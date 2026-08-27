@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Sensibilidad</title>
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    background: #0d0d0d;
+    color: #fff;
+    font-family: sans-serif;
+  }
+  h1 {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+  }
+  .card {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .valor {
+    font-size: 22px;
+    font-weight: bold;
+  }
+  .label {
+    font-size: 12px;
+    color: #999;
+  }
+  .oculto {
+    display: none;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #333;
+    color: white;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Generador de Sensibilidad</h1>
+
+<select id="marca">
+  <option value="">Selecciona tu marca</option>
+</select>
+
+<select id="modelo" class="oculto">
+  <option value="">Selecciona tu modelo</option>
+</select>
+
+<div id="resultado" class="oculto">
+  <div class="grid">
+    <div class="card">
+      <div class="label">General</div>
+      <div class="valor" id="v-general"></div>
+    </div>
+    <div class="card">
+      <div class="label">Mira de Punto Rojo</div>
+      <div class="valor" id="v-puntorojo"></div>
+    </div>
+    <div class="card">
+      <div class="label">Mira 2x</div>
+      <div class="valor" id="v-2x"></div>
+    </div>
+    <div class="card">
+      <div class="label">Mira 4x</div>
+      <div class="valor" id="v-4x"></div>
+    </div>
+    <div class="card">
+      <div class="label">Mira Francotirador</div>
+      <div class="valor" id="v-francotirador"></div>
+    </div>
+    <div class="card">
+      <div class="label">Botón de Cámara 360°</div>
+      <div class="valor" id="v-camara360"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="label">DPI sugerido</div>
+    <div class="valor" id="v-dpi"></div>
+  </div>
+  <button id="btn-disparo">Ver botón de disparo sugerido</button>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3kZdpd-4HO65mePIy93kFTPa3ciKUIDY",
+    authDomain: "generador-sensi-arabe-vip.firebaseapp.com",
+    projectId: "generador-sensi-arabe-vip",
+    storageBucket: "generador-sensi-arabe-vip.firebasestorage.app",
+    messagingSenderId: "648693505511",
+    appId: "1:648693505511:web:587af750ca9c9454d9f142"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const marcaSelect = document.getElementById("marca");
+  const modeloSelect = document.getElementById("modelo");
+  const resultado = document.getElementById("resultado");
+
+  async function cargarMarcas() {
+    const snapshot = await getDocs(collection(db, "sensibilidades"));
+    snapshot.forEach((docSnap) => {
+      const option = document.createElement("option");
+      option.value = docSnap.id;
+      option.textContent = docSnap.id;
+      marcaSelect.appendChild(option);
+    });
+  }
+
+  async function cargarModelos(marcaId) {
+    modeloSelect.innerHTML = '<option value="">Selecciona tu modelo</option>';
+    const marcaDoc = await getDoc(doc(db, "sensibilidades", marcaId));
+    if (!marcaDoc.exists()) return;
+    const modelos = marcaDoc.data().modelos || {};
+    Object.keys(modelos).forEach((modeloId) => {
+      const option = document.createElement("option");
+      option.value = modeloId;
+      option.textContent = modelos[modeloId].nombre || modeloId;
+      modeloSelect.appendChild(option);
+    });
+    modeloSelect.classList.remove("oculto");
+  }
+
+  async function mostrarResultado(marcaId, modeloId) {
+    const marcaDoc = await getDoc(doc(db, "sensibilidades", marcaId));
+    const m = marcaDoc.data().modelos[modeloId];
+    document.getElementById("v-general").textContent = m.general;
+    document.getElementById("v-puntorojo").textContent = m.puntorojo;
+    document.getElementById("v-2x").textContent = m.x2;
+    document.getElementById("v-4x").textContent = m.x4;
+    document.getElementById("v-francotirador").textContent = m.francotirador;
+    document.getElementById("v-camara360").textContent = m.camara360;
+    document.getElementById("v-dpi").textContent = m.dpi_min + " a " + m.dpi_max;
+    resultado.classList.remove("oculto");
+  }
+
+  marcaSelect.addEventListener("change", () => {
+    resultado.classList.add("oculto");
+    if (marcaSelect.value) {
+      cargarModelos(marcaSelect.value);
+    } else {
+      modeloSelect.classList.add("oculto");
+    }
+  });
+
+  modeloSelect.addEventListener("change", () => {
+    if (modeloSelect.value) {
+      mostrarResultado(marcaSelect.value, modeloSelect.value);
+    }
+  });
+
+  document.getElementById("btn-disparo").addEventListener("click", () => {
+    alert("Aquí va tu botón de disparo sugerido");
+  });
+
+  cargarMarcas();
+</script>
+
+</body>
+</html>
