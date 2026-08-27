@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generador de Sensibilidad</title>
+<title>Generador Oficial - Sensi Árabe Vip</title>
 <style>
   body {
     margin: 0;
@@ -61,7 +61,7 @@
 </head>
 <body>
 
-<h1>Generador de Sensibilidad</h1>
+<h1>Generador Oficial<br>Sensi Árabe Vip<br>الأفضل</h1>
 
 <select id="marca">
   <option value="">Selecciona tu marca</option>
@@ -105,7 +105,12 @@
   <button id="btn-disparo">Ver botón de disparo sugerido</button>
 </div>
 
+<script src="calculo-boton.js"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script type="module">
+  Telegram.WebApp.ready();
+  Telegram.WebApp.expand();
+
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -178,7 +183,13 @@
   });
 
   document.getElementById("btn-disparo").addEventListener("click", () => {
-    alert("Aquí va tu botón de disparo sugerido");
+    const general = parseInt(document.getElementById("v-general").textContent);
+    if (isNaN(general)) {
+      alert("Primero selecciona una marca y modelo.");
+      return;
+    }
+    const porcentaje = calcularBotonDisparo(general);
+    alert("Botón de disparo sugerido: " + porcentaje + "%");
   });
 
   cargarMarcas();
