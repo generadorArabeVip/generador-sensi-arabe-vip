@@ -21,9 +21,15 @@
   h1 {
     text-align: center;
     font-size: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     color: #D4AF37;
     text-shadow: 0 0 8px #8C6A16;
+  }
+  .redes {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #A6A6A6;
+    font-size: 14px;
   }
   select {
     width: 100%;
@@ -76,7 +82,18 @@
 
 <img src="logo.png" class="logo" alt="Sensi Árabe Vip">
 
-<h1>Generador Oficial<br>Sensi Árabe Vip<br>الأفضل</h1>
+<h1>
+  Generador Oficial<br>
+  Sensi Árabe Vip<br>
+  <span style="color:#E10600">*الأفضل*</span><br>
+  <span style="color:#E10600">6</span>ㅤ<span style="color:#E10600">6</span>ㅤ<span style="color:#E10600">6</span><br>
+  ㅤჯ
+</h1>
+
+<div class="redes">
+  <div>TT: @sensiarabevip</div>
+  <div>IG: @sensiarabevip</div>
+</div>
 
 <select id="marca">
   <option value="">Selecciona tu marca</option>
@@ -118,6 +135,10 @@
     <div class="valor" id="v-dpi"></div>
   </div>
   <button id="btn-disparo">Ver botón de disparo sugerido</button>
+  <div class="card oculto" id="card-boton" style="border: 1px solid #E10600; text-align:center;">
+    <div class="label">🎯 Botón de Disparo</div>
+    <div class="valor" style="color:#E10600;" id="v-boton"></div>
+  </div>
 </div>
 
 <script src="calculo-boton.js"></script>
@@ -150,7 +171,7 @@
     snapshot.forEach((docSnap) => {
       const option = document.createElement("option");
       option.value = docSnap.id;
-      option.textContent = docSnap.id;
+      option.textContent = docSnap.id.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       marcaSelect.appendChild(option);
     });
   }
@@ -179,6 +200,7 @@
     document.getElementById("v-francotirador").textContent = m.francotirador;
     document.getElementById("v-camara360").textContent = m.camara360;
     document.getElementById("v-dpi").textContent = m.dpi_min + " a " + m.dpi_max;
+    document.getElementById("card-boton").classList.add("oculto");
     resultado.classList.remove("oculto");
   }
 
@@ -199,12 +221,14 @@
 
   document.getElementById("btn-disparo").addEventListener("click", () => {
     const general = parseInt(document.getElementById("v-general").textContent);
+    const cardBoton = document.getElementById("card-boton");
     if (isNaN(general)) {
-      alert("Primero selecciona una marca y modelo.");
+      cardBoton.classList.add("oculto");
       return;
     }
     const porcentaje = calcularBotonDisparo(general);
-    alert("Botón de disparo sugerido: " + porcentaje + "%");
+    document.getElementById("v-boton").textContent = porcentaje + "%";
+    cardBoton.classList.remove("oculto");
   });
 
   cargarMarcas();
