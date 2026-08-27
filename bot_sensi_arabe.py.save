@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # ---------- CONFIG ----------
 BOT_TOKEN = "8224431904:AAEhgPbXtzRAc1VY5QdW0c1_xqWY3JheKfg"
 MINI_APP_URL = "https://generadorarabevip.github.io/generador-sensi-arabe-vip/"
-ACCESS_KEY = "666"
+	ACCESS_KEY = "666"
 
 # IDs de stickers que quieras rotar (puedes agregar los que quieras)
 STICKERS = [

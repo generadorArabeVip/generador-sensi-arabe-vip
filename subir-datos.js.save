@@ -300,16 +300,6 @@ const datos = {
       iphone_6_plus: { nombre: "iPhone 6 Plus", general: 162, puntorojo: 157, x2: 152, x4: 146, francotirador: 142, camara360: 152, dpi_min: 0, dpi_max: 0 },
       iphone_se_2022: { nombre: "iPhone SE (2022)", general: 176, puntorojo: 171, x2: 166, x4: 160, francotirador: 156, camara360: 166, dpi_min: 0, dpi_max: 0 },
       iphone_se_2020: { nombre: "iPhone SE (2020)", general: 172, puntorojo: 167, x2: 162, x4: 156, francotirador: 152, camara360: 162, dpi_min: 0, dpi_max: 0 }
-      iphone_16_pro_max: { nombre: "iPhone 16 Pro Max", general: 182, puntorojo: 177, x2: 172, x4: 166, francotirador: 155, camara360: 142 },
-      iphone_16_pro: { nombre: "iPhone 16 Pro", general: 185, puntorojo: 180, x2: 175, x4: 169, francotirador: 158, camara360: 145 },
-      iphone_16_plus: { nombre: "iPhone 16 Plus", general: 180, puntorojo: 175, x2: 170, x4: 164, francotirador: 152, camara360: 140 },
-      iphone_16: { nombre: "iPhone 16", general: 183, puntorojo: 178, x2: 173, x4: 167, francotirador: 156, camara360: 143 },
-      iphone_17_pro_max: { nombre: "iPhone 17 Pro Max", general: 181, puntorojo: 176, x2: 171, x4: 165, francotirador: 154, camara360: 141 },
-      iphone_17_pro: { nombre: "iPhone 17 Pro", general: 186, puntorojo: 181, x2: 176, x4: 170, francotirador: 159, camara360: 146 },
-      iphone_17_air: { nombre: "iPhone 17 Air", general: 184, puntorojo: 179, x2: 174, x4: 168, francotirador: 157, camara360: 144 },
-      iphone_17: { nombre: "iPhone 17", general: 181, puntorojo: 176, x2: 171, x4: 165, francotirador: 154, camara360: 141 },
-      iphone_17e: { nombre: "iPhone 17e", general: 178, puntorojo: 173, x2: 168, x4: 162, francotirador: 150, camara360: 138 }
-
     }
   }
 };
@@ -324,4 +314,3 @@ async function subir() {
 }
 
 subir();
-
