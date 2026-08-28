@@ -54,8 +54,7 @@
        los pixeles negros se funden con el fondo oscuro y quedan
        invisibles, sin tocar el archivo original. */
     mix-blend-mode: screen;
-    animation: logoSpin3D 1.5s ease-out 1;
-    animation-fill-mode: forwards;
+    animation: logoSpin3D 9s linear infinite, logoNeon 3s ease-in-out infinite;
   }
   @keyframes logoSpin3D {
     0%   { transform: perspective(700px) rotateY(0deg); }
@@ -200,8 +199,7 @@
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    animation: girarNeon 1.5s ease-out 1;
-    animation-fill-mode: forwards;
+    animation: girarNeon 2.2s linear infinite;
     z-index: -1;
   }
   @keyframes girarNeon {
@@ -216,7 +214,7 @@
   }
   .marca-sello {
     text-align: center;
-    color: #8B00FF;
+    color: #D4AF37;
     font-size: 13px;
     letter-spacing: 3px;
     margin-top: 8px;
@@ -225,7 +223,7 @@
   .titulo-seccion {
     text-align: center;
     font-size: 18px;
-    color: #E10600;
+    color: #D4AF37;
     text-shadow: 0 0 6px #8C6A16;
     margin: 24px 0 14px 0;
   }
@@ -299,8 +297,6 @@
   #candado-overlay .logo {
     max-width: 120px;
     margin-bottom: 20px;
-    animation: logoSpin3D 1.5s ease-out 1;
-    animation-fill-mode: forwards;
   }
   #candado-overlay input {
     width: 100%;
@@ -328,7 +324,6 @@
     line-height: 1.5;
     max-width: 340px;
     margin-bottom: 6px;
-    color: #E10600;
   }
   .candado-marca {
     margin-bottom: 22px;
