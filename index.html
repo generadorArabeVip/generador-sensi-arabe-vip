@@ -54,7 +54,8 @@
        los pixeles negros se funden con el fondo oscuro y quedan
        invisibles, sin tocar el archivo original. */
     mix-blend-mode: screen;
-    animation: logoSpin3D 9s linear infinite, logoNeon 3s ease-in-out infinite;
+    animation: logoSpin3D 1.5s ease-out 1;
+    animation-fill-mode: forwards;
   }
   @keyframes logoSpin3D {
     0%   { transform: perspective(700px) rotateY(0deg); }
@@ -199,7 +200,8 @@
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    animation: girarNeon 2.2s linear infinite;
+    animation: girarNeon 1.5s ease-out 1;
+    animation-fill-mode: forwards;
     z-index: -1;
   }
   @keyframes girarNeon {
@@ -214,7 +216,7 @@
   }
   .marca-sello {
     text-align: center;
-    color: #D4AF37;
+    color: #8B00FF;
     font-size: 13px;
     letter-spacing: 3px;
     margin-top: 8px;
@@ -223,7 +225,7 @@
   .titulo-seccion {
     text-align: center;
     font-size: 18px;
-    color: #D4AF37;
+    color: #E10600;
     text-shadow: 0 0 6px #8C6A16;
     margin: 24px 0 14px 0;
   }
