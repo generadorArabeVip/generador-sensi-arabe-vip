@@ -102,17 +102,17 @@ const AJUSTES_IOS = {
   iphone_se_2020:     { velocidadCursor: 100, modo: "Modo Sencillo",  toque: 0.20, refinamiento: 0.80, controlBoton: "Estándar",          controlBotonDuracion: 0.15 },
 };
 
-function correrLoader(loaderEl, onDone, duracionAprox = 1300) {
+function correrLoader(loaderEl, onDone, duracionMs = 66000) {
   loaderEl.classList.remove("oculto");
   const textoEl = loaderEl.querySelector(".loader-texto");
   const barraEl = loaderEl.querySelector(".loader-barra-fill");
 
-  let progreso = 0;
-  const pasoMs = 90;
+  const inicio = Date.now();
+  const pasoMs = 120;
 
   const interval = setInterval(() => {
-    progreso += randomInt(6, 16);
-    if (progreso >= 100) progreso = 100;
+    const transcurrido = Date.now() - inicio;
+    const progreso = Math.min(100, Math.round((transcurrido / duracionMs) * 100));
 
     if (textoEl) textoEl.textContent = `Generando... ${progreso}%`;
     if (barraEl) barraEl.style.width = progreso + "%";
