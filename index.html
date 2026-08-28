@@ -55,9 +55,10 @@
      video de fondo se distinga a través del panel. Contorno dorado
      con aura multicolor exótica (dorado → rojo → morado) girando. */
   #contenido-generador .panel {
-    background: rgba(120,120,130,0.10);
-    backdrop-filter: blur(16px) saturate(150%);
-    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    position: relative;
+    z-index: 2;
+    max-width: 340px;
+    background: transparent;
     border: 1px solid rgba(212,175,55,0.6);
     animation: panelAuraExotica 6s ease-in-out infinite, panelFlotar 6s ease-in-out infinite;
   }
@@ -404,7 +405,7 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     animation: girarNeon 2.2s linear infinite;
-    z-index: 1;
+    z-index: -1;
   }
   @keyframes girarNeon {
     to { transform: rotate(360deg); }
