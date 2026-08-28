@@ -24,7 +24,7 @@
     height: 100vh;
     object-fit: cover;
     filter: brightness(1.25) contrast(1.12) saturate(1.15);
-    z-index: -2;
+    z-index: 0;
   }
   .overlay-oscuro {
     position: fixed;
@@ -32,7 +32,7 @@
     width: 100vw;
     height: 100vh;
     background: linear-gradient(180deg, rgba(5,5,5,0.42), rgba(26,0,0,0.5), rgba(5,5,5,0.62));
-    z-index: -1;
+    z-index: 1;
   }
 
   /* ---- Panel flotante ---- */
@@ -404,7 +404,7 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     animation: girarNeon 2.2s linear infinite;
-    z-index: -1;
+    z-index: 1;
   }
   @keyframes girarNeon {
     to { transform: rotate(360deg); }
