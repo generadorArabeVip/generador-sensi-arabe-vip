@@ -374,7 +374,7 @@
   <h1 class="candado-titulo">⚙️📱👹 SENSI ÁRABE VIP يهيم<br>LAS MEJORES SETTINGS INTERNAS DE SENSIBILIDY<br>SOLO CON NOSOTROS</h1>
   <div class="marca-sello candado-marca">S:.S:.VI-66</div>
   <div class="candado-label">PASSWORD</div>
-  <input type="password" id="input-candado" placeholder="Escribe la contraseña" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+  <input type="text" id="input-candado" placeholder="Escribe la contraseña" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
   <button id="btn-candado">Entrar</button>
   <div id="candado-error">Contraseña incorrecta, intenta de nuevo.</div>
 </div>
@@ -662,11 +662,15 @@
   // Quita espacios y también caracteres invisibles de control de
   // dirección de texto (RLM/LRM/ALM, marcas bidi, etc.) que algunos
   // teclados móviles insertan solos al escribir en árabe, y que antes
-  // hacían que la contraseña "correcta" nunca coincidiera.
+  // hacían que la contraseña "correcta" nunca coincidiera. También
+  // convierte números arábigo-índicos (٠١٢٣٤٥٦٧٨٩) y persas
+  // (۰۱۲۳۴۵۶۷۸۹) a números normales, por si el teclado los usa.
   function limpiarTexto(str) {
     return str
       .normalize("NFC")
       .replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\u061C]/g, "")
+      .replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+      .replace(/[\u06F0-\u06F9]/g, (d) => String(d.charCodeAt(0) - 0x06F0))
       .trim();
   }
 
