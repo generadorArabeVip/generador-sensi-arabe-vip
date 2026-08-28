@@ -23,6 +23,7 @@
     width: 100vw;
     height: 100vh;
     object-fit: cover;
+    filter: brightness(1.25) contrast(1.12) saturate(1.15);
     z-index: -2;
   }
   .overlay-oscuro {
@@ -30,7 +31,7 @@
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(180deg, rgba(5,5,5,0.80), rgba(26,0,0,0.85), rgba(5,5,5,0.92));
+    background: linear-gradient(180deg, rgba(5,5,5,0.42), rgba(26,0,0,0.5), rgba(5,5,5,0.62));
     z-index: -1;
   }
 
@@ -44,11 +45,16 @@
     border-radius: 16px;
     box-shadow: 0 0 30px rgba(225,6,0,0.18), 0 0 60px rgba(0,0,0,0.6);
   }
+  .panel-candado {
+    max-width: 340px;
+    width: 100%;
+    margin: 0;
+  }
 
   .logo {
     display: block;
     margin: 0 auto 10px auto;
-    max-width: 160px;
+    max-width: 200px;
     width: 100%;
     /* Truco para "quitar" un fondo negro sólido del PNG: con screen,
        los pixeles negros se funden con el fondo oscuro y quedan
@@ -466,6 +472,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: brightness(1.25) contrast(1.12) saturate(1.15);
     z-index: 0;
   }
   #candado-overlay-oscuro {
@@ -473,7 +480,7 @@
     top: 0; left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, rgba(5,5,5,0.80), rgba(26,0,0,0.85), rgba(5,5,5,0.92));
+    background: linear-gradient(180deg, rgba(5,5,5,0.42), rgba(26,0,0,0.5), rgba(5,5,5,0.62));
     z-index: 1;
   }
   #candado-overlay > *:not(#candado-video-bg):not(#candado-overlay-oscuro) {
@@ -481,7 +488,6 @@
     z-index: 2;
   }
   #candado-overlay .logo {
-    max-width: 120px;
     margin-bottom: 20px;
   }
   #candado-overlay input {
@@ -618,6 +624,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: brightness(1.25) contrast(1.12) saturate(1.15);
     z-index: 0;
   }
   #bienvenida-overlay-oscuro {
@@ -625,7 +632,7 @@
     top: 0; left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, rgba(5,5,5,0.80), rgba(26,0,0,0.85), rgba(5,5,5,0.92));
+    background: linear-gradient(180deg, rgba(5,5,5,0.42), rgba(26,0,0,0.5), rgba(5,5,5,0.62));
     z-index: 1;
   }
   #bienvenida-overlay > *:not(#bienvenida-video-bg):not(#bienvenida-overlay-oscuro) {
@@ -633,7 +640,6 @@
     z-index: 2;
   }
   #bienvenida-overlay .logo {
-    max-width: 120px;
     margin-bottom: 14px;
   }
   .bienvenida-titulo {
@@ -860,17 +866,19 @@
   </video>
   <div id="candado-overlay-oscuro"></div>
   <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
-  <h1 class="candado-titulo">⚙️📱👹 SENSI ÁRABE VIP يهيم<br>LAS MEJORES SETTINGS INTERNAS DE SENSIBILIDY<br>SOLO CON NOSOTROS</h1>
-  <div class="marca-sello candado-marca">S:.S:.VI-66</div>
-  <div class="candado-label">PASSWORD</div>
-  <input type="text" id="input-candado" placeholder="Escribe la contraseña" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
-  <button id="btn-candado" class="oculto">Entrar</button>
-  <div id="slider-candado" class="slider-desliza">
-    <div class="slider-relleno"></div>
-    <div class="slider-texto">DESLIZA PARA ENTRAR »</div>
-    <div class="slider-mango"><i class="fa-solid fa-chevron-right"></i></div>
+  <div class="panel panel-candado">
+    <h1 class="candado-titulo">⚙️📱👹 SENSI ÁRABE VIP يهيم<br>LAS MEJORES SETTINGS INTERNAS DE SENSIBILIDY<br>SOLO CON NOSOTROS</h1>
+    <div class="marca-sello candado-marca">S:.S:.VI-66</div>
+    <div class="candado-label">PASSWORD</div>
+    <input type="text" id="input-candado" placeholder="Escribe la contraseña" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+    <button id="btn-candado" class="oculto">Entrar</button>
+    <div id="slider-candado" class="slider-desliza">
+      <div class="slider-relleno"></div>
+      <div class="slider-texto">DESLIZA PARA ENTRAR »</div>
+      <div class="slider-mango"><i class="fa-solid fa-chevron-right"></i></div>
+    </div>
+    <div id="candado-error">Contraseña incorrecta, intenta de nuevo.</div>
   </div>
-  <div id="candado-error">Contraseña incorrecta, intenta de nuevo.</div>
 </div>
 
 <!-- ================= BIENVENIDA (después de acertar la contraseña) =================
