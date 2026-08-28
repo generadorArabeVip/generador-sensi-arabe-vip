@@ -51,6 +51,14 @@
     0%, 100% { box-shadow: 0 0 30px rgba(225,6,0,0.18), 0 0 60px rgba(0,0,0,0.6); border-color: #8C6A16; }
     50%      { box-shadow: 0 0 42px rgba(212,175,55,0.32), 0 0 70px rgba(225,6,0,0.22), 0 0 60px rgba(0,0,0,0.6); border-color: #D4AF37; }
   }
+  /* El recuadro de la fase 3 (generador) también flota suavemente */
+  #contenido-generador .panel {
+    animation: panelAuraPulso 4s ease-in-out infinite, panelFlotar 6s ease-in-out infinite;
+  }
+  @keyframes panelFlotar {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
   /* Esquinas doradas decorativas, estilo "marco VIP" */
   .panel::before, .panel::after {
     content: "";
@@ -643,12 +651,14 @@
     margin-bottom: 6px;
     color: #E10600;
     text-shadow: 0 0 4px #FF3B3B, 0 0 10px #E10600, 0 0 22px #E10600, 0 0 34px #E10600;
-    animation: parpadeoNeon 2.6s infinite;
+    animation: parpadeoNeon 2.6s infinite, flotarSuave 4.2s ease-in-out infinite;
   }
   .candado-marca {
     margin-bottom: 22px;
     color: #B026FF;
     text-shadow: 0 0 8px rgba(176,38,255,0.55);
+    animation: flotarSuave 3.6s ease-in-out infinite;
+    animation-delay: .3s;
   }
   .candado-label {
     color: #D4AF37;
@@ -656,6 +666,12 @@
     letter-spacing: 4px;
     text-shadow: 0 0 6px #8C6A16;
     margin-bottom: 10px;
+    animation: flotarSuave 3.9s ease-in-out infinite;
+    animation-delay: .6s;
+  }
+  @keyframes flotarSuave {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
   }
 
   /* ---- Pantalla de bienvenida (después de acertar la contraseña) ---- */
@@ -702,7 +718,7 @@
     color: #E10600;
     text-shadow: 0 0 10px rgba(225,6,0,0.7), 0 0 22px rgba(176,38,255,0.4);
     margin-bottom: 14px;
-    animation: pulsoTituloBienvenida 1.6s ease-in-out infinite;
+    animation: pulsoTituloBienvenida 1.6s ease-in-out infinite, flotarSuave 4.4s ease-in-out infinite;
   }
   @keyframes pulsoTituloBienvenida {
     0%, 100% { text-shadow: 0 0 8px rgba(225,6,0,0.6), 0 0 16px rgba(176,38,255,0.35); }
@@ -714,6 +730,7 @@
     max-width: 380px;
     color: #F1F1F1;
     margin-bottom: 16px;
+    animation: flotarSuave 4.8s ease-in-out infinite;
   }
   .bienvenida-morado {
     color: #B026FF;
@@ -1027,7 +1044,7 @@
 
   <div class="panel">
 
-    <img src="Logo_sensi.png" class="logo" alt="Sensi Árabe Vip">
+    <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
 
     <h1>
       Generador Oficial<br>
