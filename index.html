@@ -133,7 +133,11 @@
     border: 1px solid #3A3A3A;
     background: #1A1A1A;
     color: #7A7A7A;
-    box-shadow: none;
+    animation: pulsoNeonGris 3s ease-in-out infinite;
+  }
+  @keyframes pulsoNeonGris {
+    0%, 100% { box-shadow: 0 0 4px rgba(122,122,122,0.2); border-color: #3A3A3A; }
+    50%      { box-shadow: 0 0 10px rgba(166,166,166,0.5); border-color: #5A5A5A; }
   }
   select.elegido {
     border: 1px solid #E10600;
@@ -191,8 +195,7 @@
   button.btn-rojo-neon {
     background: linear-gradient(90deg, #7A0000, #E10600, #FF3366, #E10600, #7A0000);
     color: #F1F1F1;
-    text-shadow: 0 0 6px rgba(0,0,0,0.5);
-    animation: pulsoBotonRojo 1.6s ease-in-out infinite;
+    animation: pulsoBotonRojo 1.6s ease-in-out infinite, parpadeoBotonTexto 2.3s ease-in-out infinite;
   }
   @keyframes pulsoBotonRojo {
     0%, 100% { box-shadow: 0 0 8px rgba(225,6,0,0.55), 0 0 16px rgba(176,38,255,0.3); }
@@ -213,7 +216,7 @@
   button.btn-morado-neon {
     background: linear-gradient(90deg, #3D0066, #B026FF, #E48EFF, #B026FF, #3D0066);
     color: #F1F1F1;
-    text-shadow: 0 0 6px rgba(0,0,0,0.5);
+    animation: parpadeoBotonTextoMorado 2.6s ease-in-out infinite;
   }
   button.btn-morado-neon::before {
     background: conic-gradient(
@@ -224,6 +227,18 @@
       #B026FF 92%,
       transparent 98%
     );
+  }
+
+  /* ---- Parpadeo neón en el texto de los botones: se aplica siempre,
+     sin importar el color de fondo del botón (dorado por defecto,
+     rojo o morado en sus variantes). ---- */
+  @keyframes parpadeoBotonTexto {
+    0%, 100% { text-shadow: 0 0 2px #FFFFFF, 0 0 8px #E10600, 0 0 18px #E10600; }
+    50%      { text-shadow: 0 0 1px #FFFFFF, 0 0 3px #E10600; }
+  }
+  @keyframes parpadeoBotonTextoMorado {
+    0%, 100% { text-shadow: 0 0 2px #FFFFFF, 0 0 8px #B026FF, 0 0 18px #B026FF; }
+    50%      { text-shadow: 0 0 1px #FFFFFF, 0 0 3px #B026FF; }
   }
 
   /* ---- Botones con borde neón giratorio ---- */
@@ -240,6 +255,7 @@
     margin-top: 10px;
     cursor: pointer;
     transition: transform .12s ease, filter .12s ease;
+    animation: parpadeoBotonTexto 2.3s ease-in-out infinite;
   }
   button:active {
     transform: scale(0.96);
@@ -520,6 +536,8 @@
     transition: color .2s ease;
     text-align: center;
     padding: 0 60px;
+    text-shadow: 0 0 3px rgba(122,122,122,0.4);
+    animation: parpadeoNeon 2.8s infinite;
   }
   .slider-desliza.deslizando .slider-texto,
   .slider-desliza.completo .slider-texto {
@@ -750,6 +768,87 @@
     text-shadow: 0 0 3px #FFFFFF, 0 0 8px #B026FF, 0 0 20px #B026FF;
     animation: parpadeoNeon 3.6s infinite;
   }
+
+  /* ---- Deslizador CIRCULAR (fase 2 → fase 3): se arrastra el mango
+     dando toda la vuelta alrededor del ícono ⚙️ para entrar al
+     generador. Reemplaza a la barra recta que se usaba antes. ---- */
+  .circulo-desliza-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .circulo-titulo {
+    font-size: 15px;
+    line-height: 1.5;
+    text-align: center;
+    max-width: 300px;
+    margin-bottom: 20px;
+    color: #E10600;
+    text-shadow: 0 0 4px #FF3B3B, 0 0 10px #E10600, 0 0 22px #E10600, 0 0 34px #E10600;
+    animation: parpadeoNeon 2.6s infinite;
+  }
+  .circulo-desliza {
+    position: relative;
+    width: 176px;
+    height: 176px;
+    border-radius: 50%;
+    background: conic-gradient(#E10600 calc(var(--progreso, 0) * 3.6deg), #1A1A1A 0deg);
+    touch-action: none;
+    user-select: none;
+    cursor: grab;
+  }
+  .circulo-pista {
+    position: absolute;
+    inset: 14px;
+    border-radius: 50%;
+    background: #050505;
+    border: 1px solid #3A3A3A;
+    pointer-events: none;
+  }
+  .circulo-icono {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 38px;
+    pointer-events: none;
+    filter: drop-shadow(0 0 6px #8C6A16) drop-shadow(0 0 2px #D4AF37);
+    animation: girarNeon 5s linear infinite;
+  }
+  .circulo-desliza.arrastrando .circulo-icono,
+  .circulo-desliza.completo .circulo-icono {
+    filter: drop-shadow(0 0 12px #E10600) drop-shadow(0 0 6px #B026FF);
+  }
+  .circulo-mango {
+    position: absolute;
+    top: 7px; left: 7px;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border-radius: 50%;
+    background: #111111;
+    border: 1px solid #E10600;
+    box-shadow: 0 0 10px rgba(225,6,0,0.6);
+    cursor: grab;
+  }
+  .circulo-desliza.arrastrando .circulo-mango,
+  .circulo-desliza.completo .circulo-mango {
+    background: linear-gradient(135deg, #7A0000, #E10600, #FF3366);
+    box-shadow: 0 0 18px rgba(225,6,0,0.95), 0 0 30px rgba(176,38,255,0.6);
+  }
+  .circulo-hint {
+    margin-top: 16px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: #7A7A7A;
+    text-shadow: 0 0 3px rgba(122,122,122,0.4);
+    animation: parpadeoNeon 2.9s infinite;
+  }
+  .circulo-desliza.arrastrando ~ .circulo-hint,
+  .circulo-desliza.completo ~ .circulo-hint {
+    color: #FF3366;
+    text-shadow: 0 0 8px rgba(225,6,0,0.6);
+  }
 </style>
 </head>
 <body>
@@ -842,10 +941,15 @@
   </div>
 
   <div class="bienvenida-sello">S:.S:.VI-66</div>
-  <div id="slider-bienvenida" class="slider-desliza">
-    <div class="slider-relleno"></div>
-    <div class="slider-texto">INGRESAR AL GENERADOR OFICIAL »</div>
-    <div class="slider-mango"><i class="fa-solid fa-chevron-right"></i></div>
+
+  <div class="circulo-desliza-wrap">
+    <div class="circulo-titulo">ENTRAR AL GENERADOR OFICIAL<br>DE SENSI ÁRABE VIP</div>
+    <div id="circulo-bienvenida" class="circulo-desliza">
+      <div class="circulo-pista"></div>
+      <div class="circulo-icono">⚙️</div>
+      <div class="circulo-mango" id="circulo-bienvenida-mango"></div>
+    </div>
+    <div class="circulo-hint">Desliza en círculo para entrar »</div>
   </div>
 </div>
 
@@ -1241,6 +1345,111 @@
     return { resetear };
   }
 
+  /* ---- Deslizador CIRCULAR (fase 2 → fase 3) ----
+     Se arrastra el mango dando toda la vuelta (≈360°) alrededor del
+     ícono ⚙️ en el centro. El progreso se acumula por el ángulo real
+     recorrido (no solo por posición), así que hay que completar la
+     vuelta de verdad; si sueltas antes, el mango regresa al inicio. */
+  function crearSliderCircular(contenedor, mango, alCompletar) {
+    const radioMango = 81;
+    const vueltaCompleta = 345; // grados; deja un poco de margen para no exigir 360 exactos
+    let arrastrando = false;
+    let anguloAnterior = 0;
+    let acumulado = 0;
+    let completado = false;
+
+    function centro() {
+      const rect = contenedor.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }
+
+    // Ángulo en grados medido en sentido horario desde arriba (0 = 12 en punto),
+    // igual a como conic-gradient dibuja el progreso por defecto.
+    function anguloDesdeEvento(e, c) {
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const dx = clientX - c.x;
+      const dy = clientY - c.y;
+      let angulo = Math.atan2(dx, -dy) * 180 / Math.PI;
+      if (angulo < 0) angulo += 360;
+      return angulo;
+    }
+
+    function colocarMango(angulo) {
+      const rad = angulo * Math.PI / 180;
+      const x = contenedor.clientWidth / 2 + radioMango * Math.sin(rad);
+      const y = contenedor.clientHeight / 2 - radioMango * Math.cos(rad);
+      mango.style.left = x + "px";
+      mango.style.top = y + "px";
+    }
+
+    function actualizarProgreso(porcentaje) {
+      contenedor.style.setProperty("--progreso", Math.max(0, Math.min(100, porcentaje)));
+    }
+
+    function resetear() {
+      acumulado = 0;
+      completado = false;
+      contenedor.classList.remove("arrastrando", "completo");
+      mango.style.transition = "left .25s ease, top .25s ease";
+      colocarMango(0);
+      actualizarProgreso(0);
+      setTimeout(() => { mango.style.transition = ""; }, 260);
+    }
+
+    function empezar(e) {
+      if (completado) return;
+      arrastrando = true;
+      acumulado = 0;
+      mango.style.transition = "";
+      contenedor.classList.add("arrastrando");
+      const c = centro();
+      anguloAnterior = anguloDesdeEvento(e, c);
+      colocarMango(anguloAnterior);
+      e.preventDefault();
+    }
+
+    function mover(e) {
+      if (!arrastrando || completado) return;
+      const c = centro();
+      const anguloActual = anguloDesdeEvento(e, c);
+      let delta = anguloActual - anguloAnterior;
+      if (delta > 180) delta -= 360;
+      if (delta < -180) delta += 360;
+      acumulado = Math.max(0, acumulado + delta);
+      anguloAnterior = anguloActual;
+      colocarMango(anguloActual);
+      actualizarProgreso((acumulado / vueltaCompleta) * 100);
+
+      if (acumulado >= vueltaCompleta) {
+        completado = true;
+        arrastrando = false;
+        contenedor.classList.remove("arrastrando");
+        contenedor.classList.add("completo");
+        actualizarProgreso(100);
+        alCompletar();
+      }
+      e.preventDefault();
+    }
+
+    function terminar() {
+      if (!arrastrando) return;
+      arrastrando = false;
+      contenedor.classList.remove("arrastrando");
+      if (!completado) resetear();
+    }
+
+    contenedor.addEventListener("mousedown", empezar);
+    contenedor.addEventListener("touchstart", empezar, { passive: false });
+    window.addEventListener("mousemove", mover);
+    window.addEventListener("touchmove", mover, { passive: false });
+    window.addEventListener("mouseup", terminar);
+    window.addEventListener("touchend", terminar);
+
+    colocarMango(0);
+    actualizarProgreso(0);
+  }
+
   // Slider del candado: al completarlo, valida la contraseña.
   // Si resultó incorrecta, el slider vuelve a su lugar para reintentar.
   crearSlider(document.getElementById("slider-candado"), (resetear) => {
@@ -1250,10 +1459,13 @@
     }, 50);
   });
 
-  // Slider de la bienvenida: al completarlo, entra directo al generador.
-  crearSlider(document.getElementById("slider-bienvenida"), () => {
-    desbloquear();
-  });
+  // Deslizador circular de la bienvenida: al completar la vuelta
+  // alrededor del ⚙️, entra al generador (fase 3).
+  crearSliderCircular(
+    document.getElementById("circulo-bienvenida"),
+    document.getElementById("circulo-bienvenida-mango"),
+    () => { desbloquear(); }
+  );
 
   /* ================= CONTADOR EN TIEMPO REAL ================= */
   const contadorNumero = document.getElementById("contador-numero");
