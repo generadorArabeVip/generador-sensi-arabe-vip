@@ -293,6 +293,27 @@
     justify-content: center;
     padding: 24px;
     text-align: center;
+    overflow: hidden;
+  }
+  #candado-video-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  #candado-overlay-oscuro {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(5,5,5,0.80), rgba(26,0,0,0.85), rgba(5,5,5,0.92));
+    z-index: 1;
+  }
+  #candado-overlay > *:not(#candado-video-bg):not(#candado-overlay-oscuro) {
+    position: relative;
+    z-index: 2;
   }
   #candado-overlay .logo {
     max-width: 120px;
@@ -345,6 +366,10 @@
 
 <!-- ================= CANDADO DE ACCESO ================= -->
 <div id="candado-overlay">
+  <video id="candado-video-bg" autoplay muted loop playsinline>
+    <source src="Video_bloqueo_sensi.mp4" type="video/mp4">
+  </video>
+  <div id="candado-overlay-oscuro"></div>
   <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
   <h1 class="candado-titulo">⚙️📱👹 SENSI ÁRABE VIP يهيم<br>LAS MEJORES SETTINGS INTERNAS DE SENSIBILIDY<br>SOLO CON NOSOTROS</h1>
   <div class="marca-sello candado-marca">S:.S:.VI-66</div>
