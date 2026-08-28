@@ -598,6 +598,16 @@
   </div>
 </div>
 
+<script>
+  // ---- DEBUG TEMPORAL: muestra cualquier error en una alerta ----
+  // (quitar este bloque una vez resuelto el problema)
+  window.addEventListener("error", (e) => {
+    alert("ERROR DETECTADO:\n" + (e.message || e) + "\nArchivo: " + (e.filename || "?") + " línea " + (e.lineno || "?"));
+  });
+  window.addEventListener("unhandledrejection", (e) => {
+    alert("ERROR (promesa):\n" + (e.reason && e.reason.message ? e.reason.message : e.reason));
+  });
+</script>
 <script src="calculo-boton.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script type="module">
