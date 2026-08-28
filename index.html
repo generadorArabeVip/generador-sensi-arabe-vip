@@ -843,11 +843,18 @@
     0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
     20%, 24%, 55% { opacity: 0.35; }
   }
+  @keyframes letraFlotar {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-4px) rotate(-0.7deg); }
+  }
   .bienvenida-leyenda h2,
   .bienvenida-leyenda strong,
   .bienvenida-leyenda .leyenda-cierre strong {
     color: #0A0A0A;
-    animation: parpadeoNeon 3s infinite;
+    animation: parpadeoNeon 3s infinite, letraFlotar 3.8s ease-in-out infinite;
+  }
+  .bienvenida-leyenda strong {
+    display: inline-block;
   }
   /* Títulos (h2): alternan rojo / azul neón */
   .bienvenida-leyenda h2:nth-of-type(odd) {
@@ -894,8 +901,9 @@
   /* Texto en árabe: tubo de neón morado/blanco combinado */
   .bienvenida-leyenda .leyenda-arabe {
     color: #0A0A0A;
+    display: inline-block;
     text-shadow: 0 0 3px #FFFFFF, 0 0 8px #B026FF, 0 0 20px #B026FF;
-    animation: parpadeoNeon 3.6s infinite;
+    animation: parpadeoNeon 3.6s infinite, letraFlotar 4.4s ease-in-out infinite;
   }
 
   /* ---- Deslizador CIRCULAR (fase 2 → fase 3): se arrastra el mango
