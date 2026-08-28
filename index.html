@@ -37,6 +37,7 @@
 
   /* ---- Panel flotante ---- */
   .panel {
+    position: relative;
     max-width: 480px;
     margin: 20px auto;
     padding: 20px;
@@ -44,6 +45,30 @@
     border: 1px solid #8C6A16;
     border-radius: 16px;
     box-shadow: 0 0 30px rgba(225,6,0,0.18), 0 0 60px rgba(0,0,0,0.6);
+    animation: panelAuraPulso 4s ease-in-out infinite;
+  }
+  @keyframes panelAuraPulso {
+    0%, 100% { box-shadow: 0 0 30px rgba(225,6,0,0.18), 0 0 60px rgba(0,0,0,0.6); border-color: #8C6A16; }
+    50%      { box-shadow: 0 0 42px rgba(212,175,55,0.32), 0 0 70px rgba(225,6,0,0.22), 0 0 60px rgba(0,0,0,0.6); border-color: #D4AF37; }
+  }
+  /* Esquinas doradas decorativas, estilo "marco VIP" */
+  .panel::before, .panel::after {
+    content: "";
+    position: absolute;
+    width: 26px; height: 26px;
+    border: 2px solid #D4AF37;
+    filter: drop-shadow(0 0 4px #D4AF37);
+    pointer-events: none;
+  }
+  .panel::before {
+    top: -1px; left: -1px;
+    border-right: none; border-bottom: none;
+    border-radius: 16px 0 0 0;
+  }
+  .panel::after {
+    bottom: -1px; right: -1px;
+    border-left: none; border-top: none;
+    border-radius: 0 0 16px 0;
   }
   .panel-candado {
     max-width: 340px;
@@ -161,12 +186,39 @@
   }
 
   .card {
-    background: #111111;
+    position: relative;
+    background: linear-gradient(155deg, #161616, #0A0A0A);
     border: 1px solid #686868;
+    border-top: 1px solid #D4AF37;
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 12px;
-    animation: cardIn .4s ease;
+    overflow: hidden;
+    animation: cardIn .4s ease, cardGlow 3.2s ease-in-out infinite;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .card:active {
+    transform: scale(0.97);
+  }
+  /* Barrido de brillo dorado que cruza la card, como un destello de "premium" */
+  .card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(245,215,110,0.16), transparent);
+    animation: cardShine 4.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes cardShine {
+    0%   { left: -60%; }
+    35%  { left: 130%; }
+    100% { left: 130%; }
+  }
+  @keyframes cardGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(212,175,55,0); border-color: #686868; }
+    50%      { box-shadow: 0 0 14px rgba(212,175,55,0.18); border-color: #8C6A16; }
   }
   @keyframes cardIn {
     from { opacity: 0; transform: translateY(6px); }
@@ -181,10 +233,12 @@
     font-size: 22px;
     font-weight: bold;
     color: #F5D76E;
+    text-shadow: 0 0 10px rgba(245,215,110,0.35);
   }
   .label {
     font-size: 12px;
     color: #A6A6A6;
+    letter-spacing: .5px;
   }
   .nota {
     font-size: 11px;
@@ -1022,32 +1076,32 @@
   <div id="resultado" class="oculto">
     <div class="grid">
       <div class="card">
-        <div class="label">General</div>
+        <div class="label">🎯 General</div>
         <div class="valor" id="v-general"></div>
       </div>
       <div class="card">
-        <div class="label">Mira de Punto Rojo</div>
+        <div class="label">🔴 Mira de Punto Rojo</div>
         <div class="valor" id="v-puntorojo"></div>
       </div>
       <div class="card">
-        <div class="label">Mira 2x</div>
+        <div class="label">🔭 Mira 2x</div>
         <div class="valor" id="v-2x"></div>
       </div>
       <div class="card">
-        <div class="label">Mira 4x</div>
+        <div class="label">🔎 Mira 4x</div>
         <div class="valor" id="v-4x"></div>
       </div>
       <div class="card">
-        <div class="label">Mira Francotirador</div>
+        <div class="label">🏹 Mira Francotirador</div>
         <div class="valor" id="v-francotirador"></div>
       </div>
       <div class="card">
-        <div class="label">Botón de Cámara 360°</div>
+        <div class="label">📷 Botón de Cámara 360°</div>
         <div class="valor" id="v-camara360"></div>
       </div>
     </div>
     <div class="card" id="dpi-card">
-      <div class="label">DPI sugerido</div>
+      <div class="label">📱 DPI sugerido</div>
       <div class="valor" id="v-dpi"></div>
       <div class="label" id="v-dpi-rango"></div>
     </div>
@@ -1057,7 +1111,7 @@
     <!-- Paso 2 -->
     <button id="btn-disparo" class="oculto btn-rojo-neon">Generar botón de disparo</button>
     <div class="card oculto" id="card-boton">
-      <div class="label">🎯 Botón de Disparo</div>
+      <div class="label">🔫 Botón de Disparo</div>
       <div class="valor" style="color:#E10600;" id="v-boton"></div>
     </div>
 
