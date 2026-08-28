@@ -51,13 +51,25 @@
     0%, 100% { box-shadow: 0 0 30px rgba(225,6,0,0.18), 0 0 60px rgba(0,0,0,0.6); border-color: #8C6A16; }
     50%      { box-shadow: 0 0 42px rgba(212,175,55,0.32), 0 0 70px rgba(225,6,0,0.22), 0 0 60px rgba(0,0,0,0.6); border-color: #D4AF37; }
   }
-  /* El recuadro de la fase 3 (generador) también flota suavemente */
+  /* Fase 3: vidrio esmerilado en vez de negro sólido, para que el
+     video de fondo se distinga a través del panel. Contorno dorado
+     con aura multicolor exótica (dorado → rojo → morado) girando. */
   #contenido-generador .panel {
-    animation: panelAuraPulso 4s ease-in-out infinite, panelFlotar 6s ease-in-out infinite;
+    background: rgba(120,120,130,0.10);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid rgba(212,175,55,0.6);
+    animation: panelAuraExotica 6s ease-in-out infinite, panelFlotar 6s ease-in-out infinite;
+  }
+  @keyframes panelAuraExotica {
+    0%   { box-shadow: 0 0 26px rgba(212,175,55,0.28), 0 0 55px rgba(0,0,0,0.5); border-color: rgba(212,175,55,0.65); }
+    33%  { box-shadow: 0 0 30px rgba(225,6,0,0.32), 0 0 60px rgba(0,0,0,0.5); border-color: rgba(225,6,0,0.6); }
+    66%  { box-shadow: 0 0 30px rgba(176,38,255,0.30), 0 0 60px rgba(0,0,0,0.5); border-color: rgba(176,38,255,0.55); }
+    100% { box-shadow: 0 0 26px rgba(212,175,55,0.28), 0 0 55px rgba(0,0,0,0.5); border-color: rgba(212,175,55,0.65); }
   }
   @keyframes panelFlotar {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-8px); }
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-12px) rotate(0.5deg); }
   }
   /* Esquinas doradas decorativas, estilo "marco VIP" */
   .panel::before, .panel::after {
@@ -78,10 +90,25 @@
     border-left: none; border-top: none;
     border-radius: 0 0 16px 0;
   }
+  #contenido-generador .panel::before,
+  #contenido-generador .panel::after {
+    animation: esquinaExotica 6s ease-in-out infinite;
+  }
+  @keyframes esquinaExotica {
+    0%   { border-color: #D4AF37; filter: drop-shadow(0 0 5px #D4AF37); }
+    33%  { border-color: #E10600; filter: drop-shadow(0 0 6px #E10600); }
+    66%  { border-color: #B026FF; filter: drop-shadow(0 0 6px #B026FF); }
+    100% { border-color: #D4AF37; filter: drop-shadow(0 0 5px #D4AF37); }
+  }
   .panel-candado {
     max-width: 340px;
     width: 100%;
     margin: 0;
+    animation: panelAuraPulso 4s ease-in-out infinite, panelFlotarNotorio 5s ease-in-out infinite;
+  }
+  @keyframes panelFlotarNotorio {
+    0%, 100%  { transform: translateY(0) rotate(0deg); }
+    50%       { transform: translateY(-10px) rotate(-0.4deg); }
   }
 
   .logo {
@@ -127,6 +154,15 @@
     text-decoration: none;
     filter: drop-shadow(0 0 4px #8C6A16);
     transition: filter .2s, transform .2s;
+    display: inline-block;
+    animation: iconoFlotaNeon 2.8s ease-in-out infinite;
+  }
+  .redes-bar a:nth-child(1) { animation-delay: 0s; }
+  .redes-bar a:nth-child(2) { animation-delay: .35s; }
+  .redes-bar a:nth-child(3) { animation-delay: .7s; }
+  @keyframes iconoFlotaNeon {
+    0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 4px #8C6A16); }
+    50%      { transform: translateY(-6px); filter: drop-shadow(0 0 13px #E10600) drop-shadow(0 0 6px #D4AF37); }
   }
   .redes-bar a:hover, .redes-bar a:active {
     filter: drop-shadow(0 0 14px #E10600);
@@ -256,6 +292,21 @@
   }
   .oculto {
     display: none !important;
+  }
+
+  /* ---- Botón principal "Generar sensibilidad": neón blanco-rojo
+     que se desvanece y reaparece (efecto "fundido"), además del
+     parpadeo normal de texto que ya tienen todos los btn-rojo-neon. ---- */
+  #btn-generar-sensibilidad {
+    animation: pulsoBotonRojo 1.6s ease-in-out infinite,
+               parpadeoBotonTexto 2.3s ease-in-out infinite,
+               fundidoNeonBlancoRojo 3.4s ease-in-out infinite;
+  }
+  @keyframes fundidoNeonBlancoRojo {
+    0%   { opacity: 1;    text-shadow: 0 0 4px #FFFFFF, 0 0 14px #E10600, 0 0 26px #E10600; }
+    45%  { opacity: 0.45; text-shadow: 0 0 2px #FFFFFF, 0 0 6px #E10600; }
+    55%  { opacity: 0.45; text-shadow: 0 0 2px #FFFFFF, 0 0 6px #E10600; }
+    100% { opacity: 1;    text-shadow: 0 0 4px #FFFFFF, 0 0 14px #E10600, 0 0 26px #E10600; }
   }
 
   /* ---- Variante roja/morada neón para los botones del generador
