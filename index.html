@@ -107,6 +107,68 @@
     margin: 0;
     animation: panelAuraPulso 4s ease-in-out infinite, panelFlotarNotorio 5s ease-in-out infinite;
   }
+
+  /* ---- Soporte por Telegram (Fase 1) ---- */
+  .soporte-telegram-box {
+    margin-top: 18px;
+    text-align: center;
+  }
+  .soporte-telegram-texto {
+    font-size: 13px;
+    color: #FF1414;
+    line-height: 1.5;
+    margin-bottom: 6px;
+    animation: textoNeonRojo 2.6s ease-in-out infinite, textoFlotaSuave 3.6s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite;
+  }
+  @keyframes textoNeonRojo {
+    0%, 100% {
+      text-shadow: 0 0 4px #FFFFFF, 0 0 8px #FFFFFF, 0 0 14px #FF1414;
+    }
+    50% {
+      text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px #FF1414, 0 0 42px #FF1414;
+    }
+  }
+  @keyframes textoFlotaSuave {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+  }
+  @keyframes textoParpadeo {
+    0%, 92%, 100% { opacity: 1; }
+    95%           { opacity: 0.55; }
+  }
+  .soporte-telegram-manita {
+    font-size: 20px;
+    animation: manitaRebote 1.4s ease-in-out infinite;
+    margin-bottom: 4px;
+  }
+  @keyframes manitaRebote {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(6px); }
+  }
+  .soporte-telegram-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    color: #29A9EA;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(41,169,234,0.6);
+    font-size: 24px;
+    text-decoration: none;
+    filter: drop-shadow(0 0 4px rgba(41,169,234,0.6));
+    transition: transform .2s, filter .2s;
+    animation: telegramNeon 2.6s ease-in-out infinite;
+  }
+  .soporte-telegram-link:hover, .soporte-telegram-link:active {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 12px #29A9EA);
+  }
+  @keyframes telegramNeon {
+    0%, 100% { box-shadow: 0 0 6px rgba(41,169,234,0.35); }
+    50%      { box-shadow: 0 0 16px rgba(41,169,234,0.65); }
+  }
   @keyframes panelFlotarNotorio {
     0%, 100%  { transform: translateY(0) rotate(0deg); }
     50%       { transform: translateY(-10px) rotate(-0.4deg); }
@@ -1009,6 +1071,13 @@
       <div class="slider-mango"><i class="fa-solid fa-chevron-right"></i></div>
     </div>
     <div id="candado-error">Contraseña incorrecta, intenta de nuevo.</div>
+    <div class="soporte-telegram-box">
+      <div class="soporte-telegram-texto">¿Dudas o soporte? Contáctanos<br>⚙️👹👺🇦🇱</div>
+      <div class="soporte-telegram-manita">👇</div>
+      <a href="https://t.me/SensiArabeVip?text=Hola%20bro%20%F0%9F%91%B9%20Info%20para%20obtener%20la%20contrase%C3%B1a%20VIP%20del%20Generador%20Sensi%20%C3%81rabe%20Oficial%20S%3A.S%3A.VI-66%20%E2%9A%99%EF%B8%8F%F0%9F%91%BA%F0%9F%87%A6%F0%9F%87%B1%F0%9F%94%A5" target="_blank" rel="noopener" class="soporte-telegram-link" aria-label="Contactar por Telegram">
+        <i class="fa-brands fa-telegram"></i>
+      </a>
+    </div>
   </div>
 </div>
 
