@@ -183,7 +183,7 @@
     margin-top: 4px;
   }
   .oculto {
-    display: none;
+    display: none !important;
   }
 
   /* ---- Variante roja/morada neón para los botones del generador
@@ -1077,16 +1077,6 @@
   </div>
 </div>
 
-<script>
-  // ---- DEBUG TEMPORAL: muestra cualquier error en una alerta ----
-  // (quitar este bloque una vez resuelto el problema)
-  window.addEventListener("error", (e) => {
-    alert("ERROR DETECTADO:\n" + (e.message || e) + "\nArchivo: " + (e.filename || "?") + " línea " + (e.lineno || "?"));
-  });
-  window.addEventListener("unhandledrejection", (e) => {
-    alert("ERROR (promesa):\n" + (e.reason && e.reason.message ? e.reason.message : e.reason));
-  });
-</script>
 <script src="calculo-boton.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script type="module">
@@ -1145,13 +1135,10 @@
     contenidoGenerador.classList.remove("oculto");
   }
 
-  // Si ya se desbloqueó en esta misma sesión del navegador, se salta
-  // solo el candado (ya no hace falta volver a poner la contraseña),
-  // pero SIEMPRE se muestra la fase 2 (bienvenida) antes de entrar
-  // al generador, para respetar el orden de las 3 fases.
-  if (sessionStorage.getItem("accesoOk") === "1") {
-    mostrarBienvenida();
-  }
+  // La fase 1 (candado) pide la contraseña SIEMPRE, sin excepción,
+  // aunque el navegador recuerde una sesión anterior. Por eso aquí
+  // no hay ningún salto automático: la página siempre arranca
+  // mostrando el candado.
 
   // Quita espacios y también caracteres invisibles de control de
   // dirección de texto (RLM/LRM/ALM, marcas bidi, etc.) que algunos
@@ -1174,7 +1161,6 @@
       const cfgDoc = await getDoc(doc(db, "config", "acceso"));
       const passwordReal = limpiarTexto(cfgDoc.exists() ? cfgDoc.data().password : "666");
       if (intento === passwordReal) {
-        sessionStorage.setItem("accesoOk", "1");
         mostrarBienvenida();
       } else {
         candadoError.style.display = "block";
