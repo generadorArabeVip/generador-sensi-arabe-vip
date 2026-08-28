@@ -119,10 +119,33 @@
     background: #111111;
     color: #F1F1F1;
     font-family: inherit;
+    transition: border-color .25s ease, box-shadow .25s ease, color .25s ease;
   }
   textarea {
     resize: vertical;
     min-height: 70px;
+  }
+
+  /* ---- Estado de los selects: sin elegir vs. ya seleccionado ---- */
+  select.sin-elegir {
+    border: 1px solid #3A3A3A;
+    background: #1A1A1A;
+    color: #7A7A7A;
+    box-shadow: none;
+  }
+  select.elegido {
+    border: 1px solid #E10600;
+    color: #FF3366;
+    box-shadow: 0 0 8px rgba(225,6,0,0.65), 0 0 18px rgba(176,38,255,0.45), inset 0 0 6px rgba(225,6,0,0.25);
+    animation: pulsoNeonSelect 1.8s ease-in-out infinite;
+  }
+  @keyframes pulsoNeonSelect {
+    0%, 100% { box-shadow: 0 0 8px rgba(225,6,0,0.55), 0 0 18px rgba(176,38,255,0.35), inset 0 0 6px rgba(225,6,0,0.2); }
+    50%      { box-shadow: 0 0 14px rgba(225,6,0,0.9), 0 0 28px rgba(176,38,255,0.6), inset 0 0 10px rgba(225,6,0,0.35); }
+  }
+  select.elegido option {
+    color: #F1F1F1;
+    background: #111111;
   }
 
   .card {
@@ -159,6 +182,46 @@
   }
   .oculto {
     display: none;
+  }
+
+  /* ---- Variante roja/morada neón para los botones del generador
+     (se activan/aparecen conforme avanzas seleccionando) ---- */
+  button.btn-rojo-neon {
+    background: linear-gradient(90deg, #7A0000, #E10600, #FF3366, #E10600, #7A0000);
+    color: #F1F1F1;
+    text-shadow: 0 0 6px rgba(0,0,0,0.5);
+    animation: pulsoBotonRojo 1.6s ease-in-out infinite;
+  }
+  @keyframes pulsoBotonRojo {
+    0%, 100% { box-shadow: 0 0 8px rgba(225,6,0,0.55), 0 0 16px rgba(176,38,255,0.3); }
+    50%      { box-shadow: 0 0 20px rgba(225,6,0,0.95), 0 0 36px rgba(176,38,255,0.6); }
+  }
+  button.btn-rojo-neon::before {
+    background: conic-gradient(
+      from 0deg,
+      transparent 0%,
+      transparent 78%,
+      #FF3366 86%,
+      #B026FF 92%,
+      transparent 98%
+    );
+  }
+
+  /* ---- Variante morada neón (ej. Regenerar sensibilidad) ---- */
+  button.btn-morado-neon {
+    background: linear-gradient(90deg, #3D0066, #B026FF, #E48EFF, #B026FF, #3D0066);
+    color: #F1F1F1;
+    text-shadow: 0 0 6px rgba(0,0,0,0.5);
+  }
+  button.btn-morado-neon::before {
+    background: conic-gradient(
+      from 0deg,
+      transparent 0%,
+      transparent 78%,
+      #E48EFF 86%,
+      #B026FF 92%,
+      transparent 98%
+    );
   }
 
   /* ---- Botones con borde neón giratorio ---- */
@@ -334,6 +397,69 @@
   #candado-overlay button {
     max-width: 300px;
   }
+
+  /* ---- Deslizador "Entrar" (slide to unlock) — reutilizable ---- */
+  .slider-desliza {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    height: 52px;
+    border-radius: 26px;
+    background: #1A1A1A;
+    border: 1px solid #3A3A3A;
+    margin-top: 4px;
+    overflow: hidden;
+    user-select: none;
+    touch-action: none;
+  }
+  .slider-relleno {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 52px;
+    background: linear-gradient(90deg, #7A0000, #E10600);
+    box-shadow: 0 0 14px rgba(225,6,0,0.7);
+    transition: width .05s linear;
+  }
+  .slider-texto {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7A7A7A;
+    font-size: 14px;
+    letter-spacing: 1px;
+    pointer-events: none;
+    transition: color .2s ease;
+    text-align: center;
+    padding: 0 60px;
+  }
+  .slider-desliza.deslizando .slider-texto,
+  .slider-desliza.completo .slider-texto {
+    color: #FF3366;
+    text-shadow: 0 0 8px rgba(225,6,0,0.6);
+  }
+  .slider-mango {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #111111;
+    border: 1px solid #E10600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #E10600;
+    font-size: 18px;
+    cursor: grab;
+    box-shadow: 0 0 10px rgba(225,6,0,0.6);
+  }
+  .slider-desliza.completo .slider-mango {
+    box-shadow: 0 0 18px rgba(225,6,0,0.95), 0 0 30px rgba(176,38,255,0.6);
+  }
   #candado-error {
     color: #E10600;
     font-size: 13px;
@@ -360,6 +486,171 @@
     text-shadow: 0 0 6px #8C6A16;
     margin-bottom: 10px;
   }
+
+  /* ---- Pantalla de bienvenida (después de acertar la contraseña) ---- */
+  #bienvenida-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 24px;
+    text-align: center;
+    overflow-y: auto;
+  }
+  #bienvenida-video-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  #bienvenida-overlay-oscuro {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(5,5,5,0.80), rgba(26,0,0,0.85), rgba(5,5,5,0.92));
+    z-index: 1;
+  }
+  #bienvenida-overlay > *:not(#bienvenida-video-bg):not(#bienvenida-overlay-oscuro) {
+    position: relative;
+    z-index: 2;
+  }
+  #bienvenida-overlay .logo {
+    max-width: 120px;
+    margin-bottom: 14px;
+  }
+  .bienvenida-titulo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #E10600;
+    text-shadow: 0 0 10px rgba(225,6,0,0.7), 0 0 22px rgba(176,38,255,0.4);
+    margin-bottom: 14px;
+    animation: pulsoTituloBienvenida 1.6s ease-in-out infinite;
+  }
+  @keyframes pulsoTituloBienvenida {
+    0%, 100% { text-shadow: 0 0 8px rgba(225,6,0,0.6), 0 0 16px rgba(176,38,255,0.35); }
+    50%      { text-shadow: 0 0 16px rgba(225,6,0,1), 0 0 32px rgba(176,38,255,0.7); }
+  }
+  .bienvenida-linea {
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 380px;
+    color: #F1F1F1;
+    margin-bottom: 16px;
+  }
+  .bienvenida-morado {
+    color: #B026FF;
+    text-shadow: 0 0 8px rgba(176,38,255,0.6);
+  }
+  .bienvenida-sello {
+    color: #D4AF37;
+    letter-spacing: 3px;
+    font-size: 13px;
+    text-shadow: 0 0 6px #8C6A16;
+    margin-bottom: 22px;
+  }
+
+  /* ---- Leyenda larga de la bienvenida (segunda fase) ---- */
+  .bienvenida-leyenda {
+    text-align: left;
+    max-width: 420px;
+    width: 100%;
+    margin: 6px 0 20px 0;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: #E8E8E8;
+  }
+  .bienvenida-leyenda h2 {
+    font-size: 15px;
+    color: #E10600;
+    text-shadow: 0 0 8px rgba(225,6,0,0.6);
+    margin: 20px 0 8px 0;
+    text-align: center;
+  }
+  .bienvenida-leyenda ul {
+    margin: 8px 0;
+    padding-left: 18px;
+  }
+  .bienvenida-leyenda li {
+    margin-bottom: 8px;
+  }
+  .bienvenida-leyenda .leyenda-cierre {
+    text-align: center;
+    color: #E10600;
+    text-shadow: 0 0 8px rgba(225,6,0,0.6);
+    margin-top: 18px;
+  }
+  .bienvenida-leyenda .leyenda-cierre strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ---- Letrero de neón: parpadeo + colores variados en las letras ----
+     Se aplica por posición (nth-of-type) para no tener que tocar el
+     texto en el HTML. Cada título/palabra resaltada queda con su
+     propio color de tubo de neón y su propio parpadeo. */
+  @keyframes parpadeoNeon {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0.35; }
+  }
+  .bienvenida-leyenda h2,
+  .bienvenida-leyenda strong,
+  .bienvenida-leyenda .leyenda-cierre strong {
+    color: #0A0A0A;
+    animation: parpadeoNeon 3s infinite;
+  }
+  /* Títulos (h2): alternan rojo / azul neón */
+  .bienvenida-leyenda h2:nth-of-type(odd) {
+    text-shadow: 0 0 4px #FF3B3B, 0 0 10px #E10600, 0 0 22px #E10600, 0 0 34px #E10600;
+    animation-duration: 2.4s;
+  }
+  .bienvenida-leyenda h2:nth-of-type(even) {
+    text-shadow: 0 0 4px #6FE0FF, 0 0 10px #00AEEF, 0 0 22px #00AEEF, 0 0 34px #00AEEF;
+    animation-duration: 2.9s;
+  }
+  /* Palabras en negrita dentro de párrafos: alternan blanco / morado */
+  .bienvenida-leyenda p strong:nth-of-type(odd) {
+    text-shadow: 0 0 3px #FFFFFF, 0 0 8px #FFFFFF, 0 0 18px #FFFFFF;
+    animation-duration: 3.4s;
+  }
+  .bienvenida-leyenda p strong:nth-of-type(even) {
+    text-shadow: 0 0 3px #E48EFF, 0 0 8px #B026FF, 0 0 18px #B026FF;
+    animation-duration: 2.7s;
+  }
+  /* Puntos de la lista: alternan morado / blanco en su negrita */
+  .bienvenida-leyenda li:nth-of-type(odd) strong {
+    text-shadow: 0 0 3px #E48EFF, 0 0 8px #B026FF, 0 0 18px #B026FF;
+    animation-duration: 2.6s;
+  }
+  .bienvenida-leyenda li:nth-of-type(even) strong {
+    text-shadow: 0 0 3px #FFFFFF, 0 0 8px #FFFFFF, 0 0 18px #FFFFFF;
+    animation-duration: 3.1s;
+  }
+  /* Bloque final: rojo / azul / morado */
+  .bienvenida-leyenda .leyenda-cierre strong:nth-of-type(1) {
+    text-shadow: 0 0 4px #FF3B3B, 0 0 10px #E10600, 0 0 24px #E10600;
+    animation-duration: 2.3s;
+  }
+  .bienvenida-leyenda .leyenda-cierre strong:nth-of-type(2) {
+    text-shadow: 0 0 4px #6FE0FF, 0 0 10px #00AEEF, 0 0 24px #00AEEF;
+    animation-duration: 2.8s;
+  }
+  .bienvenida-leyenda .leyenda-cierre strong:nth-of-type(3) {
+    text-shadow: 0 0 4px #E48EFF, 0 0 10px #B026FF, 0 0 24px #B026FF;
+    animation-duration: 3.2s;
+  }
+  /* Texto en árabe: tubo de neón morado/blanco combinado */
+  .bienvenida-leyenda .leyenda-arabe {
+    color: #0A0A0A;
+    text-shadow: 0 0 3px #FFFFFF, 0 0 8px #B026FF, 0 0 20px #B026FF;
+    animation: parpadeoNeon 3.6s infinite;
+  }
 </style>
 </head>
 <body>
@@ -375,8 +666,88 @@
   <div class="marca-sello candado-marca">S:.S:.VI-66</div>
   <div class="candado-label">PASSWORD</div>
   <input type="text" id="input-candado" placeholder="Escribe la contraseña" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
-  <button id="btn-candado">Entrar</button>
+  <button id="btn-candado" class="oculto">Entrar</button>
+  <div id="slider-candado" class="slider-desliza">
+    <div class="slider-relleno"></div>
+    <div class="slider-texto">DESLIZA PARA ENTRAR »</div>
+    <div class="slider-mango"><i class="fa-solid fa-chevron-right"></i></div>
+  </div>
   <div id="candado-error">Contraseña incorrecta, intenta de nuevo.</div>
+</div>
+
+<!-- ================= BIENVENIDA (después de acertar la contraseña) =================
+     Video de fondo: por ahora usa el mismo que el candado; en cuanto
+     Video de fondo: Video_segunda_interfaz.mp4 -->
+<div id="bienvenida-overlay" class="oculto">
+  <video id="bienvenida-video-bg" autoplay muted loop playsinline>
+    <source src="Video_segunda_interfaz.mp4" type="video/mp4">
+  </video>
+  <div id="bienvenida-overlay-oscuro"></div>
+  <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
+  <div class="bienvenida-titulo">🩸🎯 BIENVENIDO A SENSI ÁRABE VIP 🎯🩸</div>
+  <div class="bienvenida-linea">
+    👺 Si has entrado aquí es porque eres diferente al resto...<br><br>
+    🔥 Aquí no vienes a probar suerte…<br>
+    vienes a buscar la configuración que te haga jugar diferente.
+    Y a destacar ☝️⚙️📱👺
+  </div>
+  <div class="bienvenida-linea">
+    👑 <span class="bienvenida-morado">GENERADOR OFICIAL</span><br>
+    🎯 SENSIBILIDADES<br>
+    👹👺 Android &amp; IOS<br>
+    ⚡ CONFIGURACIONES<br>
+    ⚙️📱🇦🇱 AJUSTES VIP<br>
+    <span class="bienvenida-morado">الأفضل — LOS MEJORES</span>
+  </div>
+  <div class="bienvenida-linea">
+    🔐 Acceso exclusivo para quienes buscan llevar tu juego al siguiente nivel.
+  </div>
+
+  <div class="bienvenida-leyenda">
+    <h2>👹🎯 S:.S:.VI-66 - MENÚ &amp; GENERADOR OFICIAL 🇦🇱💀</h2>
+    <p class="leyenda-arabe" style="text-align:center;">نحن الأفضل - NOSOTROS SOMOS LOS MEJORES 🔥</p>
+
+    <h2>🔥 S:.S:.VI-66 - NO ES PARA TODOS ⚙️</h2>
+    <p><strong>S:.S:.VI-66</strong> 💀 no es una marca cualquiera. Es la marca que usan solo las personas que quieren destacar y no ser del montón. 👺</p>
+    <p><strong class="leyenda-arabe">نحن الأفضل</strong> - No lo decimos nosotros, lo demuestra nuestra experiencia. 📱🎯</p>
+
+    <h2>⚙️ 9 AÑOS DE EXPERIENCIA NOS AVALAN 👹</h2>
+    <p>Nos avalan <strong>más de 9 años de experiencia en Free Fire</strong>. 📱 Desde el inicio hasta hoy. 🇦🇱</p>
+    <p>Por eso podemos decir con orgullo: <strong class="leyenda-arabe">نحن الأفضل</strong> 💀 Porque nuestro desarrollo no es copia, es hecho por nosotros desde cero. ⚙️</p>
+
+    <h2>📱 MENÚ S:.S:.VI-66 - OPTIMIZACIÓN REAL 💀</h2>
+    <p>Nuestro <strong>Menú S:.S:.VI-66</strong> 🇦🇱 es más que una sensi, es un complemento completo modulado para que <strong>solo afecte cuando juegas</strong>. 👹</p>
+    <p><strong>¿Qué trae? 👺</strong></p>
+    <ul>
+      <li><strong>📱 DNS Mejorado para Juegos:</strong> Optimizamos tu DNS para menos lag y conexión más estable. 🇦🇱</li>
+      <li><strong>⚙️ Optimización Táctil del Sistema:</strong> Respuesta más rápida. 🔥</li>
+      <li><strong>🎯 Sensibilidades Rápidas y Bien Hechas:</strong> Usualmente damos sensis rápidas que levantan mira y pegan rojo más fácil, calibradas según tu teléfono. 💀</li>
+      <li><strong>🔥 Módulo Inteligente:</strong> Solo afecta cuando juegas, no es permanente. 📱</li>
+      <li><strong>👺 نحن الأفضل:</strong> Porque todo está relacionado 100% a tu modelo, no son números al azar.</li>
+    </ul>
+
+    <h2>📱 COMPATIBILIDAD OFICIAL S:.S:.VI-66 ⚙️</h2>
+    <p><strong>👹 MENÚ S:.S:.VI-66:</strong> Solamente para <strong>ANDROID</strong> 🇦🇱⚙️ - Trae DNS, sistema, DPI y módulo completo.</p>
+    <p><strong>🎯 GENERADOR S:.S:.VI-66:</strong> Para <strong>ANDROID &amp; iOS</strong> 📱🔥 - Sensi exacta según tu modelo.</p>
+
+    <h2>💀 S:.S:.VI-66 - SOLO PARA LOS QUE DESTACAN 👹</h2>
+    <p>Esta marca no la usa cualquiera. 🇦🇱 <strong>S:.S:.VI-66</strong> es para los que están hartos de ser del montón. 🎯🔥</p>
+    <p>Si quieres ser del montón, hay muchas páginas.<br>
+    Si quieres destacar y ser parte de <strong class="leyenda-arabe">نحن الأفضل</strong>, ya sabes dónde estás. 📱⚙️</p>
+
+    <div class="leyenda-cierre">
+      <strong>👹 S:.S:.VI-66 OFICIAL 🇦🇱</strong>
+      <strong>🎯 نحن الأفضل - 9 AÑOS | DNS | MÓDULO INTELIGENTE | SENSIS RÁPIDAS 💀</strong>
+      <strong>⚙️ الأفضل - LOS QUE DESTACAN 🔥📱</strong>
+    </div>
+  </div>
+
+  <div class="bienvenida-sello">S:.S:.VI-66</div>
+  <div id="slider-bienvenida" class="slider-desliza">
+    <div class="slider-relleno"></div>
+    <div class="slider-texto">INGRESAR AL GENERADOR OFICIAL »</div>
+    <div class="slider-mango"><i class="fa-solid fa-chevron-right"></i></div>
+  </div>
 </div>
 
 <!-- ================= CONTENIDO DEL GENERADOR =================
@@ -411,11 +782,11 @@
     <div class="contador-label">SENSIBILIDADES GENERADAS EN VIVO</div>
   </div>
 
-  <select id="marca">
+  <select id="marca" class="sin-elegir">
     <option value="">Selecciona tu marca</option>
   </select>
 
-  <select id="modelo" class="oculto">
+  <select id="modelo" class="oculto sin-elegir">
     <option value="">Selecciona tu modelo</option>
   </select>
 
@@ -426,7 +797,7 @@
   </div>
 
   <!-- Paso 1 -->
-  <button id="btn-generar-sensibilidad" class="oculto">Generar sensibilidad</button>
+  <button id="btn-generar-sensibilidad" class="oculto btn-rojo-neon">Generar sensibilidad</button>
 
   <div id="resultado" class="oculto">
     <div class="grid">
@@ -461,17 +832,17 @@
       <div class="label" id="v-dpi-rango"></div>
     </div>
 
-    <button id="btn-regenerar" style="background: linear-gradient(90deg, #686868, #A6A6A6, #686868); color:#050505;">🔄 Regenerar sensibilidad</button>
+    <button id="btn-regenerar" class="btn-morado-neon">🔄 Regenerar sensibilidad</button>
 
     <!-- Paso 2 -->
-    <button id="btn-disparo" class="oculto">Generar botón de disparo</button>
+    <button id="btn-disparo" class="oculto btn-rojo-neon">Generar botón de disparo</button>
     <div class="card oculto" id="card-boton">
       <div class="label">🎯 Botón de Disparo</div>
       <div class="valor" style="color:#E10600;" id="v-boton"></div>
     </div>
 
     <!-- Paso 3 -->
-    <button id="btn-ajustes-internos" class="oculto">Generar ajustes internos</button>
+    <button id="btn-ajustes-internos" class="oculto btn-rojo-neon">Generar ajustes internos</button>
   </div>
 
   <!-- Resultado fijo del paso 3 -->
@@ -648,13 +1019,27 @@
   const inputCandado = document.getElementById("input-candado");
   const btnCandado = document.getElementById("btn-candado");
   const candadoError = document.getElementById("candado-error");
+  const bienvenidaOverlay = document.getElementById("bienvenida-overlay");
   const contenidoGenerador = document.getElementById("contenido-generador");
+
+  // Tras acertar la contraseña, en vez de entrar directo al generador
+  // se muestra la pantalla de bienvenida. Esta se muestra cada vez que
+  // se vuelve a escribir la contraseña correctamente (por ejemplo, en
+  // una nueva sesión del navegador).
+  function mostrarBienvenida() {
+    candadoOverlay.classList.add("oculto");
+    bienvenidaOverlay.classList.remove("oculto");
+  }
 
   function desbloquear() {
     candadoOverlay.classList.add("oculto");
+    bienvenidaOverlay.classList.add("oculto");
     contenidoGenerador.classList.remove("oculto");
   }
 
+  // Si ya se desbloqueó en esta misma sesión del navegador, se entra
+  // directo al generador (sin repetir candado ni bienvenida) para no
+  // ser molesto en cada recarga de la página.
   if (sessionStorage.getItem("accesoOk") === "1") {
     desbloquear();
   }
@@ -681,7 +1066,7 @@
       const passwordReal = limpiarTexto(cfgDoc.exists() ? cfgDoc.data().password : "666");
       if (intento === passwordReal) {
         sessionStorage.setItem("accesoOk", "1");
-        desbloquear();
+        mostrarBienvenida();
       } else {
         candadoError.style.display = "block";
       }
@@ -692,6 +1077,87 @@
   });
   inputCandado.addEventListener("keydown", (e) => {
     if (e.key === "Enter") btnCandado.click();
+  });
+
+  /* ---- Deslizadores tipo "slide to unlock" (reutilizable) ----
+     Se usa para el candado (valida la contraseña) y para la
+     bienvenida (entra directo al generador). */
+  function crearSlider(contenedor, alCompletar) {
+    const relleno = contenedor.querySelector(".slider-relleno");
+    const mango = contenedor.querySelector(".slider-mango");
+    const anchoMango = 52;
+    let arrastrando = false;
+
+    function limitePista() {
+      return contenedor.clientWidth - anchoMango;
+    }
+
+    function moverMango(x) {
+      const limite = limitePista();
+      const clamped = Math.max(0, Math.min(x, limite));
+      mango.style.left = clamped + "px";
+      relleno.style.width = (clamped + anchoMango) + "px";
+      const completo = clamped >= limite - 2;
+      contenedor.classList.toggle("completo", completo);
+      return completo;
+    }
+
+    function resetear() {
+      mango.style.left = "2px";
+      relleno.style.width = anchoMango + "px";
+      contenedor.classList.remove("deslizando", "completo");
+    }
+
+    function xDesdeEvento(e) {
+      const rect = contenedor.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      return clientX - rect.left - anchoMango / 2;
+    }
+
+    function empezar(e) {
+      arrastrando = true;
+      contenedor.classList.add("deslizando");
+      e.preventDefault();
+    }
+
+    function mover(e) {
+      if (!arrastrando) return;
+      moverMango(xDesdeEvento(e));
+    }
+
+    function terminar() {
+      if (!arrastrando) return;
+      arrastrando = false;
+      const completo = contenedor.classList.contains("completo");
+      if (completo) {
+        alCompletar(resetear);
+      } else {
+        resetear();
+      }
+    }
+
+    mango.addEventListener("mousedown", empezar);
+    mango.addEventListener("touchstart", empezar, { passive: false });
+    window.addEventListener("mousemove", mover);
+    window.addEventListener("touchmove", mover, { passive: false });
+    window.addEventListener("mouseup", terminar);
+    window.addEventListener("touchend", terminar);
+
+    return { resetear };
+  }
+
+  // Slider del candado: al completarlo, valida la contraseña.
+  // Si resultó incorrecta, el slider vuelve a su lugar para reintentar.
+  crearSlider(document.getElementById("slider-candado"), (resetear) => {
+    btnCandado.click();
+    setTimeout(() => {
+      if (candadoError.style.display === "block") resetear();
+    }, 50);
+  });
+
+  // Slider de la bienvenida: al completarlo, entra directo al generador.
+  crearSlider(document.getElementById("slider-bienvenida"), () => {
+    desbloquear();
   });
 
   /* ================= CONTADOR EN TIEMPO REAL ================= */
@@ -802,19 +1268,34 @@
     btnAjustes.classList.add("oculto");
   }
 
+  function actualizarEstiloSelect(select) {
+    if (select.value) {
+      select.classList.remove("sin-elegir");
+      select.classList.add("elegido");
+    } else {
+      select.classList.remove("elegido");
+      select.classList.add("sin-elegir");
+    }
+  }
+
   marcaSelect.addEventListener("change", () => {
     ocultarTodoElFlujo();
     modeloActual = null;
+    actualizarEstiloSelect(marcaSelect);
     if (marcaSelect.value) {
       cargarModelos(marcaSelect.value);
     } else {
       modeloSelect.classList.add("oculto");
     }
+    // Al cambiar de marca, el modelo vuelve a quedar sin elegir.
+    modeloSelect.value = "";
+    actualizarEstiloSelect(modeloSelect);
   });
 
   modeloSelect.addEventListener("change", async () => {
     ocultarTodoElFlujo();
     modeloActual = null;
+    actualizarEstiloSelect(modeloSelect);
     if (!modeloSelect.value) return;
 
     const marcaDoc = await getDoc(doc(db, "sensibilidades", marcaSelect.value));
