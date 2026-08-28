@@ -324,9 +324,13 @@
     line-height: 1.5;
     max-width: 340px;
     margin-bottom: 6px;
+    color: #E10600;
+    text-shadow: 0 0 8px rgba(225,6,0,0.55);
   }
   .candado-marca {
     margin-bottom: 22px;
+    color: #B026FF;
+    text-shadow: 0 0 8px rgba(176,38,255,0.55);
   }
   .candado-label {
     color: #D4AF37;
@@ -345,7 +349,7 @@
   <h1 class="candado-titulo">⚙️📱👹 SENSI ÁRABE VIP يهيم<br>LAS MEJORES SETTINGS INTERNAS DE SENSIBILIDY<br>SOLO CON NOSOTROS</h1>
   <div class="marca-sello candado-marca">S:.S:.VI-66</div>
   <div class="candado-label">PASSWORD</div>
-  <input type="password" id="input-candado" placeholder="Escribe la contraseña">
+  <input type="password" id="input-candado" placeholder="Escribe la contraseña" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
   <button id="btn-candado">Entrar</button>
   <div id="candado-error">Contraseña incorrecta, intenta de nuevo.</div>
 </div>
@@ -368,9 +372,8 @@
       Generador Oficial<br>
       Sensi Árabe Vip<br>
       <span style="color:#E10600">الأفضل</span><br>
-      <span style="color:#E10600">6</span> <span style="color:#E10600">6</span> <span style="color:#E10600">6</span><br>
-    $
-  </h1>
+      <span style="color:#E10600">6</span> <span style="color:#E10600">6</span> <span style="color:#E10600">6</span>
+    </h1>
 
   <div class="redes-bar">
     <a href="https://www.instagram.com/sensiarabevip?igsi=MzRlODBiNWFlZA==" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
@@ -573,8 +576,14 @@
 <script src="calculo-boton.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script type="module">
-  Telegram.WebApp.ready();
-  Telegram.WebApp.expand();
+  try {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+  } catch (e) {
+    console.warn("Telegram WebApp no disponible:", e);
+  }
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import {
@@ -598,7 +607,7 @@
      Contraseña guardada en Firestore: colección "config",
      documento "acceso", campo "password".
      Si el documento no existe todavía, se usa un valor por
-     defecto ("sensiarabevip") para no dejar la web sin acceso.
+     defecto ("666") para no dejar la web sin acceso.
   */
   const candadoOverlay = document.getElementById("candado-overlay");
   const inputCandado = document.getElementById("input-candado");
@@ -615,11 +624,22 @@
     desbloquear();
   }
 
+  // Quita espacios y también caracteres invisibles de control de
+  // dirección de texto (RLM/LRM/ALM, marcas bidi, etc.) que algunos
+  // teclados móviles insertan solos al escribir en árabe, y que antes
+  // hacían que la contraseña "correcta" nunca coincidiera.
+  function limpiarTexto(str) {
+    return str
+      .normalize("NFC")
+      .replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\u061C]/g, "")
+      .trim();
+  }
+
   btnCandado.addEventListener("click", async () => {
-    const intento = inputCandado.value.trim();
+    const intento = limpiarTexto(inputCandado.value);
     try {
       const cfgDoc = await getDoc(doc(db, "config", "acceso"));
-      const passwordReal = cfgDoc.exists() ? cfgDoc.data().password : "sensiarabevip";
+      const passwordReal = limpiarTexto(cfgDoc.exists() ? cfgDoc.data().password : "666");
       if (intento === passwordReal) {
         sessionStorage.setItem("accesoOk", "1");
         desbloquear();
