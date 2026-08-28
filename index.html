@@ -4,20 +4,67 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generador Oficial - Sensi Árabe Vip</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-  body {
+  * { box-sizing: border-box; }
+  html, body {
     margin: 0;
-    padding: 20px;
-    background: linear-gradient(180deg, #050505, #1a0000, #050505);
+    padding: 0;
+    min-height: 100vh;
+    background: #050505;
     color: #F1F1F1;
     font-family: sans-serif;
   }
+
+  /* ---- Video de fondo ---- */
+  #video-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -2;
+  }
+  .overlay-oscuro {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(5,5,5,0.80), rgba(26,0,0,0.85), rgba(5,5,5,0.92));
+    z-index: -1;
+  }
+
+  /* ---- Panel flotante ---- */
+  .panel {
+    max-width: 480px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(8,8,8,0.88);
+    border: 1px solid #8C6A16;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(225,6,0,0.18), 0 0 60px rgba(0,0,0,0.6);
+  }
+
   .logo {
     display: block;
     margin: 0 auto 10px auto;
     max-width: 160px;
     width: 100%;
+    /* Truco para "quitar" un fondo negro sólido del PNG: con screen,
+       los pixeles negros se funden con el fondo oscuro y quedan
+       invisibles, sin tocar el archivo original. */
+    mix-blend-mode: screen;
+    animation: logoSpin3D 9s linear infinite, logoNeon 3s ease-in-out infinite;
   }
+  @keyframes logoSpin3D {
+    0%   { transform: perspective(700px) rotateY(0deg); }
+    100% { transform: perspective(700px) rotateY(360deg); }
+  }
+  @keyframes logoNeon {
+    0%, 100% { filter: drop-shadow(0 0 6px #8C6A16) drop-shadow(0 0 2px #D4AF37); }
+    50%      { filter: drop-shadow(0 0 20px #E10600) drop-shadow(0 0 8px #F5D76E); }
+  }
+
   h1 {
     text-align: center;
     font-size: 20px;
@@ -25,13 +72,44 @@
     color: #D4AF37;
     text-shadow: 0 0 8px #8C6A16;
   }
-  .redes {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #A6A6A6;
-    font-size: 14px;
+
+  /* ---- Barra de redes ---- */
+  .redes-bar {
+    display: flex;
+    justify-content: center;
+    gap: 26px;
+    margin: 8px 0 18px 0;
   }
-  select {
+  .redes-bar a {
+    color: #D4AF37;
+    font-size: 26px;
+    text-decoration: none;
+    filter: drop-shadow(0 0 4px #8C6A16);
+    transition: filter .2s, transform .2s;
+  }
+  .redes-bar a:hover, .redes-bar a:active {
+    filter: drop-shadow(0 0 14px #E10600);
+    transform: scale(1.18);
+  }
+
+  /* ---- Contador en tiempo real ---- */
+  .contador-box {
+    text-align: center;
+    margin: 4px 0 18px 0;
+  }
+  .contador-numero {
+    font-size: 26px;
+    font-weight: bold;
+    color: #F5D76E;
+    text-shadow: 0 0 10px #E10600;
+  }
+  .contador-label {
+    font-size: 11px;
+    color: #A6A6A6;
+    letter-spacing: 1px;
+  }
+
+  select, textarea {
     width: 100%;
     padding: 12px;
     margin-bottom: 16px;
@@ -40,13 +118,24 @@
     font-size: 16px;
     background: #111111;
     color: #F1F1F1;
+    font-family: inherit;
   }
+  textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+
   .card {
     background: #111111;
     border: 1px solid #686868;
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 12px;
+    animation: cardIn .4s ease;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .grid {
     display: grid;
@@ -62,10 +151,19 @@
     font-size: 12px;
     color: #A6A6A6;
   }
+  .nota {
+    font-size: 11px;
+    color: #686868;
+    font-style: italic;
+    margin-top: 4px;
+  }
   .oculto {
     display: none;
   }
+
+  /* ---- Botones con borde neón giratorio ---- */
   button {
+    position: relative;
     width: 100%;
     padding: 14px;
     border: none;
@@ -75,80 +173,401 @@
     font-weight: bold;
     font-size: 16px;
     margin-top: 10px;
+    cursor: pointer;
+    transition: transform .12s ease, filter .12s ease;
   }
+  button:active {
+    transform: scale(0.96);
+    filter: brightness(1.25);
+  }
+  button::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 10px;
+    padding: 2px;
+    /* Un solo tramo brillante (la "cometa") que recorre el borde,
+       el resto del contorno queda transparente/tenue. */
+    background: conic-gradient(
+      from 0deg,
+      transparent 0%,
+      transparent 78%,
+      #F5D76E 86%,
+      #E10600 92%,
+      transparent 98%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: girarNeon 2.2s linear infinite;
+    z-index: -1;
+  }
+  @keyframes girarNeon {
+    to { transform: rotate(360deg); }
+  }
+
   .frase-final {
     text-align: center;
     color: #E10600;
     margin-top: 30px;
     font-size: 16px;
   }
+  .marca-sello {
+    text-align: center;
+    color: #D4AF37;
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-top: 8px;
+    text-shadow: 0 0 6px #8C6A16;
+  }
+  .titulo-seccion {
+    text-align: center;
+    font-size: 18px;
+    color: #D4AF37;
+    text-shadow: 0 0 6px #8C6A16;
+    margin: 24px 0 14px 0;
+  }
+
+  /* ---- Loader premium ---- */
+  .loader {
+    text-align: center;
+    margin: 16px 0;
+  }
+  .loader-texto {
+    color: #F5D76E;
+    font-size: 15px;
+    margin-bottom: 8px;
+    text-shadow: 0 0 8px #8C6A16;
+  }
+  .loader-barra {
+    width: 100%;
+    height: 8px;
+    border-radius: 6px;
+    background: #111111;
+    border: 1px solid #686868;
+    overflow: hidden;
+  }
+  .loader-barra-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #8C6A16, #D4AF37, #F5D76E, #E10600);
+    box-shadow: 0 0 10px #E10600;
+    transition: width .15s linear;
+  }
+
+  #card-boton {
+    border: 1px solid #E10600 !important;
+    text-align: center;
+  }
+
+  /* ---- Reseñas ---- */
+  .estrellas-select {
+    text-align: center;
+  }
+  .resena-item {
+    background: #111111;
+    border: 1px solid #686868;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .resena-estrellas {
+    color: #F5D76E;
+    font-size: 14px;
+  }
+  .resena-texto {
+    font-size: 13px;
+    color: #F1F1F1;
+    margin-top: 4px;
+  }
+
+  /* ---- Candado de acceso ---- */
+  #candado-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+  }
+  #candado-overlay .logo {
+    max-width: 120px;
+    margin-bottom: 20px;
+  }
+  #candado-overlay input {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px;
+    margin-bottom: 14px;
+    border-radius: 8px;
+    border: 1px solid #8C6A16;
+    background: #111111;
+    color: #F1F1F1;
+    font-size: 16px;
+    text-align: center;
+  }
+  #candado-overlay button {
+    max-width: 300px;
+  }
+  #candado-error {
+    color: #E10600;
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+  }
+  .candado-titulo {
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 340px;
+    margin-bottom: 6px;
+  }
+  .candado-marca {
+    margin-bottom: 22px;
+  }
+  .candado-label {
+    color: #D4AF37;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-shadow: 0 0 6px #8C6A16;
+    margin-bottom: 10px;
+  }
 </style>
 </head>
 <body>
 
-<img src="logo.png" class="logo" alt="Sensi Árabe Vip">
-
-<h1>
-  Generador Oficial<br>
-  Sensi Árabe Vip<br>
-  <span style="color:#E10600">الأفضل</span><br>
-  <span style="color:#E10600">6</span>ㅤ<span style="color:#E10600">6</span>ㅤ<span style="color:#E10600">6</span><br>
-  ㅤჯ
-</h1>
-
-<div class="redes">
-  <div>TT: @sensiarabevip</div>
-  <div>IG: @sensiarabevip</div>
+<!-- ================= CANDADO DE ACCESO ================= -->
+<div id="candado-overlay">
+  <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
+  <h1 class="candado-titulo">⚙️📱👹 SENSI ÁRABE VIP يهيم<br>LAS MEJORES SETTINGS INTERNAS DE SENSIBILIDY<br>SOLO CON NOSOTROS</h1>
+  <div class="marca-sello candado-marca">S:.S:.VI-66</div>
+  <div class="candado-label">PASSWORD</div>
+  <input type="password" id="input-candado" placeholder="Escribe la contraseña">
+  <button id="btn-candado">Entrar</button>
+  <div id="candado-error">Contraseña incorrecta, intenta de nuevo.</div>
 </div>
 
-<select id="marca">
-  <option value="">Selecciona tu marca</option>
-</select>
+<!-- ================= CONTENIDO DEL GENERADOR =================
+     No se muestra (ni el video ni el panel) hasta desbloquear con
+     la contraseña correcta. -->
+<div id="contenido-generador" class="oculto">
 
-<select id="modelo" class="oculto">
-  <option value="">Selecciona tu modelo</option>
-</select>
+  <video id="video-bg" autoplay muted loop playsinline>
+    <source src="Videosensi.mp4" type="video/mp4">
+  </video>
+  <div class="overlay-oscuro"></div>
 
-<div id="resultado" class="oculto">
-  <div class="grid">
-    <div class="card">
-      <div class="label">General</div>
-      <div class="valor" id="v-general"></div>
+  <div class="panel">
+
+    <img src="Logo_sensi.png" class="logo" alt="Sensi Árabe Vip">
+
+    <h1>
+      Generador Oficial<br>
+      Sensi Árabe Vip<br>
+      <span style="color:#E10600">الأفضل</span><br>
+      <span style="color:#E10600">6</span> <span style="color:#E10600">6</span> <span style="color:#E10600">6</span><br>
+    $
+  </h1>
+
+  <div class="redes-bar">
+    <a href="https://www.instagram.com/sensiarabevip?igsi=MzRlODBiNWFlZA==" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
+    <a href="https://www.tiktok.com/@sensiarabevip?_r=1&_t=ZS-99FUHQdshJC" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
+    <a href="https://whatsapp.com/channel/0029VbCsFXAICVfdnm140g03" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i></a>
+  </div>
+
+  <div class="contador-box">
+    <div class="contador-numero" id="contador-numero">0</div>
+    <div class="contador-label">SENSIBILIDADES GENERADAS EN VIVO</div>
+  </div>
+
+  <select id="marca">
+    <option value="">Selecciona tu marca</option>
+  </select>
+
+  <select id="modelo" class="oculto">
+    <option value="">Selecciona tu modelo</option>
+  </select>
+
+  <!-- Loader compartido para los pasos -->
+  <div class="loader oculto" id="loader">
+    <div class="loader-texto">Generando... 0%</div>
+    <div class="loader-barra"><div class="loader-barra-fill"></div></div>
+  </div>
+
+  <!-- Paso 1 -->
+  <button id="btn-generar-sensibilidad" class="oculto">Generar sensibilidad</button>
+
+  <div id="resultado" class="oculto">
+    <div class="grid">
+      <div class="card">
+        <div class="label">General</div>
+        <div class="valor" id="v-general"></div>
+      </div>
+      <div class="card">
+        <div class="label">Mira de Punto Rojo</div>
+        <div class="valor" id="v-puntorojo"></div>
+      </div>
+      <div class="card">
+        <div class="label">Mira 2x</div>
+        <div class="valor" id="v-2x"></div>
+      </div>
+      <div class="card">
+        <div class="label">Mira 4x</div>
+        <div class="valor" id="v-4x"></div>
+      </div>
+      <div class="card">
+        <div class="label">Mira Francotirador</div>
+        <div class="valor" id="v-francotirador"></div>
+      </div>
+      <div class="card">
+        <div class="label">Botón de Cámara 360°</div>
+        <div class="valor" id="v-camara360"></div>
+      </div>
     </div>
-    <div class="card">
-      <div class="label">Mira de Punto Rojo</div>
-      <div class="valor" id="v-puntorojo"></div>
+    <div class="card" id="dpi-card">
+      <div class="label">DPI sugerido</div>
+      <div class="valor" id="v-dpi"></div>
+      <div class="label" id="v-dpi-rango"></div>
     </div>
-    <div class="card">
-      <div class="label">Mira 2x</div>
-      <div class="valor" id="v-2x"></div>
+
+    <button id="btn-regenerar" style="background: linear-gradient(90deg, #686868, #A6A6A6, #686868); color:#050505;">🔄 Regenerar sensibilidad</button>
+
+    <!-- Paso 2 -->
+    <button id="btn-disparo" class="oculto">Generar botón de disparo</button>
+    <div class="card oculto" id="card-boton">
+      <div class="label">🎯 Botón de Disparo</div>
+      <div class="valor" style="color:#E10600;" id="v-boton"></div>
     </div>
-    <div class="card">
-      <div class="label">Mira 4x</div>
-      <div class="valor" id="v-4x"></div>
+
+    <!-- Paso 3 -->
+    <button id="btn-ajustes-internos" class="oculto">Generar ajustes internos</button>
+  </div>
+
+  <!-- Resultado fijo del paso 3 -->
+  <div id="seccion-ajustes-tecnicos" class="oculto">
+
+    <!-- Bloque Android: tabla fija, igual para todos los modelos -->
+    <div id="bloque-ajustes-android" class="oculto">
+      <div class="titulo-seccion">⚙️ Ajustes Técnicos del Sistema</div>
+
+      <div class="label" style="margin-bottom:8px;">OPCIONES DE DESARROLLADOR</div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">DPI (Ancho mínimo)</div>
+          <div class="valor">411 - 500</div>
+          <div class="nota">Ajustes &gt; Sistema &gt; Opciones de Desarrollador</div>
+        </div>
+        <div class="card">
+          <div class="label">Escala de animación de ventana</div>
+          <div class="valor">0.5x</div>
+          <div class="nota">Ajustes &gt; Sistema &gt; Opciones de Desarrollador</div>
+        </div>
+        <div class="card">
+          <div class="label">Escala de animación de transición</div>
+          <div class="valor">0.5x</div>
+          <div class="nota">Ajustes &gt; Sistema &gt; Opciones de Desarrollador</div>
+        </div>
+        <div class="card">
+          <div class="label">Escala de duración del animador</div>
+          <div class="valor">0.5x</div>
+          <div class="nota">Ajustes &gt; Sistema &gt; Opciones de Desarrollador</div>
+        </div>
+      </div>
+
+      <div class="label" style="margin:14px 0 8px 0;">SISTEMA</div>
+      <div class="card">
+        <div class="label">Velocidad del puntero</div>
+        <div class="valor">70%</div>
+        <div class="nota">Ajustes &gt; Sistema &gt; Idioma e Introducción &gt; Velocidad del Puntero</div>
+      </div>
+
+      <div class="label" style="margin:14px 0 8px 0;">ACCESIBILIDAD</div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Tiempo de respuesta táctil</div>
+          <div class="valor">Corto</div>
+          <div class="nota">Ajustes &gt; Accesibilidad</div>
+        </div>
+        <div class="card">
+          <div class="label">Click automático al parar el puntero</div>
+          <div class="valor">Desactivado</div>
+          <div class="nota">Ajustes &gt; Accesibilidad</div>
+        </div>
+      </div>
+
+      <div class="label" style="margin:14px 0 8px 0;">AJUSTES GLOBALES ANDROID</div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Puntero del mouse grande</div>
+          <div class="valor">Activado</div>
+          <div class="nota">Ajustes &gt; Accesibilidad</div>
+        </div>
+        <div class="card">
+          <div class="label">Supresión de respuesta táctil</div>
+          <div class="valor">Nivel medio</div>
+          <div class="nota">Ajustes &gt; Accesibilidad</div>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <div class="label">Mira Francotirador</div>
-      <div class="valor" id="v-francotirador"></div>
+
+    <!-- Bloque iOS: valores por modelo específico -->
+    <div id="bloque-ajustes-ios" class="oculto">
+      <div class="titulo-seccion">⚙️ Ajustes Internos de iOS</div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Velocidad del cursor (DPI interno)</div>
+          <div class="valor" id="v-ios-velocidad"></div>
+        </div>
+        <div class="card">
+          <div class="label">Toque con asistencia (duración)</div>
+          <div class="valor" id="v-ios-toque"></div>
+        </div>
+        <div class="card">
+          <div class="label">Refinamiento de movimiento</div>
+          <div class="valor" id="v-ios-refinamiento"></div>
+        </div>
+        <div class="card">
+          <div class="label">Control por botón (exploración)</div>
+          <div class="valor" id="v-ios-control"></div>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <div class="label">Botón de Cámara 360°</div>
-      <div class="valor" id="v-camara360"></div>
+
+    <div class="titulo-seccion" id="seccion-ff">Configuración sugerida adicional FF</div>
+    <div class="grid">
+      <div class="card">
+        <div class="label">Gráficos</div>
+        <div class="valor">Suaves</div>
+      </div>
+      <div class="card">
+        <div class="label">FPS</div>
+        <div class="valor">Altos</div>
+      </div>
     </div>
   </div>
-  <div class="card">
-    <div class="label">DPI sugerido</div>
-    <div class="valor" id="v-dpi"></div>
-  </div>
-  <button id="btn-disparo">Ver botón de disparo sugerido</button>
-  <div class="card oculto" id="card-boton" style="border: 1px solid #E10600; text-align:center;">
-    <div class="label">🎯 Botón de Disparo</div>
-    <div class="valor" style="color:#E10600;" id="v-boton"></div>
-  </div>
-</div>
 
-<div class="frase-final">
-  الأفضل في التكوينات الداخلية
+  <!-- ================= RESEÑAS ================= -->
+  <div class="titulo-seccion">⭐ Reseñas de la comunidad</div>
+  <div class="estrellas-select">
+    <select id="resena-estrellas">
+      <option value="5">★★★★★ (5)</option>
+      <option value="4">★★★★☆ (4)</option>
+      <option value="3">★★★☆☆ (3)</option>
+    </select>
+  </div>
+  <textarea id="resena-texto" placeholder="Escribe tu opinión sobre el generador..."></textarea>
+  <button id="btn-enviar-resena">Enviar reseña</button>
+  <div id="lista-resenas" style="margin-top:14px;"></div>
+
+  <div class="frase-final">
+    الأفضل في التكوينات الداخلية
+  </div>
+  <div class="marca-sello">S:.S:.VI-66</div>
+
+  </div>
 </div>
 
 <script src="calculo-boton.js"></script>
@@ -158,7 +577,10 @@
   Telegram.WebApp.expand();
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import {
+    getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc,
+    increment, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB3kZdpd-4HO65mePIy93kFTPa3ciKUIDY",
@@ -172,9 +594,118 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  /* ================= CANDADO DE ACCESO =================
+     Contraseña guardada en Firestore: colección "config",
+     documento "acceso", campo "password".
+     Si el documento no existe todavía, se usa un valor por
+     defecto ("sensiarabevip") para no dejar la web sin acceso.
+  */
+  const candadoOverlay = document.getElementById("candado-overlay");
+  const inputCandado = document.getElementById("input-candado");
+  const btnCandado = document.getElementById("btn-candado");
+  const candadoError = document.getElementById("candado-error");
+  const contenidoGenerador = document.getElementById("contenido-generador");
+
+  function desbloquear() {
+    candadoOverlay.classList.add("oculto");
+    contenidoGenerador.classList.remove("oculto");
+  }
+
+  if (sessionStorage.getItem("accesoOk") === "1") {
+    desbloquear();
+  }
+
+  btnCandado.addEventListener("click", async () => {
+    const intento = inputCandado.value.trim();
+    try {
+      const cfgDoc = await getDoc(doc(db, "config", "acceso"));
+      const passwordReal = cfgDoc.exists() ? cfgDoc.data().password : "sensiarabevip";
+      if (intento === passwordReal) {
+        sessionStorage.setItem("accesoOk", "1");
+        desbloquear();
+      } else {
+        candadoError.style.display = "block";
+      }
+    } catch (e) {
+      candadoError.textContent = "Error de conexión, intenta de nuevo.";
+      candadoError.style.display = "block";
+    }
+  });
+  inputCandado.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") btnCandado.click();
+  });
+
+  /* ================= CONTADOR EN TIEMPO REAL ================= */
+  const contadorNumero = document.getElementById("contador-numero");
+  onSnapshot(doc(db, "contador", "generaciones"), (snap) => {
+    const total = snap.exists() ? (snap.data().total || 0) : 0;
+    contadorNumero.textContent = total.toLocaleString("es-MX");
+  });
+
+  async function sumarContador() {
+    if (sessionStorage.getItem("yaConto") === "1") return;
+    sessionStorage.setItem("yaConto", "1");
+    try {
+      await updateDoc(doc(db, "contador", "generaciones"), { total: increment(1) });
+    } catch (e) {
+      // Si el documento no existe aún, se crea con total 1.
+      await setDoc(doc(db, "contador", "generaciones"), { total: 1 });
+    }
+  }
+
+  /* ================= RESEÑAS ================= */
+  const listaResenas = document.getElementById("lista-resenas");
+  const btnEnviarResena = document.getElementById("btn-enviar-resena");
+  const resenaEstrellas = document.getElementById("resena-estrellas");
+  const resenaTexto = document.getElementById("resena-texto");
+
+  const qResenas = query(collection(db, "resenas"), orderBy("fecha", "desc"), limit(10));
+  onSnapshot(qResenas, (snap) => {
+    listaResenas.innerHTML = "";
+    snap.forEach((docSnap) => {
+      const r = docSnap.data();
+      const estrellas = "★".repeat(r.estrellas || 5) + "☆".repeat(5 - (r.estrellas || 5));
+      const div = document.createElement("div");
+      div.className = "resena-item";
+      div.innerHTML = `<div class="resena-estrellas">${estrellas}</div><div class="resena-texto"></div>`;
+      div.querySelector(".resena-texto").textContent = r.texto || "";
+      listaResenas.appendChild(div);
+    });
+  });
+
+  btnEnviarResena.addEventListener("click", async () => {
+    const texto = resenaTexto.value.trim();
+    if (!texto) return;
+    if (sessionStorage.getItem("yaReseño") === "1") {
+      alert("Ya enviaste una reseña en esta sesión, ¡gracias!");
+      return;
+    }
+    await addDoc(collection(db, "resenas"), {
+      estrellas: Number(resenaEstrellas.value),
+      texto: texto,
+      fecha: serverTimestamp()
+    });
+    sessionStorage.setItem("yaReseño", "1");
+    resenaTexto.value = "";
+  });
+
+  /* ================= FLUJO DEL GENERADOR ================= */
   const marcaSelect = document.getElementById("marca");
   const modeloSelect = document.getElementById("modelo");
   const resultado = document.getElementById("resultado");
+  const loader = document.getElementById("loader");
+
+  const btnSensibilidad = document.getElementById("btn-generar-sensibilidad");
+  const btnRegenerar = document.getElementById("btn-regenerar");
+  const btnDisparo = document.getElementById("btn-disparo");
+  const btnAjustes = document.getElementById("btn-ajustes-internos");
+  const cardBoton = document.getElementById("card-boton");
+  const dpiCard = document.getElementById("dpi-card");
+  const seccionAjustes = document.getElementById("seccion-ajustes-tecnicos");
+  const bloqueAndroid = document.getElementById("bloque-ajustes-android");
+  const bloqueIOS = document.getElementById("bloque-ajustes-ios");
+
+  let modeloActual = null; // { marcaId, modeloId, datos }
 
   async function cargarMarcas() {
     const snapshot = await getDocs(collection(db, "sensibilidades"));
@@ -200,22 +731,21 @@
     modeloSelect.classList.remove("oculto");
   }
 
-  async function mostrarResultado(marcaId, modeloId) {
-    const marcaDoc = await getDoc(doc(db, "sensibilidades", marcaId));
-    const m = marcaDoc.data().modelos[modeloId];
-    document.getElementById("v-general").textContent = m.general;
-    document.getElementById("v-puntorojo").textContent = m.puntorojo;
-    document.getElementById("v-2x").textContent = m.x2;
-    document.getElementById("v-4x").textContent = m.x4;
-    document.getElementById("v-francotirador").textContent = m.francotirador;
-    document.getElementById("v-camara360").textContent = m.camara360;
-    document.getElementById("v-dpi").textContent = m.dpi_min + " a " + m.dpi_max;
-    document.getElementById("card-boton").classList.add("oculto");
-    resultado.classList.remove("oculto");
+  function ocultarTodoElFlujo() {
+    resultado.classList.add("oculto");
+    cardBoton.classList.add("oculto");
+    seccionAjustes.classList.add("oculto");
+    bloqueAndroid.classList.add("oculto");
+    bloqueIOS.classList.add("oculto");
+    btnSensibilidad.classList.add("oculto");
+    btnRegenerar.classList.add("oculto");
+    btnDisparo.classList.add("oculto");
+    btnAjustes.classList.add("oculto");
   }
 
   marcaSelect.addEventListener("change", () => {
-    resultado.classList.add("oculto");
+    ocultarTodoElFlujo();
+    modeloActual = null;
     if (marcaSelect.value) {
       cargarModelos(marcaSelect.value);
     } else {
@@ -223,22 +753,88 @@
     }
   });
 
-  modeloSelect.addEventListener("change", () => {
-    if (modeloSelect.value) {
-      mostrarResultado(marcaSelect.value, modeloSelect.value);
-    }
+  modeloSelect.addEventListener("change", async () => {
+    ocultarTodoElFlujo();
+    modeloActual = null;
+    if (!modeloSelect.value) return;
+
+    const marcaDoc = await getDoc(doc(db, "sensibilidades", marcaSelect.value));
+    const m = marcaDoc.data().modelos[modeloSelect.value];
+    modeloActual = {
+      marcaId: marcaSelect.value,
+      modeloId: modeloSelect.value,
+      datos: m
+    };
+    btnSensibilidad.classList.remove("oculto");
   });
 
-  document.getElementById("btn-disparo").addEventListener("click", () => {
-    const general = parseInt(document.getElementById("v-general").textContent);
-    const cardBoton = document.getElementById("card-boton");
-    if (isNaN(general)) {
-      cardBoton.classList.add("oculto");
-      return;
-    }
-    const porcentaje = calcularBotonDisparo(general);
-    document.getElementById("v-boton").textContent = porcentaje + "%";
-    cardBoton.classList.remove("oculto");
+  // Paso 1: Generar sensibilidad (también se reusa para "Regenerar")
+  function correrGenerarSensibilidad() {
+    if (!modeloActual) return;
+    const els = {
+      general: document.getElementById("v-general"),
+      puntorojo: document.getElementById("v-puntorojo"),
+      x2: document.getElementById("v-2x"),
+      x4: document.getElementById("v-4x"),
+      francotirador: document.getElementById("v-francotirador"),
+      camara360: document.getElementById("v-camara360"),
+      dpiValor: document.getElementById("v-dpi"),
+      dpiRango: document.getElementById("v-dpi-rango")
+    };
+    cardBoton.classList.add("oculto");
+    seccionAjustes.classList.add("oculto");
+    bloqueAndroid.classList.add("oculto");
+    bloqueIOS.classList.add("oculto");
+    btnAjustes.classList.add("oculto");
+
+    window.SensiApp.generarSensibilidad(modeloActual.datos, els, loader, (tieneDPI) => {
+      resultado.classList.remove("oculto");
+      btnRegenerar.classList.remove("oculto");
+      btnDisparo.classList.remove("oculto");
+
+      if (tieneDPI) {
+        dpiCard.classList.remove("oculto");
+      } else {
+        dpiCard.classList.add("oculto");
+      }
+
+      sumarContador();
+    });
+  }
+
+  btnSensibilidad.addEventListener("click", correrGenerarSensibilidad);
+  btnRegenerar.addEventListener("click", correrGenerarSensibilidad);
+
+  // Paso 2: Generar botón de disparo
+  btnDisparo.addEventListener("click", () => {
+    const els = { boton: document.getElementById("v-boton") };
+    window.SensiApp.generarBotonDisparo(els, loader, () => {
+      cardBoton.classList.remove("oculto");
+      btnAjustes.classList.remove("oculto");
+    });
+  });
+
+  // Paso 3: Generar ajustes internos
+  btnAjustes.addEventListener("click", () => {
+    if (!modeloActual) return;
+    window.SensiApp.generarAjustesInternos(
+      {
+        esApple: modeloActual.marcaId === "apple",
+        modeloId: modeloActual.modeloId,
+        elsIOS: {
+          velocidad: document.getElementById("v-ios-velocidad"),
+          toque: document.getElementById("v-ios-toque"),
+          refinamiento: document.getElementById("v-ios-refinamiento"),
+          controlBoton: document.getElementById("v-ios-control")
+        },
+        seccionesAOcultar: [resultado, btnSensibilidad, btnDisparo, btnAjustes],
+        seccionAjustes: seccionAjustes,
+        bloqueAndroid: bloqueAndroid,
+        bloqueIOS: bloqueIOS
+      },
+      loader,
+      () => {}
+    );
   });
 
   cargarMarcas();
@@ -246,4 +842,3 @@
 
 </body>
 </html>
-
