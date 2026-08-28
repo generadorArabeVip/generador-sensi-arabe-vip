@@ -1054,7 +1054,7 @@
 
 <!-- ================= CANDADO DE ACCESO ================= -->
 <div id="candado-overlay">
-  <video id="candado-video-bg" autoplay muted loop playsinline>
+  <video id="candado-video-bg" autoplay muted loop playsinline webkit-playsinline preload="auto" disableRemotePlayback>
     <source src="Video_bloqueo_sensi.mp4" type="video/mp4">
   </video>
   <div id="candado-overlay-oscuro"></div>
@@ -1085,7 +1085,7 @@
      Video de fondo: Video_segunda_interfaz.mp4 (debe subirse al repo,
      en la misma carpeta que este index.html, con ese nombre exacto). -->
 <div id="bienvenida-overlay" class="oculto">
-  <video id="bienvenida-video-bg" autoplay muted loop playsinline>
+  <video id="bienvenida-video-bg" autoplay muted loop playsinline webkit-playsinline preload="auto" disableRemotePlayback>
     <source src="Video_segunda_interfaz.mp4" type="video/mp4">
   </video>
   <div id="bienvenida-overlay-oscuro"></div>
@@ -1166,7 +1166,7 @@
      la contraseña correcta. -->
 <div id="contenido-generador" class="oculto">
 
-  <video id="video-bg" autoplay muted loop playsinline>
+  <video id="video-bg" autoplay muted loop playsinline webkit-playsinline preload="auto" disableRemotePlayback>
     <source src="Videosensi.mp4" type="video/mp4">
   </video>
   <div class="overlay-oscuro"></div>
@@ -1893,6 +1893,40 @@
   });
 
   cargarMarcas();
+
+  /* ================= FLUIDEZ DE VIDEOS DE FONDO (3 fases) =================
+     Refuerza el loop nativo por si algún navegador se queda "pegado" al
+     terminar el video (pasa en algunos Android/iPhone con buffer lento),
+     y reintenta reproducir si el video se pausa solo por falta de buffer. */
+  ["candado-video-bg", "bienvenida-video-bg", "video-bg"].forEach((id) => {
+    const v = document.getElementById(id);
+    if (!v) return;
+
+    // Respaldo manual del loop: si por algo el navegador no lo retoma solo,
+    // lo regresamos al inicio y lo volvemos a reproducir.
+    v.addEventListener("ended", () => {
+      v.currentTime = 0;
+      v.play().catch(() => {});
+    });
+
+    // Si el video se pausa por sí solo (buffer, cambio de pestaña, etc.),
+    // intentamos reanudarlo para que no se quede una imagen fija.
+    v.addEventListener("pause", () => {
+      if (!document.hidden) {
+        v.play().catch(() => {});
+      }
+    });
+
+    // Al volver a la pestaña/app, aseguramos que siga reproduciendo.
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && v.paused) {
+        v.play().catch(() => {});
+      }
+    });
+
+    // Reintento silencioso si el autoplay inicial fue bloqueado.
+    v.play().catch(() => {});
+  });
 </script>
 
 </body>
