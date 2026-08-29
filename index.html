@@ -6,6 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generador Oficial - Sensi Árabe Vip</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
   html, body {
@@ -214,6 +217,16 @@
     margin-bottom: 10px;
     color: #FF1414;
     animation: textoNeonRojo 2.6s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite;
+  }
+  /* Fase 3: sello del título con fuente ornamentada tipo "oficial/blasón".
+     Se aplica solo a "Generador Oficial / Sensi Árabe Vip" -- el árabe
+     y el 6 6 6 se quedan con la fuente/estilo que ya tenían. */
+  .titulo-sello-cinzel {
+    font-family: 'Cinzel Decorative', serif;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    display: inline-block;
+    line-height: 1.4;
   }
 
   /* ---- Barra de redes ---- */
@@ -487,6 +500,14 @@
   .resultado-barra-label {
     font-size: 13px;
     color: #D4AF37;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: .6px;
+    text-shadow: 0 0 4px rgba(212,175,55,0.5), 0 0 8px rgba(212,175,55,0.25);
+    animation: etiquetaPulsoNeon 2.4s ease-in-out infinite;
+  }
+  @keyframes etiquetaPulsoNeon {
+    0%, 100% { text-shadow: 0 0 4px rgba(212,175,55,0.5), 0 0 8px rgba(212,175,55,0.25); }
+    50%      { text-shadow: 0 0 8px rgba(212,175,55,0.9), 0 0 16px rgba(225,6,0,0.45); }
   }
   .resultado-barra-valor {
     font-size: 18px;
@@ -1306,6 +1327,197 @@
     color: #FF3366;
     text-shadow: 0 0 8px rgba(225,6,0,0.6);
   }
+
+  /* ================= TRANSICIÓN FASE 3 → FASE 4 ================= */
+  #transicion-fase4-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .transicion-paso {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ---- Emoji flotante con neón que se desvanece y reaparece ---- */
+  .emoji-flotante-neon {
+    font-size: 64px;
+    margin-bottom: 36px;
+    animation: emojiFlotar 4s ease-in-out infinite, emojiDesvanece 3.4s ease-in-out infinite, emojiNeonPulso 2.2s ease-in-out infinite;
+  }
+  @keyframes emojiFlotar {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
+  }
+  @keyframes emojiDesvanece {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+  }
+  @keyframes emojiNeonPulso {
+    0%, 100% { filter: drop-shadow(0 0 6px #E10600) drop-shadow(0 0 2px #B026FF); }
+    50%      { filter: drop-shadow(0 0 20px #E10600) drop-shadow(0 0 10px #B026FF); }
+  }
+
+  /* ---- Engranaje: mismo mecanismo visual del círculo de bienvenida,
+     pero pieza de código independiente (crearEngranajeDial), y solo
+     tiñe de gris a rojo si el giro es antihorario (derecha→izquierda). ---- */
+  .engranaje-desliza-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .engranaje-desliza {
+    position: relative;
+    width: 176px;
+    height: 176px;
+    border-radius: 50%;
+    background: conic-gradient(#E10600 calc(var(--progreso, 0) * 3.6deg), #3A3A3A 0deg);
+    touch-action: none;
+    user-select: none;
+    cursor: grab;
+  }
+  .engranaje-pista {
+    position: absolute;
+    inset: 14px;
+    border-radius: 50%;
+    background: #050505;
+    border: 1px solid #3A3A3A;
+    pointer-events: none;
+  }
+  .engranaje-icono {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 38px;
+    pointer-events: none;
+    filter: drop-shadow(0 0 6px #8C6A16) drop-shadow(0 0 2px #D4AF37);
+    animation: girarNeon 5s linear infinite, emojiFlotar 4s ease-in-out infinite;
+  }
+  .engranaje-desliza.arrastrando .engranaje-icono,
+  .engranaje-desliza.completo .engranaje-icono {
+    filter: drop-shadow(0 0 12px #E10600) drop-shadow(0 0 6px #B026FF);
+  }
+  .engranaje-mango {
+    position: absolute;
+    top: 7px; left: 7px;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border-radius: 50%;
+    background: #111111;
+    border: 1px solid #E10600;
+    box-shadow: 0 0 10px rgba(225,6,0,0.6);
+    cursor: grab;
+  }
+  .engranaje-desliza.arrastrando .engranaje-mango,
+  .engranaje-desliza.completo .engranaje-mango {
+    background: linear-gradient(135deg, #7A0000, #E10600, #FF3366);
+    box-shadow: 0 0 18px rgba(225,6,0,0.95), 0 0 30px rgba(176,38,255,0.6);
+  }
+  .engranaje-hint {
+    margin-top: 16px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: #7A7A7A;
+    text-shadow: 0 0 3px rgba(122,122,122,0.4);
+    animation: parpadeoNeon 2.9s infinite;
+  }
+  .engranaje-desliza.arrastrando ~ .engranaje-hint,
+  .engranaje-desliza.completo ~ .engranaje-hint {
+    color: #FF3366;
+    text-shadow: 0 0 8px rgba(225,6,0,0.6);
+  }
+
+  /* ---- Relleno automático del 666, diagonal de abajo-izquierda a
+     arriba-derecha. clip-path anima el barrido; el número en sí también
+     flota + neón + desvanece, igual que el resto de la transición. ---- */
+  .seis-seis-seis-relleno-wrap {
+    position: relative;
+    display: inline-block;
+  }
+  .seis-seis-seis-relleno {
+    position: relative;
+    display: inline-block;
+    font-size: 72px;
+    font-weight: 900;
+    color: #3A3A3A;
+    animation: emojiFlotar 4s ease-in-out infinite;
+  }
+  .seis-seis-seis-relleno::after {
+    content: "666";
+    position: absolute;
+    top: 0; left: 0;
+    color: #E10600;
+    text-shadow: 0 0 10px #FF3B3B, 0 0 22px #E10600, 0 0 38px #E10600;
+    clip-path: polygon(0% 100%, 0% 100%, 0% 100%);
+    animation: rellenoDiagonal666 2.6s ease-in-out forwards, textoParpadeo 5s ease-in-out infinite;
+  }
+  @keyframes rellenoDiagonal666 {
+    0%   { clip-path: polygon(0% 100%, 0% 100%, 0% 100%); }
+    100% { clip-path: polygon(0% 100%, 200% -100%, 200% 200%); }
+  }
+
+  /* ================= FASE 4 ================= */
+  #fase4-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    overflow: hidden;
+  }
+  #video-fase4-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(1.25) contrast(1.12) saturate(1.15);
+    z-index: 0;
+  }
+  #fase4-overlay .overlay-oscuro {
+    position: absolute;
+    z-index: 1;
+  }
+  #contenido-fase4 {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    justify-content: space-between;
+    padding: 30px 0;
+    box-sizing: border-box;
+  }
+  .fase4-666 {
+    font-size: 40px;
+    font-weight: 900;
+    margin-top: 6px;
+    animation: textoNeonRojo 2.6s ease-in-out infinite, emojiFlotar 4.5s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite;
+  }
+  .fase4-frase {
+    animation: flotarSuave 4.2s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite;
+  }
+  .fase4-marca {
+    animation: flotarSuave 3.6s ease-in-out infinite;
+    animation-delay: .3s;
+  }
 </style>
 </head>
 <body>
@@ -1434,8 +1646,7 @@
     <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
 
     <h1>
-      Generador Oficial<br>
-      Sensi Árabe Vip<br>
+      <span class="titulo-sello-cinzel">Generador Oficial<br>Sensi Árabe Vip</span><br>
       <span style="color:#E10600">الأفضل</span><br>
       <span style="color:#E10600">6</span> <span style="color:#E10600">6</span> <span style="color:#E10600">6</span>
     </h1>
@@ -1689,6 +1900,60 @@
   </div>
   <div class="marca-sello">S:.S:.VI-66</div>
 
+  <button id="btn-continuar-fase4" class="oculto btn-rojo-neon" style="margin-top:18px;">Continuar »</button>
+
+  </div>
+</div>
+
+<!-- ================= TRANSICIÓN FASE 3 → FASE 4 =================
+     Dos pantallas nuevas, independientes del deslizador circular que ya
+     usan candado/bienvenida (crearSliderCircular no se toca).
+     Paso A: engranaje ⚙️ que solo tiñe de gris a rojo si se gira en
+             sentido antihorario (derecha→izquierda).
+     Paso B: relleno automático del "666" en diagonal, de abajo-izquierda
+             a arriba-derecha. Al terminar, entra a Fase 4. -->
+<div id="transicion-fase4-overlay" class="oculto">
+
+  <div id="transicion-paso-engranaje" class="transicion-paso">
+    <div class="emoji-flotante-neon emoji-👺">👺</div>
+    <div class="engranaje-desliza-wrap">
+      <div id="engranaje-dial" class="engranaje-desliza">
+        <div class="engranaje-pista"></div>
+        <div class="engranaje-icono">⚙️</div>
+        <div class="engranaje-mango" id="engranaje-mango"></div>
+      </div>
+      <div class="engranaje-hint">Gira de derecha a izquierda »</div>
+    </div>
+  </div>
+
+  <div id="transicion-paso-666" class="transicion-paso oculto">
+    <div class="seis-seis-seis-relleno-wrap">
+      <span class="seis-seis-seis-relleno" id="seis-seis-seis-relleno">666</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= FASE 4 =================
+     Video de fondo: Video_fase_4.mp4 (debe subirse al repo, en la misma
+     carpeta que este index.html, con ese nombre exacto -- igual que
+     Video_bloqueo_sensi.mp4, Video_segunda_interfaz.mp4 y Videosensi.mp4). -->
+<div id="fase4-overlay" class="oculto">
+  <video id="video-fase4-bg" muted loop playsinline webkit-playsinline preload="none" disableRemotePlayback>
+    <source src="Video_fase_4.mp4" type="video/mp4">
+  </video>
+  <div class="overlay-oscuro"></div>
+
+  <div id="contenido-fase4">
+    <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
+    <div class="fase4-666">
+      <span style="color:#E10600">6</span> <span style="color:#E10600">6</span> <span style="color:#E10600">6</span>
+    </div>
+
+    <div class="frase-final fase4-frase">
+      الأفضل في التكوينات الداخلية
+    </div>
+    <div class="marca-sello fase4-marca">S:.S:.VI-66</div>
   </div>
 </div>
 
@@ -2403,6 +2668,8 @@
   });
 
   // Paso 3: Generar ajustes internos
+  const btnContinuarFase4 = document.getElementById("btn-continuar-fase4");
+
   btnAjustes.addEventListener("click", () => {
     if (!modeloActual) return;
     window.SensiApp.generarAjustesInternos(
@@ -2421,9 +2688,153 @@
         bloqueIOS: bloqueIOS
       },
       loader,
-      () => {}
+      () => {
+        // Al terminar de generar los ajustes internos, se revela el botón
+        // que lleva a la transición hacia Fase 4 (el usuario baja con
+        // scroll y lo encuentra al final del contenido de Fase 3).
+        btnContinuarFase4.classList.remove("oculto");
+      }
     );
   });
+
+  /* ================= TRANSICIÓN FASE 3 → FASE 4 =================
+     Pieza de código independiente del crearSliderCircular que ya usan
+     candado/bienvenida -- no se toca esa función ni su comportamiento. */
+  const transicionFase4Overlay = document.getElementById("transicion-fase4-overlay");
+  const transicionPasoEngranaje = document.getElementById("transicion-paso-engranaje");
+  const transicionPaso666 = document.getElementById("transicion-paso-666");
+  const fase4Overlay = document.getElementById("fase4-overlay");
+
+  function crearEngranajeDial(contenedor, mango, alCompletar) {
+    const radioMango = 81;
+    const vueltaCompleta = 345; // grados, igual margen que el círculo de bienvenida
+    let arrastrando = false;
+    let anguloAnterior = 0;
+    let acumulado = 0;
+    let completado = false;
+
+    function centro() {
+      const rect = contenedor.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }
+
+    function anguloDesdeEvento(e, c) {
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const dx = clientX - c.x;
+      const dy = clientY - c.y;
+      let angulo = Math.atan2(dx, -dy) * 180 / Math.PI;
+      if (angulo < 0) angulo += 360;
+      return angulo;
+    }
+
+    function colocarMango(angulo) {
+      const rad = angulo * Math.PI / 180;
+      const x = contenedor.clientWidth / 2 + radioMango * Math.sin(rad);
+      const y = contenedor.clientHeight / 2 - radioMango * Math.cos(rad);
+      mango.style.left = x + "px";
+      mango.style.top = y + "px";
+    }
+
+    function actualizarProgreso(porcentaje) {
+      contenedor.style.setProperty("--progreso", Math.max(0, Math.min(100, porcentaje)));
+    }
+
+    function empezar(e) {
+      if (completado) return;
+      arrastrando = true;
+      mango.style.transition = "";
+      contenedor.classList.add("arrastrando");
+      const c = centro();
+      anguloAnterior = anguloDesdeEvento(e, c);
+      colocarMango(anguloAnterior);
+      e.preventDefault();
+    }
+
+    function mover(e) {
+      if (!arrastrando || completado) return;
+      const c = centro();
+      const anguloActual = anguloDesdeEvento(e, c);
+      let delta = anguloActual - anguloAnterior;
+      if (delta > 180) delta -= 360;
+      if (delta < -180) delta += 360;
+      anguloAnterior = anguloActual;
+      colocarMango(anguloActual);
+
+      // CLAVE: solo el giro antihorario (derecha→izquierda, delta negativo)
+      // suma progreso y tiñe el aro. Si lo giran al revés (delta positivo),
+      // no se resta ni se resetea -- simplemente no cuenta ni tiñe nada.
+      if (delta < 0) {
+        acumulado += -delta;
+        actualizarProgreso((acumulado / vueltaCompleta) * 100);
+      }
+
+      if (acumulado >= vueltaCompleta) {
+        completado = true;
+        arrastrando = false;
+        contenedor.classList.remove("arrastrando");
+        contenedor.classList.add("completo");
+        actualizarProgreso(100);
+        alCompletar();
+      }
+      e.preventDefault();
+    }
+
+    function terminar() {
+      arrastrando = false;
+      contenedor.classList.remove("arrastrando");
+      // No se resetea el acumulado al soltar: el usuario puede retomar el
+      // giro correcto donde lo dejó, sin perder lo ya avanzado.
+    }
+
+    contenedor.addEventListener("mousedown", empezar);
+    contenedor.addEventListener("touchstart", empezar, { passive: false });
+    window.addEventListener("mousemove", mover);
+    window.addEventListener("touchmove", mover, { passive: false });
+    window.addEventListener("mouseup", terminar);
+    window.addEventListener("touchend", terminar);
+
+    colocarMango(0);
+    actualizarProgreso(0);
+  }
+
+  function mostrarFase4() {
+    transicionFase4Overlay.classList.add("oculto");
+    fase4Overlay.classList.remove("oculto");
+    // Misma carga perezosa que usan bienvenida/generador: el video de
+    // Fase 4 solo se descarga hasta que el usuario de verdad llega aquí.
+    const vFase4 = document.getElementById("video-fase4-bg");
+    if (vFase4 && !vFase4.dataset.cargado) {
+      vFase4.dataset.cargado = "1";
+      vFase4.load();
+      vFase4.play().catch(() => {});
+    } else if (vFase4) {
+      vFase4.play().catch(() => {});
+    }
+  }
+
+  btnContinuarFase4.addEventListener("click", () => {
+    vibrarTelegram("medium");
+    transicionFase4Overlay.classList.remove("oculto");
+    transicionPasoEngranaje.classList.remove("oculto");
+    transicionPaso666.classList.add("oculto");
+  });
+
+  crearEngranajeDial(
+    document.getElementById("engranaje-dial"),
+    document.getElementById("engranaje-mango"),
+    () => {
+      vibrarTelegram("heavy");
+      transicionPasoEngranaje.classList.add("oculto");
+      transicionPaso666.classList.remove("oculto");
+      // El relleno del 666 es automático (animación CSS de ~2.6s). Al
+      // terminar, se entra a Fase 4 sin necesidad de otra interacción.
+      setTimeout(() => {
+        vibrarTelegram("heavy");
+        mostrarFase4();
+      }, 2700);
+    }
+  );
 
   /* ================= INTEGRACIÓN TELEGRAM MINI APP =================
      Sin tocar fondos/tema/colores ni Firebase: solo vibración (haptics).
@@ -2443,51 +2854,87 @@
 
   cargarMarcas();
 
-  /* ================= FLUIDEZ DE VIDEOS DE FONDO (3 fases) =================
+  /* ================= FLUIDEZ DE VIDEOS DE FONDO (4 fases) =================
      Refuerza el loop nativo por si algún navegador se queda "pegado" al
      terminar el video (pasa en algunos Android/iPhone con buffer lento),
-     y reintenta reproducir si el video se pausa solo por falta de buffer. */
-  ["candado-video-bg", "bienvenida-video-bg", "video-bg"].forEach((id) => {
+     reintenta reproducir si el video se pausa solo por falta de buffer,
+     y agrega un "vigilante" que detecta congelamiento silencioso (cuando
+     el navegador interno de Telegram deja el video en estado "reproduciendo"
+     pero el tiempo no avanza, sin disparar el evento pause). */
+  const IDS_VIDEO_FONDO = ["candado-video-bg", "bienvenida-video-bg", "video-bg", "video-fase4-bg"];
+  const ultimoTiempoPorVideo = {};
+
+  function reintentarReproducir(v) {
+    const intento = v.play();
+    if (intento && intento.catch) intento.catch(() => {});
+  }
+
+  IDS_VIDEO_FONDO.forEach((id) => {
     const v = document.getElementById(id);
     if (!v) return;
+    ultimoTiempoPorVideo[id] = -1;
 
     // Respaldo manual del loop: si por algo el navegador no lo retoma solo,
     // lo regresamos al inicio y lo volvemos a reproducir.
     v.addEventListener("ended", () => {
       v.currentTime = 0;
-      v.play().catch(() => {});
+      reintentarReproducir(v);
     });
 
     // Si el video se pausa por sí solo (buffer, cambio de pestaña, etc.),
     // intentamos reanudarlo para que no se quede una imagen fija.
     v.addEventListener("pause", () => {
-      if (!document.hidden) {
-        v.play().catch(() => {});
-      }
-    });
-
-    // Al volver a la pestaña/app, aseguramos que siga reproduciendo.
-    document.addEventListener("visibilitychange", () => {
-      if (!document.hidden && v.paused) {
-        v.play().catch(() => {});
-      }
+      if (!document.hidden) reintentarReproducir(v);
     });
 
     // Reintento silencioso si el autoplay inicial fue bloqueado.
-    v.play().catch(() => {});
+    reintentarReproducir(v);
   });
 
-  // Desbloqueo extra para WebViews estrictos (como el navegador interno de
-  // Telegram): en el primer toque real del usuario en cualquier parte de la
-  // pantalla, se reintenta reproducir los 3 videos. No cambia nada más.
-  function desbloquearVideosConToque() {
-    ["candado-video-bg", "bienvenida-video-bg", "video-bg"].forEach((id) => {
+  // Al volver a la pestaña/app, aseguramos que los 4 videos sigan reproduciendo.
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) return;
+    IDS_VIDEO_FONDO.forEach((id) => {
       const v = document.getElementById(id);
-      if (v && v.paused) v.play().catch(() => {});
+      if (v && v.paused) reintentarReproducir(v);
+    });
+  });
+
+  // Vigilante silencioso: cada 3s revisa si cada video visible realmente
+  // avanzó de tiempo. Si sigue "reproduciendo" pero el tiempo no cambió
+  // (congelado sin disparar pause -- el caso típico dentro de Telegram),
+  // fuerza una recarga y reproducción para destrabarlo.
+  setInterval(() => {
+    if (document.hidden) return;
+    IDS_VIDEO_FONDO.forEach((id) => {
+      const v = document.getElementById(id);
+      if (!v || v.paused || v.classList.contains("oculto")) return;
+      // Si el elemento está detrás de una pantalla oculta (display:none en
+      // un ancestro), offsetParent es null -- no vale la pena forzarlo.
+      if (v.offsetParent === null) return;
+
+      const tiempoActual = v.currentTime;
+      if (tiempoActual === ultimoTiempoPorVideo[id]) {
+        v.load();
+        reintentarReproducir(v);
+      }
+      ultimoTiempoPorVideo[id] = tiempoActual;
+    });
+  }, 3000);
+
+  // Desbloqueo extra para WebViews estrictos (como el navegador interno de
+  // Telegram): en cada toque real del usuario en cualquier parte de la
+  // pantalla, se reintenta reproducir los videos que sigan pausados. No
+  // se limita a una sola vez, para blindar el "continuo siempre" en todas
+  // las fases.
+  function desbloquearVideosConToque() {
+    IDS_VIDEO_FONDO.forEach((id) => {
+      const v = document.getElementById(id);
+      if (v && v.paused) reintentarReproducir(v);
     });
   }
-  document.addEventListener("touchstart", desbloquearVideosConToque, { once: true, passive: true });
-  document.addEventListener("click", desbloquearVideosConToque, { once: true });
+  document.addEventListener("touchstart", desbloquearVideosConToque, { passive: true });
+  document.addEventListener("click", desbloquearVideosConToque);
 </script>
 
 </body>
