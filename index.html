@@ -1459,12 +1459,9 @@
     top: 0; left: 0;
     color: #E10600;
     text-shadow: 0 0 10px #FF3B3B, 0 0 22px #E10600, 0 0 38px #E10600;
-    clip-path: polygon(0% 100%, 0% 100%, 0% 100%);
-    animation: rellenoDiagonal666 2.6s ease-in-out forwards, textoParpadeo 5s ease-in-out infinite;
-  }
-  @keyframes rellenoDiagonal666 {
-    0%   { clip-path: polygon(0% 100%, 0% 100%, 0% 100%); }
-    100% { clip-path: polygon(0% 100%, 200% -100%, 200% 200%); }
+    opacity: var(--progreso-frac, 0);
+    transition: opacity .05s linear;
+    animation: textoParpadeo 5s ease-in-out infinite;
   }
 
   /* ================= FASE 4 ================= */
@@ -1926,9 +1923,14 @@
     </div>
   </div>
 
-  <div id="transicion-paso-666" class="transicion-paso oculto">
+  <div id="transicion-paso-666" class="transicion-paso oculto" style="margin-top:28px;">
     <div class="seis-seis-seis-relleno-wrap">
       <span class="seis-seis-seis-relleno" id="seis-seis-seis-relleno">666</span>
+    </div>
+    <div id="slider-666" class="slider-desliza" style="margin-top:24px;">
+      <div class="slider-relleno"></div>
+      <div class="slider-texto">Desliza para continuar »</div>
+      <div class="slider-mango">➤</div>
     </div>
   </div>
 
@@ -2705,6 +2707,74 @@
   const transicionPaso666 = document.getElementById("transicion-paso-666");
   const fase4Overlay = document.getElementById("fase4-overlay");
 
+  /* ---- Deslizador del 666 (manual, con tinte proporcional) ----
+     Variante de crearSlider que además reporta el % arrastrado en vivo,
+     para ir tiñendo el 666 de gris a rojo mientras se arrastra. */
+  function crearSliderProgreso(contenedor, onProgreso, alCompletar) {
+    const relleno = contenedor.querySelector(".slider-relleno");
+    const mango = contenedor.querySelector(".slider-mango");
+    const anchoMango = 52;
+    let arrastrando = false;
+    let completado = false;
+
+    function limitePista() {
+      return contenedor.clientWidth - anchoMango;
+    }
+
+    function moverMango(x) {
+      const limite = limitePista();
+      const clamped = Math.max(0, Math.min(x, limite));
+      mango.style.left = clamped + "px";
+      relleno.style.width = (clamped + anchoMango) + "px";
+      const pct = limite > 0 ? (clamped / limite) * 100 : 0;
+      onProgreso(pct);
+      const completo = clamped >= limite - 2;
+      contenedor.classList.toggle("completo", completo);
+      return completo;
+    }
+
+    function xDesdeEvento(e) {
+      const rect = contenedor.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      return clientX - rect.left - anchoMango / 2;
+    }
+
+    function empezar(e) {
+      if (completado) return;
+      arrastrando = true;
+      contenedor.classList.add("deslizando");
+      e.preventDefault();
+    }
+
+    function mover(e) {
+      if (!arrastrando || completado) return;
+      const completo = moverMango(xDesdeEvento(e));
+      if (completo) {
+        completado = true;
+        arrastrando = false;
+        contenedor.classList.remove("deslizando");
+        alCompletar();
+      }
+      e.preventDefault();
+    }
+
+    function terminar() {
+      if (!arrastrando) return;
+      arrastrando = false;
+      contenedor.classList.remove("deslizando");
+      if (!completado) {
+        moverMango(0);
+      }
+    }
+
+    mango.addEventListener("mousedown", empezar);
+    mango.addEventListener("touchstart", empezar, { passive: false });
+    window.addEventListener("mousemove", mover);
+    window.addEventListener("touchmove", mover, { passive: false });
+    window.addEventListener("mouseup", terminar);
+    window.addEventListener("touchend", terminar);
+  }
+
   function crearEngranajeDial(contenedor, mango, alCompletar) {
     const radioMango = 81;
     const vueltaCompleta = 345; // grados, igual margen que el círculo de bienvenida
@@ -2818,6 +2888,7 @@
     transicionFase4Overlay.classList.remove("oculto");
     transicionPasoEngranaje.classList.remove("oculto");
     transicionPaso666.classList.add("oculto");
+    document.getElementById("seis-seis-seis-relleno").style.setProperty("--progreso-frac", "0");
   });
 
   crearEngranajeDial(
@@ -2825,14 +2896,20 @@
     document.getElementById("engranaje-mango"),
     () => {
       vibrarTelegram("heavy");
-      transicionPasoEngranaje.classList.add("oculto");
+      // El engranaje se queda visible (ya teñido de rojo); debajo se
+      // revela el 666 + la barra "Desliza", sin ocultar nada más.
       transicionPaso666.classList.remove("oculto");
-      // El relleno del 666 es automático (animación CSS de ~2.6s). Al
-      // terminar, se entra a Fase 4 sin necesidad de otra interacción.
-      setTimeout(() => {
-        vibrarTelegram("heavy");
-        mostrarFase4();
-      }, 2700);
+    }
+  );
+
+  crearSliderProgreso(
+    document.getElementById("slider-666"),
+    (pct) => {
+      document.getElementById("seis-seis-seis-relleno").style.setProperty("--progreso-frac", (pct / 100).toFixed(3));
+    },
+    () => {
+      vibrarTelegram("heavy");
+      mostrarFase4();
     }
   );
 
