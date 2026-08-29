@@ -275,6 +275,103 @@
     min-height: 70px;
   }
 
+  /* ================= BUSCADOR DE DISPOSITIVO (capa visual sobre los selects) =================
+     No toca Firebase ni la lógica de marca/modelo: los <select> reales siguen
+     existiendo y funcionando igual, solo quedan ocultos visualmente. */
+  #marca, #modelo {
+    display: none !important;
+  }
+
+  .plataforma-selector {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .plataforma-card {
+    flex: 1;
+    text-align: center;
+    padding: 18px 10px;
+    border-radius: 14px;
+    border: 1px solid #3A3A3A;
+    background: #111111;
+    cursor: pointer;
+    transition: transform .15s ease;
+    animation: plataformaPulso 3.2s ease-in-out infinite;
+  }
+  .plataforma-card:active { transform: scale(0.97); }
+  .plataforma-card#card-ios { animation-delay: 0s; }
+  .plataforma-card#card-android { animation-delay: .5s; }
+  @keyframes plataformaPulso {
+    0%, 100% { box-shadow: 0 0 6px rgba(140,106,22,0.25); border-color: #3A3A3A; }
+    50%      { box-shadow: 0 0 16px rgba(212,175,55,0.4), 0 0 26px rgba(225,6,0,0.2); border-color: #8C6A16; }
+  }
+  .plataforma-card.elegido {
+    border-color: #E10600;
+    box-shadow: 0 0 14px rgba(225,6,0,0.7), 0 0 26px rgba(176,38,255,0.4);
+    animation: pulsoNeonSelect 1.8s ease-in-out infinite;
+  }
+  .plataforma-emoji {
+    font-size: 30px;
+    display: block;
+    margin-bottom: 6px;
+    animation: textoFlotaSuave 3.6s ease-in-out infinite;
+  }
+  .plataforma-nombre {
+    font-size: 15px;
+    font-weight: bold;
+    color: #F1F1F1;
+    animation: textoParpadeo 4.5s ease-in-out infinite;
+  }
+
+  .buscador-dispositivo { margin-bottom: 4px; }
+  .btn-cambiar-plataforma {
+    background: none;
+    border: none;
+    color: #D4AF37;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 0 10px 0;
+  }
+  .input-buscador {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 4px;
+    border-radius: 10px;
+    border: 1px solid #8C6A16;
+    font-size: 15px;
+    background: #111111;
+    color: #F1F1F1;
+    font-family: inherit;
+    text-align: center;
+    animation: pulsoNeonGris 3s ease-in-out infinite;
+  }
+  .input-buscador:focus {
+    outline: none;
+    border-color: #E10600;
+    box-shadow: 0 0 10px rgba(225,6,0,0.55), 0 0 18px rgba(176,38,255,0.35);
+  }
+  .resultados-buscador {
+    margin-bottom: 14px;
+    max-height: 220px;
+    overflow-y: auto;
+    border-radius: 10px;
+    border: 1px solid #3A3A3A;
+    background: #0B0B0B;
+  }
+  .resultado-item {
+    padding: 11px 14px;
+    color: #F1F1F1;
+    border-bottom: 1px solid #222;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .resultado-item:last-child { border-bottom: none; }
+  .resultado-item:hover, .resultado-item:active {
+    background: #1A0505;
+    color: #FF3366;
+    text-shadow: 0 0 6px rgba(225,6,0,0.6);
+  }
+
   /* ---- Selects premium: marca / modelo (flecha custom + efectos) ---- */
   select#marca, select#modelo {
     background-image: linear-gradient(45deg, transparent 50%, #D4AF37 50%),
@@ -1318,6 +1415,26 @@
     <div class="contador-label">SENSIBILIDADES GENERADAS EN VIVO</div>
   </div>
 
+  <div class="plataforma-selector" id="plataforma-selector">
+    <div class="plataforma-card" id="card-ios" data-plataforma="ios">
+      <span class="plataforma-emoji">👹</span>
+      <span class="plataforma-nombre">iOS</span>
+    </div>
+    <div class="plataforma-card" id="card-android" data-plataforma="android">
+      <span class="plataforma-emoji">👺</span>
+      <span class="plataforma-nombre">Android</span>
+    </div>
+  </div>
+
+  <div class="buscador-dispositivo oculto" id="buscador-dispositivo">
+    <button type="button" class="btn-cambiar-plataforma" id="btn-cambiar-plataforma">‹ Cambiar dispositivo</button>
+    <input type="text" id="input-buscar-marca" class="input-buscador" placeholder="📱 👺 Ingresa tu dispositivo 👹 ⚙️" autocomplete="off">
+    <div class="resultados-buscador oculto" id="resultados-marca"></div>
+
+    <input type="text" id="input-buscar-modelo" class="input-buscador oculto" placeholder="📱 Ingresa tu modelo ⚙️" autocomplete="off">
+    <div class="resultados-buscador oculto" id="resultados-modelo"></div>
+  </div>
+
   <select id="marca" class="sin-elegir">
     <option value="">Selecciona tu marca</option>
   </select>
@@ -1909,6 +2026,119 @@
 
   let modeloActual = null; // { marcaId, modeloId, datos }
 
+  /* ================= BUSCADOR DE DISPOSITIVO (capa visual) =================
+     Solo filtra sobre lo que ya cargan cargarMarcas()/cargarModelos() desde
+     Firebase. No hace consultas nuevas ni toca el cálculo de sensibilidades. */
+  const plataformaSelector = document.getElementById("plataforma-selector");
+  const buscadorDispositivo = document.getElementById("buscador-dispositivo");
+  const btnCambiarPlataforma = document.getElementById("btn-cambiar-plataforma");
+  const inputBuscarMarca = document.getElementById("input-buscar-marca");
+  const resultadosMarca = document.getElementById("resultados-marca");
+  const inputBuscarModelo = document.getElementById("input-buscar-modelo");
+  const resultadosModelo = document.getElementById("resultados-modelo");
+
+  let marcasCache = [];   // {id, label} — espejo de las <option> de #marca
+  let modelosCache = [];  // {id, label} — espejo de las <option> de #modelo
+  let plataformaElegida = null; // "ios" | "android"
+
+  function renderResultadosBusqueda(contenedor, items, onSelect) {
+    contenedor.innerHTML = "";
+    if (!items.length) {
+      contenedor.classList.add("oculto");
+      return;
+    }
+    contenedor.classList.remove("oculto");
+    items.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "resultado-item";
+      div.textContent = item.label;
+      div.addEventListener("click", () => onSelect(item));
+      contenedor.appendChild(div);
+    });
+  }
+
+  function marcasSegunPlataforma() {
+    if (plataformaElegida === "android") {
+      return marcasCache.filter((m) => m.id.toLowerCase() !== "apple");
+    }
+    return marcasCache;
+  }
+
+  function seleccionarMarcaDesdeBuscador(marcaId) {
+    marcaSelect.value = marcaId;
+    marcaSelect.dispatchEvent(new Event("change"));
+    inputBuscarModelo.value = "";
+    inputBuscarModelo.classList.remove("oculto");
+    resultadosModelo.classList.add("oculto");
+    resultadosModelo.innerHTML = "";
+  }
+
+  document.querySelectorAll(".plataforma-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      document.querySelectorAll(".plataforma-card").forEach((c) => c.classList.remove("elegido"));
+      card.classList.add("elegido");
+      plataformaElegida = card.dataset.plataforma;
+      vibrarTelegram("light");
+
+      plataformaSelector.classList.add("oculto");
+      buscadorDispositivo.classList.remove("oculto");
+      inputBuscarMarca.value = "";
+      resultadosMarca.classList.add("oculto");
+      resultadosMarca.innerHTML = "";
+      inputBuscarModelo.classList.add("oculto");
+      resultadosModelo.classList.add("oculto");
+
+      if (plataformaElegida === "ios") {
+        // Solo hay una marca iOS (Apple): se salta el paso de marca y va directo a modelo.
+        inputBuscarMarca.classList.add("oculto");
+        const apple = marcasCache.find((m) => m.id.toLowerCase() === "apple");
+        if (apple) seleccionarMarcaDesdeBuscador(apple.id);
+      } else {
+        inputBuscarMarca.classList.remove("oculto");
+      }
+    });
+  });
+
+  btnCambiarPlataforma.addEventListener("click", () => {
+    buscadorDispositivo.classList.add("oculto");
+    plataformaSelector.classList.remove("oculto");
+    document.querySelectorAll(".plataforma-card").forEach((c) => c.classList.remove("elegido"));
+    plataformaElegida = null;
+    marcaSelect.value = "";
+    marcaSelect.dispatchEvent(new Event("change"));
+  });
+
+  inputBuscarMarca.addEventListener("input", () => {
+    const texto = inputBuscarMarca.value.trim().toLowerCase();
+    if (!texto) {
+      resultadosMarca.classList.add("oculto");
+      resultadosMarca.innerHTML = "";
+      return;
+    }
+    const filtrados = marcasSegunPlataforma().filter((m) => m.label.toLowerCase().includes(texto));
+    renderResultadosBusqueda(resultadosMarca, filtrados, (item) => {
+      inputBuscarMarca.value = item.label;
+      resultadosMarca.classList.add("oculto");
+      seleccionarMarcaDesdeBuscador(item.id);
+    });
+  });
+
+  inputBuscarModelo.addEventListener("input", () => {
+    const texto = inputBuscarModelo.value.trim().toLowerCase();
+    if (!texto) {
+      resultadosModelo.classList.add("oculto");
+      resultadosModelo.innerHTML = "";
+      return;
+    }
+    const filtrados = modelosCache.filter((m) => m.label.toLowerCase().includes(texto));
+    renderResultadosBusqueda(resultadosModelo, filtrados, (item) => {
+      inputBuscarModelo.value = item.label;
+      resultadosModelo.classList.add("oculto");
+      modeloSelect.value = item.id;
+      modeloSelect.dispatchEvent(new Event("change"));
+    });
+  });
+
   async function cargarMarcas() {
     const snapshot = await getDocs(collection(db, "sensibilidades"));
     snapshot.forEach((docSnap) => {
@@ -1916,11 +2146,13 @@
       option.value = docSnap.id;
       option.textContent = docSnap.id.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       marcaSelect.appendChild(option);
+      marcasCache.push({ id: option.value, label: option.textContent });
     });
   }
 
   async function cargarModelos(marcaId) {
     modeloSelect.innerHTML = '<option value="">Selecciona tu modelo</option>';
+    modelosCache = [];
     const marcaDoc = await getDoc(doc(db, "sensibilidades", marcaId));
     if (!marcaDoc.exists()) return;
     const modelos = marcaDoc.data().modelos || {};
@@ -1929,6 +2161,7 @@
       option.value = modeloId;
       option.textContent = modelos[modeloId].nombre || modeloId;
       modeloSelect.appendChild(option);
+      modelosCache.push({ id: option.value, label: option.textContent });
     });
     modeloSelect.classList.remove("oculto");
   }
