@@ -296,7 +296,7 @@
     background: #111111;
     cursor: pointer;
     transition: transform .15s ease;
-    animation: plataformaPulso 3.2s ease-in-out infinite;
+    animation: plataformaPulso 3.2s ease-in-out infinite, plataformaRespira 2.6s ease-in-out infinite;
   }
   .plataforma-card:active { transform: scale(0.97); }
   .plataforma-card#card-ios { animation-delay: 0s; }
@@ -304,6 +304,10 @@
   @keyframes plataformaPulso {
     0%, 100% { box-shadow: 0 0 6px rgba(140,106,22,0.25); border-color: #3A3A3A; }
     50%      { box-shadow: 0 0 16px rgba(212,175,55,0.4), 0 0 26px rgba(225,6,0,0.2); border-color: #8C6A16; }
+  }
+  @keyframes plataformaRespira {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50%      { transform: scale(1.035) translateY(-3px); }
   }
   .plataforma-card.elegido {
     border-color: #E10600;
@@ -314,7 +318,13 @@
     font-size: 30px;
     display: block;
     margin-bottom: 6px;
-    animation: textoFlotaSuave 3.6s ease-in-out infinite;
+    animation: textoFlotaSuave 3.6s ease-in-out infinite, emojiNeonExotico 3.2s ease-in-out infinite;
+  }
+  @keyframes emojiNeonExotico {
+    0%   { opacity: .55; filter: drop-shadow(0 0 4px #FFFFFF) drop-shadow(0 0 8px #FFFFFF); }
+    30%  { opacity: 1;   filter: drop-shadow(0 0 10px #29A9EA) drop-shadow(0 0 18px #29A9EA); }
+    60%  { opacity: .6;  filter: drop-shadow(0 0 10px #B026FF) drop-shadow(0 0 20px #B026FF); }
+    100% { opacity: .55; filter: drop-shadow(0 0 4px #FFFFFF) drop-shadow(0 0 8px #FFFFFF); }
   }
   .plataforma-nombre {
     font-size: 15px;
@@ -322,6 +332,7 @@
     color: #F1F1F1;
     animation: textoParpadeo 4.5s ease-in-out infinite;
   }
+
 
   .buscador-dispositivo { margin-bottom: 4px; }
   .btn-cambiar-plataforma {
@@ -349,6 +360,20 @@
     outline: none;
     border-color: #E10600;
     box-shadow: 0 0 10px rgba(225,6,0,0.55), 0 0 18px rgba(176,38,255,0.35);
+  }
+  .input-buscador.elegido {
+    border-color: #E10600;
+    background-color: #150505;
+    animation: inputGlowIntenso 1.6s ease-in-out infinite, inputTextoTinte 1.6s ease-in-out infinite;
+  }
+  @keyframes inputGlowIntenso {
+    0%, 100% { box-shadow: 0 0 10px rgba(225,6,0,0.6), 0 0 22px rgba(176,38,255,0.4), inset 0 0 8px rgba(225,6,0,0.25); }
+    50%      { box-shadow: 0 0 22px rgba(225,6,0,0.95), 0 0 40px rgba(176,38,255,0.65), inset 0 0 14px rgba(225,6,0,0.4); }
+  }
+  @keyframes inputTextoTinte {
+    0%, 100% { opacity: 1;  color: #FF3366; text-shadow: 0 0 6px rgba(225,6,0,0.5); }
+    50%      { opacity: .45; color: #FFFFFF; text-shadow: 0 0 2px rgba(255,255,255,0.2); }
+    75%      { opacity: .9;  color: #E10600; text-shadow: 0 0 12px rgba(225,6,0,0.9); }
   }
   .resultados-buscador {
     margin-bottom: 14px;
@@ -1307,7 +1332,7 @@
      Video de fondo: Video_segunda_interfaz.mp4 (debe subirse al repo,
      en la misma carpeta que este index.html, con ese nombre exacto). -->
 <div id="bienvenida-overlay" class="oculto">
-  <video id="bienvenida-video-bg" autoplay muted loop playsinline webkit-playsinline preload="auto" disableRemotePlayback>
+  <video id="bienvenida-video-bg" muted loop playsinline webkit-playsinline preload="none" disableRemotePlayback>
     <source src="Video_segunda_interfaz.mp4" type="video/mp4">
   </video>
   <div id="bienvenida-overlay-oscuro"></div>
@@ -1388,7 +1413,7 @@
      la contraseña correcta. -->
 <div id="contenido-generador" class="oculto">
 
-  <video id="video-bg" autoplay muted loop playsinline webkit-playsinline preload="auto" disableRemotePlayback>
+  <video id="video-bg" muted loop playsinline webkit-playsinline preload="none" disableRemotePlayback>
     <source src="Videosensi.mp4" type="video/mp4">
   </video>
   <div class="overlay-oscuro"></div>
@@ -1706,12 +1731,33 @@
   function mostrarBienvenida() {
     candadoOverlay.classList.add("oculto");
     bienvenidaOverlay.classList.remove("oculto");
+    // Carga perezosa: el video de esta fase solo empieza a descargarse
+    // hasta que de verdad se muestra, para no competir por recursos con
+    // el de la fase 1 (esto es lo que ayuda a que no se trabe en Telegram).
+    const vBienvenida = document.getElementById("bienvenida-video-bg");
+    if (vBienvenida && !vBienvenida.dataset.cargado) {
+      vBienvenida.dataset.cargado = "1";
+      vBienvenida.load();
+      vBienvenida.play().catch(() => {});
+    } else if (vBienvenida) {
+      vBienvenida.play().catch(() => {});
+    }
   }
 
   function desbloquear() {
     candadoOverlay.classList.add("oculto");
     bienvenidaOverlay.classList.add("oculto");
     contenidoGenerador.classList.remove("oculto");
+    // Igual que con la de bienvenida: el video del generador solo se
+    // carga hasta que el usuario de verdad llega a esta fase.
+    const vGenerador = document.getElementById("video-bg");
+    if (vGenerador && !vGenerador.dataset.cargado) {
+      vGenerador.dataset.cargado = "1";
+      vGenerador.load();
+      vGenerador.play().catch(() => {});
+    } else if (vGenerador) {
+      vGenerador.play().catch(() => {});
+    }
   }
 
   // La fase 1 (candado) pide la contraseña SIEMPRE, sin excepción,
@@ -2067,8 +2113,10 @@
   function seleccionarMarcaDesdeBuscador(marcaId) {
     marcaSelect.value = marcaId;
     marcaSelect.dispatchEvent(new Event("change"));
+    inputBuscarMarca.classList.add("elegido");
     inputBuscarModelo.value = "";
     inputBuscarModelo.classList.remove("oculto");
+    inputBuscarModelo.classList.remove("elegido");
     resultadosModelo.classList.add("oculto");
     resultadosModelo.innerHTML = "";
   }
@@ -2083,9 +2131,11 @@
       plataformaSelector.classList.add("oculto");
       buscadorDispositivo.classList.remove("oculto");
       inputBuscarMarca.value = "";
+      inputBuscarMarca.classList.remove("elegido");
       resultadosMarca.classList.add("oculto");
       resultadosMarca.innerHTML = "";
       inputBuscarModelo.classList.add("oculto");
+      inputBuscarModelo.classList.remove("elegido");
       resultadosModelo.classList.add("oculto");
 
       if (plataformaElegida === "ios") {
@@ -2103,12 +2153,15 @@
     buscadorDispositivo.classList.add("oculto");
     plataformaSelector.classList.remove("oculto");
     document.querySelectorAll(".plataforma-card").forEach((c) => c.classList.remove("elegido"));
+    inputBuscarMarca.classList.remove("elegido");
+    inputBuscarModelo.classList.remove("elegido");
     plataformaElegida = null;
     marcaSelect.value = "";
     marcaSelect.dispatchEvent(new Event("change"));
   });
 
   inputBuscarMarca.addEventListener("input", () => {
+    inputBuscarMarca.classList.remove("elegido");
     const texto = inputBuscarMarca.value.trim().toLowerCase();
     if (!texto) {
       resultadosMarca.classList.add("oculto");
@@ -2124,6 +2177,7 @@
   });
 
   inputBuscarModelo.addEventListener("input", () => {
+    inputBuscarModelo.classList.remove("elegido");
     const texto = inputBuscarModelo.value.trim().toLowerCase();
     if (!texto) {
       resultadosModelo.classList.add("oculto");
@@ -2133,6 +2187,7 @@
     const filtrados = modelosCache.filter((m) => m.label.toLowerCase().includes(texto));
     renderResultadosBusqueda(resultadosModelo, filtrados, (item) => {
       inputBuscarModelo.value = item.label;
+      inputBuscarModelo.classList.add("elegido");
       resultadosModelo.classList.add("oculto");
       modeloSelect.value = item.id;
       modeloSelect.dispatchEvent(new Event("change"));
@@ -2410,6 +2465,18 @@
     // Reintento silencioso si el autoplay inicial fue bloqueado.
     v.play().catch(() => {});
   });
+
+  // Desbloqueo extra para WebViews estrictos (como el navegador interno de
+  // Telegram): en el primer toque real del usuario en cualquier parte de la
+  // pantalla, se reintenta reproducir los 3 videos. No cambia nada más.
+  function desbloquearVideosConToque() {
+    ["candado-video-bg", "bienvenida-video-bg", "video-bg"].forEach((id) => {
+      const v = document.getElementById(id);
+      if (v && v.paused) v.play().catch(() => {});
+    });
+  }
+  document.addEventListener("touchstart", desbloquearVideosConToque, { once: true, passive: true });
+  document.addEventListener("click", desbloquearVideosConToque, { once: true });
 </script>
 
 </body>
