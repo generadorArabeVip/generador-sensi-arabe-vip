@@ -1520,10 +1520,10 @@
     box-sizing: border-box;
   }
   .fase4-666 {
-    font-size: 40px;
+    font-size: 28px;
     font-weight: 900;
     margin-top: 6px;
-    animation: textoNeonRojo 2.6s ease-in-out infinite, emojiFlotar 4.5s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite;
+    animation: textoNeonRojo 2.6s ease-in-out infinite, emojiFlotar 4.5s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite, emojiDesvanece 3.2s ease-in-out infinite;
   }
   .fase4-frase {
     animation: flotarSuave 4.2s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite;
@@ -1531,6 +1531,132 @@
   .fase4-marca {
     animation: flotarSuave 3.6s ease-in-out infinite;
     animation-delay: .3s;
+  }
+
+  /* ---- Fase 3: título arriba de los íconos de redes ---- */
+  .redes-oficiales-titulo {
+    color: #D4AF37;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    animation: flotarSuave 3.8s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite;
+  }
+
+  /* ---- Fase 3: bloque de soporte (hasta abajo) ---- */
+  #soporte-fase3 {
+    margin: 26px 0 10px 0;
+    text-align: center;
+  }
+  #soporte-fase3 .soporte-titulo {
+    color: #E10600;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(225,6,0,0.5);
+    animation: textoParpadeo 4s ease-in-out infinite;
+  }
+  #soporte-fase3 .soporte-manita {
+    font-size: 22px;
+    margin: 4px 0;
+    animation: flechaFlotar 1.4s ease-in-out infinite;
+  }
+  #soporte-fase3 a {
+    display: inline-block;
+    font-size: 34px;
+    color: #29A9EA;
+    text-shadow: 0 0 10px rgba(41,169,234,0.7);
+    animation: emojiFlotar 3s ease-in-out infinite, emojiNeonPulso 2.4s ease-in-out infinite;
+  }
+
+  /* ---- Fase 4: tres recuadros de búsqueda (HUD / Combo / Clan) ---- */
+  #fase4-buscadores {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 22px;
+    width: 100%;
+    max-width: 360px;
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+  .fase4-recuadro {
+    flex: 1 1 30%;
+    min-width: 96px;
+    background: #111111;
+    border: 1px solid #3A3A3A;
+    border-radius: 12px;
+    padding: 12px 6px;
+    text-align: center;
+    color: #B0B0B0;
+    font-size: 12px;
+    line-height: 1.3;
+    cursor: pointer;
+    transition: border-color .2s ease, color .2s ease, box-shadow .2s ease;
+  }
+  .fase4-recuadro:active,
+  .fase4-recuadro.activo {
+    border-color: #E10600;
+    color: #FF3366;
+    box-shadow: 0 0 14px rgba(225,6,0,0.5);
+  }
+  .fase4-recuadro-emoji {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ---- Fase 4: paneles de resultado (categorías, listas, resultado final) ---- */
+  .fase4-panel {
+    width: 100%;
+    max-width: 340px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    margin-top: 18px;
+    text-align: center;
+  }
+  .fase4-panel select {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #111111;
+    border: 1px solid #3A3A3A;
+    color: #E5E5E5;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  .fase4-logo-giro {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 14px auto 4px auto;
+    display: block;
+    border: 2px solid #E10600;
+    box-shadow: 0 0 16px rgba(225,6,0,0.6), 0 0 30px rgba(176,38,255,0.35);
+    animation: girarNeon 6s linear infinite, emojiFlotar 4s ease-in-out infinite;
+  }
+  .fase4-codigo-titulo {
+    color: #D4AF37;
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    animation: parpadeoNeon 2.8s infinite;
+  }
+  .fase4-codigo-caja {
+    background: #111111;
+    border: 1px solid #3A3A3A;
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #FF3366;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 6px;
+    word-break: break-all;
+    text-shadow: 0 0 8px rgba(225,6,0,0.5);
   }
 </style>
 </head>
@@ -1665,6 +1791,7 @@
       <span style="color:#E10600">6</span> <span style="color:#E10600">6</span> <span style="color:#E10600">6</span>
     </h1>
 
+  <div class="redes-oficiales-titulo">Redes Oficiales</div>
   <div class="redes-bar">
     <a href="https://www.instagram.com/sensiarabevip?igsi=MzRlODBiNWFlZA==" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
     <a href="https://www.tiktok.com/@sensiarabevip?_r=1&_t=ZS-99FUHQdshJC" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
@@ -1949,6 +2076,12 @@
 
   </div>
 
+  <div id="soporte-fase3">
+    <div class="soporte-titulo">Soporte Oficial del Generador</div>
+    <div class="soporte-manita">👇</div>
+    <a href="https://t.me/SensiArabeVip?text=%F0%9F%91%B9%20Hola%20hermano%20tuve%20un%20problema%20con%20el%20generador%20necesito%20ayuda%20%E2%9A%99%EF%B8%8F%F0%9F%91%87" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i></a>
+  </div>
+
   </div>
 </div>
 
@@ -1972,6 +2105,93 @@
       الأفضل في التكوينات الداخلية
     </div>
     <div class="marca-sello fase4-marca">S:.S:.VI-66</div>
+
+    <!-- ---- Fila de 3 recuadros: HUD / Combo de Habilidades / Busca de Clan ---- -->
+    <div id="fase4-buscadores">
+      <div class="fase4-recuadro" id="fase4-recuadro-hud">
+        <span class="fase4-recuadro-emoji">⚙️👺📱</span>HUD
+      </div>
+      <div class="fase4-recuadro" id="fase4-recuadro-combo">
+        <span class="fase4-recuadro-emoji">🇦🇱</span>COMBO DE HABILIDADES
+      </div>
+      <div class="fase4-recuadro" id="fase4-recuadro-clan">
+        <span class="fase4-recuadro-emoji">🦅</span>BUSCA DE CLAN
+      </div>
+    </div>
+
+    <!-- ---- HUD: paso 1, elegir categoría ---- -->
+    <div id="fase4-hud-categoria" class="fase4-panel oculto">
+      <select id="fase4-hud-categoria-select">
+        <option value="">Elige una categoría de HUD</option>
+        <option value="famosos">HUD Famosos</option>
+        <option value="2dedos">HUD 2 dedos</option>
+        <option value="3dedos">HUD 3 dedos</option>
+        <option value="4dedos">HUD 4 dedos</option>
+        <option value="4dedos_hibrido">HUD 4 dedos Híbrido</option>
+        <option value="5dedos">HUD 5 dedos</option>
+      </select>
+    </div>
+
+    <!-- ---- HUD: paso 2, elegir versión/famoso dentro de la categoría ---- -->
+    <div id="fase4-hud-version" class="fase4-panel oculto">
+      <select id="fase4-hud-version-select">
+        <option value="">Selecciona</option>
+      </select>
+    </div>
+
+    <!-- ---- HUD: resultado (logo solo si es "famosos") ---- -->
+    <div id="fase4-hud-resultado" class="fase4-panel oculto">
+      <img id="fase4-hud-logo" class="fase4-logo-giro oculto" alt="Logo">
+      <div class="fase4-codigo-titulo">CÓDIGO OFICIAL</div>
+      <div class="fase4-codigo-caja" id="fase4-hud-codigo"></div>
+      <button class="btn-rojo-neon fase4-btn-copiar" id="fase4-hud-copiar" style="margin-top:12px;">Copiar</button>
+      <button class="btn-rojo-neon oculto fase4-btn-regresar" id="fase4-hud-regresar" style="margin-top:10px;">« Regresar</button>
+    </div>
+
+    <!-- ---- Combo: paso 1, elegir clase ---- -->
+    <div id="fase4-combo-clase" class="fase4-panel oculto">
+      <select id="fase4-combo-clase-select">
+        <option value="">Elige una clase</option>
+      </select>
+    </div>
+
+    <!-- ---- Combo: paso 2, elegir personaje ---- -->
+    <div id="fase4-combo-personaje" class="fase4-panel oculto">
+      <select id="fase4-combo-personaje-select">
+        <option value="">Selecciona un personaje</option>
+      </select>
+    </div>
+
+    <!-- ---- Combo: resultado (sin logo) ---- -->
+    <div id="fase4-combo-resultado" class="fase4-panel oculto">
+      <div class="fase4-codigo-titulo">CÓDIGO DEL COMBO</div>
+      <div class="fase4-codigo-caja" id="fase4-combo-codigo"></div>
+      <button class="btn-rojo-neon fase4-btn-copiar" id="fase4-combo-copiar" style="margin-top:12px;">Copiar</button>
+      <button class="btn-rojo-neon oculto fase4-btn-regresar" id="fase4-combo-regresar" style="margin-top:10px;">« Regresar</button>
+    </div>
+
+    <!-- ---- Clan: paso 1, elegir/buscar clan ---- -->
+    <div id="fase4-clan-buscar" class="fase4-panel oculto">
+      <select id="fase4-clan-select">
+        <option value="">Busca tu clan</option>
+      </select>
+    </div>
+
+    <!-- ---- Clan: resultado (logo fijo de colaboración) ---- -->
+    <div id="fase4-clan-resultado" class="fase4-panel oculto">
+      <img src="Logo_colaboracion_nvx.png" class="fase4-logo-giro" alt="Colaboración Sensi Árabe Vip x NVX Esports">
+      <div class="fase4-codigo-titulo">COLABORACIÓN SENSI ÁRABE VIP X NVX ESPORTS</div>
+      <div class="fase4-codigo-caja" id="fase4-clan-id"></div>
+      <button class="btn-rojo-neon fase4-btn-copiar" id="fase4-clan-copiar" style="margin-top:12px;">Copiar</button>
+      <button class="btn-rojo-neon oculto fase4-btn-regresar" id="fase4-clan-regresar" style="margin-top:10px;">« Regresar</button>
+    </div>
+
+    <!-- ---- Continuar a Fase 5: aparece con completar al menos 1 de los 3 ---- -->
+    <div id="slider-fase5" class="slider-desliza slider-ancho oculto" style="margin-top:26px;">
+      <div class="slider-relleno"></div>
+      <div class="slider-texto">Desliza para continuar »</div>
+      <div class="slider-mango">➤</div>
+    </div>
   </div>
 </div>
 
@@ -2951,6 +3171,235 @@
       tgApp.HapticFeedback.impactOccurred(tipo || "medium");
     }
   }
+
+  /* ================= FASE 4: TRES BUSCADORES (HUD / COMBO / CLAN) =================
+     Estructura en Firestore (el usuario la va llenando desde la consola,
+     igual que hace con "sensibilidades" para marca/modelo):
+
+     huds/{categoria}            -> { items: { id: { nombre, codigo, logo? } } }
+       categorías: famosos, 2dedos, 3dedos, 4dedos, 4dedos_hibrido, 5dedos
+       (solo "famosos" usa el campo "logo"; el resto no muestra logo)
+
+     combos/{clase}              -> { personajes: { id: { nombre, codigo } } }
+       (un doc por clase: curandero, agresivo, lobo_solitario, etc. -- placeholders)
+
+     clanes/lista                -> { items: { id: { nombre, idClan } } }
+       (el logo de esta sección es fijo: Logo_colaboracion_nvx.png, no por clan)
+
+     Con completar (copiar) al menos UNO de los tres, se revela el
+     deslizador para continuar a Fase 5 (aún sin construir). */
+
+  const recuadroHud = document.getElementById("fase4-recuadro-hud");
+  const recuadroCombo = document.getElementById("fase4-recuadro-combo");
+  const recuadroClan = document.getElementById("fase4-recuadro-clan");
+  const fase4Buscadores = document.getElementById("fase4-buscadores");
+
+  const panelesFase4 = [
+    "fase4-hud-categoria", "fase4-hud-version", "fase4-hud-resultado",
+    "fase4-combo-clase", "fase4-combo-personaje", "fase4-combo-resultado",
+    "fase4-clan-buscar", "fase4-clan-resultado"
+  ].map((id) => document.getElementById(id));
+
+  function ocultarPanelesFase4() {
+    panelesFase4.forEach((p) => p.classList.add("oculto"));
+  }
+
+  function volverAFase4Inicio() {
+    ocultarPanelesFase4();
+    fase4Buscadores.classList.remove("oculto");
+    recuadroHud.classList.remove("activo");
+    recuadroCombo.classList.remove("activo");
+    recuadroClan.classList.remove("activo");
+  }
+
+  function mostrarPanelFase4(id) {
+    ocultarPanelesFase4();
+    fase4Buscadores.classList.add("oculto");
+    document.getElementById(id).classList.remove("oculto");
+  }
+
+  let fase4AlgunoCompletado = false;
+  const sliderFase5 = document.getElementById("slider-fase5");
+
+  function copiarTexto(texto, botonRegresar) {
+    const hacerVisible = () => {
+      botonRegresar.classList.remove("oculto");
+      vibrarTelegram("medium");
+      if (!fase4AlgunoCompletado) {
+        fase4AlgunoCompletado = true;
+        sliderFase5.classList.remove("oculto");
+      }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(hacerVisible).catch(() => {
+        copiarTextoFallback(texto);
+        hacerVisible();
+      });
+    } else {
+      copiarTextoFallback(texto);
+      hacerVisible();
+    }
+  }
+
+  function copiarTextoFallback(texto) {
+    const ta = document.createElement("textarea");
+    ta.value = texto;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  /* ---- HUD ---- */
+  recuadroHud.addEventListener("click", () => {
+    recuadroHud.classList.add("activo");
+    mostrarPanelFase4("fase4-hud-categoria");
+  });
+
+  const hudCategoriaSelect = document.getElementById("fase4-hud-categoria-select");
+  const NOMBRES_CATEGORIA_HUD = {
+    famosos: "HUD Famosos", "2dedos": "HUD 2 dedos", "3dedos": "HUD 3 dedos",
+    "4dedos": "HUD 4 dedos", "4dedos_hibrido": "HUD 4 dedos Híbrido", "5dedos": "HUD 5 dedos"
+  };
+
+  hudCategoriaSelect.addEventListener("change", async () => {
+    const categoria = hudCategoriaSelect.value;
+    if (!categoria) return;
+    const versionSelect = document.getElementById("fase4-hud-version-select");
+    versionSelect.innerHTML = '<option value="">Selecciona</option>';
+    const docSnap = await getDoc(doc(db, "huds", categoria));
+    const items = docSnap.exists() ? (docSnap.data().items || {}) : {};
+    Object.keys(items).forEach((id) => {
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = items[id].nombre || id;
+      versionSelect.appendChild(opt);
+    });
+    versionSelect.dataset.categoria = categoria;
+    mostrarPanelFase4("fase4-hud-version");
+  });
+
+  document.getElementById("fase4-hud-version-select").addEventListener("change", async function () {
+    const id = this.value;
+    if (!id) return;
+    const categoria = this.dataset.categoria;
+    const docSnap = await getDoc(doc(db, "huds", categoria));
+    const item = (docSnap.data().items || {})[id];
+    if (!item) return;
+    const logoImg = document.getElementById("fase4-hud-logo");
+    if (categoria === "famosos" && item.logo) {
+      logoImg.src = item.logo;
+      logoImg.classList.remove("oculto");
+    } else {
+      logoImg.classList.add("oculto");
+    }
+    document.getElementById("fase4-hud-codigo").textContent = item.codigo || "";
+    document.getElementById("fase4-hud-regresar").classList.add("oculto");
+    mostrarPanelFase4("fase4-hud-resultado");
+  });
+
+  document.getElementById("fase4-hud-copiar").addEventListener("click", () => {
+    const codigo = document.getElementById("fase4-hud-codigo").textContent;
+    copiarTexto(codigo, document.getElementById("fase4-hud-regresar"));
+  });
+  document.getElementById("fase4-hud-regresar").addEventListener("click", volverAFase4Inicio);
+
+  /* ---- Combo de Habilidades ---- */
+  recuadroCombo.addEventListener("click", async () => {
+    recuadroCombo.classList.add("activo");
+    const claseSelect = document.getElementById("fase4-combo-clase-select");
+    claseSelect.innerHTML = '<option value="">Elige una clase</option>';
+    const snapshot = await getDocs(collection(db, "combos"));
+    snapshot.forEach((docSnap) => {
+      const opt = document.createElement("option");
+      opt.value = docSnap.id;
+      opt.textContent = docSnap.id.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      claseSelect.appendChild(opt);
+    });
+    mostrarPanelFase4("fase4-combo-clase");
+  });
+
+  document.getElementById("fase4-combo-clase-select").addEventListener("change", async function () {
+    const clase = this.value;
+    if (!clase) return;
+    const personajeSelect = document.getElementById("fase4-combo-personaje-select");
+    personajeSelect.innerHTML = '<option value="">Selecciona un personaje</option>';
+    const docSnap = await getDoc(doc(db, "combos", clase));
+    const personajes = docSnap.exists() ? (docSnap.data().personajes || {}) : {};
+    Object.keys(personajes).forEach((id) => {
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = personajes[id].nombre || id;
+      personajeSelect.appendChild(opt);
+    });
+    personajeSelect.dataset.clase = clase;
+    mostrarPanelFase4("fase4-combo-personaje");
+  });
+
+  document.getElementById("fase4-combo-personaje-select").addEventListener("change", async function () {
+    const id = this.value;
+    if (!id) return;
+    const clase = this.dataset.clase;
+    const docSnap = await getDoc(doc(db, "combos", clase));
+    const personaje = (docSnap.data().personajes || {})[id];
+    if (!personaje) return;
+    document.getElementById("fase4-combo-codigo").textContent = personaje.codigo || "";
+    document.getElementById("fase4-combo-regresar").classList.add("oculto");
+    mostrarPanelFase4("fase4-combo-resultado");
+  });
+
+  document.getElementById("fase4-combo-copiar").addEventListener("click", () => {
+    const codigo = document.getElementById("fase4-combo-codigo").textContent;
+    copiarTexto(codigo, document.getElementById("fase4-combo-regresar"));
+  });
+  document.getElementById("fase4-combo-regresar").addEventListener("click", volverAFase4Inicio);
+
+  /* ---- Busca de Clan ---- */
+  recuadroClan.addEventListener("click", async () => {
+    recuadroClan.classList.add("activo");
+    const clanSelect = document.getElementById("fase4-clan-select");
+    clanSelect.innerHTML = '<option value="">Busca tu clan</option>';
+    const docSnap = await getDoc(doc(db, "clanes", "lista"));
+    const items = docSnap.exists() ? (docSnap.data().items || {}) : {};
+    Object.keys(items).forEach((id) => {
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = items[id].nombre || id;
+      clanSelect.appendChild(opt);
+    });
+    mostrarPanelFase4("fase4-clan-buscar");
+  });
+
+  document.getElementById("fase4-clan-select").addEventListener("change", async function () {
+    const id = this.value;
+    if (!id) return;
+    const docSnap = await getDoc(doc(db, "clanes", "lista"));
+    const clan = (docSnap.data().items || {})[id];
+    if (!clan) return;
+    document.getElementById("fase4-clan-id").textContent = clan.idClan || "";
+    document.getElementById("fase4-clan-regresar").classList.add("oculto");
+    mostrarPanelFase4("fase4-clan-resultado");
+  });
+
+  document.getElementById("fase4-clan-copiar").addEventListener("click", () => {
+    const idClan = document.getElementById("fase4-clan-id").textContent;
+    copiarTexto(idClan, document.getElementById("fase4-clan-regresar"));
+  });
+  document.getElementById("fase4-clan-regresar").addEventListener("click", volverAFase4Inicio);
+
+  /* ---- Deslizador hacia Fase 5 (pendiente de construir) ---- */
+  crearSliderProgreso(
+    sliderFase5,
+    () => {},
+    () => {
+      vibrarTelegram("heavy");
+      // Fase 5 aún no está construida -- este es el punto donde se
+      // conectará cuando se arme esa fase.
+      console.log("Fase 4 completa: listo para pasar a Fase 5.");
+    }
+  );
 
   cargarMarcas();
 
