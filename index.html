@@ -1328,20 +1328,10 @@
     text-shadow: 0 0 8px rgba(225,6,0,0.6);
   }
 
-  /* ================= TRANSICIÓN FASE 3 → FASE 4 ================= */
-  #transicion-fase4-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    background: #050505;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    text-align: center;
-    overflow: hidden;
-  }
+  /* ================= TRANSICIÓN FINAL DE FASE 3 =================
+     Ya no es un overlay fijo aparte: ahora vive dentro del propio
+     #contenido-generador (ver .fase3-final-flecha y .slider-ancho
+     más abajo, y el bloque #fase3-transicion-final en el HTML). */
   .transicion-paso {
     display: flex;
     flex-direction: column;
@@ -1401,7 +1391,7 @@
     font-size: 38px;
     pointer-events: none;
     filter: drop-shadow(0 0 6px #8C6A16) drop-shadow(0 0 2px #D4AF37);
-    animation: girarNeon 5s linear infinite, emojiFlotar 4s ease-in-out infinite;
+    animation: girarNeon 5s linear infinite, emojiFlotar 4s ease-in-out infinite, emojiDesvanece 3.4s ease-in-out infinite;
   }
   .engranaje-desliza.arrastrando .engranaje-icono,
   .engranaje-desliza.completo .engranaje-icono {
@@ -1418,6 +1408,10 @@
     border: 1px solid #E10600;
     box-shadow: 0 0 10px rgba(225,6,0,0.6);
     cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
   }
   .engranaje-desliza.arrastrando .engranaje-mango,
   .engranaje-desliza.completo .engranaje-mango {
@@ -1462,6 +1456,29 @@
     opacity: var(--progreso-frac, 0);
     transition: opacity .05s linear;
     animation: textoParpadeo 5s ease-in-out infinite;
+  }
+
+  /* ---- 666 en negro (transición final de Fase 3, dentro del mismo
+     fondo) y barra más ancha para más distancia de arrastre ---- */
+  .seis-seis-seis-negro {
+    color: #050505;
+    -webkit-text-stroke: 1px #3A3A3A;
+  }
+  .slider-ancho {
+    max-width: 340px;
+    width: 100%;
+  }
+  .fase3-final-flecha {
+    font-size: 40px;
+    line-height: 1;
+    color: #E10600;
+    text-shadow: 0 0 10px #FF3B3B, 0 0 22px #E10600;
+    margin: 6px 0 2px 0;
+    animation: flechaFlotar 1.6s ease-in-out infinite, emojiDesvanece 3.4s ease-in-out infinite;
+  }
+  @keyframes flechaFlotar {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(10px); }
   }
 
   /* ================= FASE 4 ================= */
@@ -1892,48 +1909,47 @@
     <div id="lista-resenas" style="margin-top:14px;"></div>
   </div>
 
-  <div class="frase-final">
-    الأفضل في التكوينات الداخلية
+  <div id="fase3-info-final">
+    <div class="frase-final">
+      الأفضل في التكوينات الداخلية
+    </div>
+    <div class="marca-sello">S:.S:.VI-66</div>
+
+    <button id="btn-continuar-fase4" class="oculto btn-rojo-neon" style="margin-top:18px;">Continuar »</button>
   </div>
-  <div class="marca-sello">S:.S:.VI-66</div>
 
-  <button id="btn-continuar-fase4" class="oculto btn-rojo-neon" style="margin-top:18px;">Continuar »</button>
+  <!-- ================= TRANSICIÓN FINAL DE FASE 3 =================
+       Ya no es un overlay aparte con fondo negro: vive dentro del mismo
+       contenedor de Fase 3, así que reutiliza su mismo fondo/video.
+       Al darle "Continuar", se oculta #fase3-info-final (arriba) y se
+       revela esto en su lugar, en la misma pantalla. -->
+  <div id="fase3-transicion-final" class="oculto">
 
-  </div>
-</div>
-
-<!-- ================= TRANSICIÓN FASE 3 → FASE 4 =================
-     Dos pantallas nuevas, independientes del deslizador circular que ya
-     usan candado/bienvenida (crearSliderCircular no se toca).
-     Paso A: engranaje ⚙️ que solo tiñe de gris a rojo si se gira en
-             sentido antihorario (derecha→izquierda).
-     Paso B: relleno automático del "666" en diagonal, de abajo-izquierda
-             a arriba-derecha. Al terminar, entra a Fase 4. -->
-<div id="transicion-fase4-overlay" class="oculto">
-
-  <div id="transicion-paso-engranaje" class="transicion-paso">
-    <div class="emoji-flotante-neon emoji-👺">👺</div>
-    <div class="engranaje-desliza-wrap">
-      <div id="engranaje-dial" class="engranaje-desliza">
+    <div id="circulo-final-wrap" class="engranaje-desliza-wrap">
+      <div id="circulo-final-dial" class="engranaje-desliza">
         <div class="engranaje-pista"></div>
-        <div class="engranaje-icono">⚙️</div>
-        <div class="engranaje-mango" id="engranaje-mango"></div>
+        <div class="engranaje-icono">👺</div>
+        <div class="engranaje-mango" id="circulo-final-mango">⚙️</div>
       </div>
       <div class="engranaje-hint">Gira de derecha a izquierda »</div>
     </div>
+
+    <div id="fase3-final-flecha" class="fase3-final-flecha oculto">⌄</div>
+
+    <div id="fase3-final-666" class="oculto" style="margin-top:6px;">
+      <div class="seis-seis-seis-relleno-wrap">
+        <span class="seis-seis-seis-relleno seis-seis-seis-negro" id="fase3-final-666-texto">666</span>
+      </div>
+      <div id="slider-final-fase3" class="slider-desliza slider-ancho" style="margin-top:24px;">
+        <div class="slider-relleno"></div>
+        <div class="slider-texto">Desliza para continuar »</div>
+        <div class="slider-mango">➤</div>
+      </div>
+    </div>
+
   </div>
 
-  <div id="transicion-paso-666" class="transicion-paso oculto" style="margin-top:28px;">
-    <div class="seis-seis-seis-relleno-wrap">
-      <span class="seis-seis-seis-relleno" id="seis-seis-seis-relleno">666</span>
-    </div>
-    <div id="slider-666" class="slider-desliza" style="margin-top:24px;">
-      <div class="slider-relleno"></div>
-      <div class="slider-texto">Desliza para continuar »</div>
-      <div class="slider-mango">➤</div>
-    </div>
   </div>
-
 </div>
 
 <!-- ================= FASE 4 =================
@@ -2699,12 +2715,9 @@
     );
   });
 
-  /* ================= TRANSICIÓN FASE 3 → FASE 4 =================
-     Pieza de código independiente del crearSliderCircular que ya usan
-     candado/bienvenida -- no se toca esa función ni su comportamiento. */
-  const transicionFase4Overlay = document.getElementById("transicion-fase4-overlay");
-  const transicionPasoEngranaje = document.getElementById("transicion-paso-engranaje");
-  const transicionPaso666 = document.getElementById("transicion-paso-666");
+  /* ================= TRANSICIÓN FINAL DE FASE 3 =================
+     Ya no es un overlay aparte (#transicion-fase4-overlay): ahora vive
+     dentro del mismo #contenido-generador, ver más abajo. */
   const fase4Overlay = document.getElementById("fase4-overlay");
 
   /* ---- Deslizador del 666 (manual, con tinte proporcional) ----
@@ -2869,7 +2882,7 @@
   }
 
   function mostrarFase4() {
-    transicionFase4Overlay.classList.add("oculto");
+    contenidoGenerador.classList.add("oculto");
     fase4Overlay.classList.remove("oculto");
     // Misma carga perezosa que usan bienvenida/generador: el video de
     // Fase 4 solo se descarga hasta que el usuario de verdad llega aquí.
@@ -2883,29 +2896,39 @@
     }
   }
 
+  const fase3InfoFinal = document.getElementById("fase3-info-final");
+  const fase3TransicionFinal = document.getElementById("fase3-transicion-final");
+  const fase3FinalFlecha = document.getElementById("fase3-final-flecha");
+  const fase3Final666 = document.getElementById("fase3-final-666");
+
   btnContinuarFase4.addEventListener("click", () => {
     vibrarTelegram("medium");
-    transicionFase4Overlay.classList.remove("oculto");
-    transicionPasoEngranaje.classList.remove("oculto");
-    transicionPaso666.classList.add("oculto");
-    document.getElementById("seis-seis-seis-relleno").style.setProperty("--progreso-frac", "0");
+    // Ya no se abre ningún overlay nuevo: se oculta la info de ajustes
+    // (tarjetas, frase, marca, este mismo botón) y se revela el paso
+    // final en el mismo fondo/video de Fase 3.
+    fase3InfoFinal.classList.add("oculto");
+    fase3TransicionFinal.classList.remove("oculto");
+    fase3FinalFlecha.classList.add("oculto");
+    fase3Final666.classList.add("oculto");
+    document.getElementById("fase3-final-666-texto").style.setProperty("--progreso-frac", "0");
   });
 
   crearEngranajeDial(
-    document.getElementById("engranaje-dial"),
-    document.getElementById("engranaje-mango"),
+    document.getElementById("circulo-final-dial"),
+    document.getElementById("circulo-final-mango"),
     () => {
       vibrarTelegram("heavy");
-      // El engranaje se queda visible (ya teñido de rojo); debajo se
-      // revela el 666 + la barra "Desliza", sin ocultar nada más.
-      transicionPaso666.classList.remove("oculto");
+      // El círculo (👺 + ⚙️) se queda visible ya teñido de rojo; debajo
+      // aparece la flechita y, junto con ella, el 666 + la barra.
+      fase3FinalFlecha.classList.remove("oculto");
+      fase3Final666.classList.remove("oculto");
     }
   );
 
   crearSliderProgreso(
-    document.getElementById("slider-666"),
+    document.getElementById("slider-final-fase3"),
     (pct) => {
-      document.getElementById("seis-seis-seis-relleno").style.setProperty("--progreso-frac", (pct / 100).toFixed(3));
+      document.getElementById("fase3-final-666-texto").style.setProperty("--progreso-frac", (pct / 100).toFixed(3));
     },
     () => {
       vibrarTelegram("heavy");
