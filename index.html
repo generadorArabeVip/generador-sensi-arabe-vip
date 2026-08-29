@@ -55,10 +55,21 @@
   /* Fase 3: vidrio esmerilado en vez de negro sólido, para que el
      video de fondo se distinga a través del panel. Contorno dorado
      con aura multicolor exótica (dorado → rojo → morado) girando. */
+  /* Fase 3: la tarjeta completa (con todo lo de en medio) se centra
+     de verdad en la pantalla, en vez de quedar pegada arriba. */
+  #contenido-generador {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+    box-sizing: border-box;
+  }
   #contenido-generador .panel {
     position: relative;
     z-index: 2;
     max-width: 340px;
+    margin: 0 auto;
     background: transparent;
     border: 1px solid rgba(212,175,55,0.6);
     animation: panelAuraExotica 6s ease-in-out infinite, panelFlotar 6s ease-in-out infinite;
