@@ -1637,7 +1637,8 @@
     border: 1px solid transparent;
     border-radius: 14px;
     position: relative;
-    overflow: hidden;
+    max-height: 280px;
+    overflow-y: auto;
     animation: fase4ListaAparece .35s ease-out;
   }
   #contenido-fase4 .resultados-buscador::before {
@@ -3559,9 +3560,28 @@
     { valor: "5dedos", texto: "HUD 5 dedos" }
   ];
 
+  /* Envuelve un getDoc para que, si Firestore lo rechaza (por ejemplo
+     por las reglas de seguridad), se vea el problema en pantalla en
+     vez de quedarse "pegado" sin hacer nada. */
+  async function leerDocSeguro(coleccion, idDoc, contenedorError) {
+    try {
+      return await getDoc(doc(db, coleccion, idDoc));
+    } catch (e) {
+      contenedorError.innerHTML = "";
+      const aviso = document.createElement("div");
+      aviso.className = "resultado-item";
+      aviso.style.color = "#FF3366";
+      aviso.textContent = "⚠️ No se pudo cargar (" + (e.code || e.message || "error") + ")";
+      contenedorError.appendChild(aviso);
+      return null;
+    }
+  }
+
   pintarLista(document.getElementById("fase4-hud-categoria-lista"), CATEGORIAS_HUD, async (categoria) => {
     const listaVersion = document.getElementById("fase4-hud-version-lista");
-    const docSnap = await getDoc(doc(db, "huds", categoria));
+    mostrarPanelFase4("fase4-hud-version");
+    const docSnap = await leerDocSeguro("huds", categoria, listaVersion);
+    if (!docSnap) return;
     const items = docSnap.exists() ? (docSnap.data().items || {}) : {};
     const opciones = Object.keys(items).map((id) => ({ valor: id, texto: items[id].nombre || id }));
     pintarLista(listaVersion, opciones, async (id) => {
@@ -3582,7 +3602,6 @@
         mostrarPanelFase4("fase4-hud-resultado");
       });
     });
-    mostrarPanelFase4("fase4-hud-version");
   });
 
   document.getElementById("fase4-hud-descargar").addEventListener("click", () => {
@@ -3615,7 +3634,9 @@
     { valor: "competitivos", texto: "Competitivos" }
   ], async (modo) => {
     const listaItem = document.getElementById("fase4-combo-item-lista");
-    const docSnap = await getDoc(doc(db, "combos", modo));
+    mostrarPanelFase4("fase4-combo-item");
+    const docSnap = await leerDocSeguro("combos", modo, listaItem);
+    if (!docSnap) return;
     const items = docSnap.exists() ? (docSnap.data().items || {}) : {};
     const opciones = Object.keys(items).map((id) => ({ valor: id, texto: items[id].nombre || id }));
     pintarLista(listaItem, opciones, async (id) => {
@@ -3636,7 +3657,6 @@
         mostrarPanelFase4("fase4-combo-resultado");
       });
     });
-    mostrarPanelFase4("fase4-combo-item");
   });
 
   document.getElementById("fase4-combo-descargar").addEventListener("click", () => {
@@ -3659,10 +3679,13 @@
      con Copiar, + el logo del clan girando con neón) ---- */
   recuadroClan.addEventListener("click", async () => {
     recuadroClan.classList.add("activo");
-    const docSnap = await getDoc(doc(db, "clanes", "lista"));
+    const listaClan = document.getElementById("fase4-clan-lista");
+    mostrarPanelFase4("fase4-clan-buscar");
+    const docSnap = await leerDocSeguro("clanes", "lista", listaClan);
+    if (!docSnap) return;
     const items = docSnap.exists() ? (docSnap.data().items || {}) : {};
     const opciones = Object.keys(items).map((id) => ({ valor: id, texto: items[id].nombre || id }));
-    pintarLista(document.getElementById("fase4-clan-lista"), opciones, (id) => {
+    pintarLista(listaClan, opciones, (id) => {
       const clan = items[id];
       if (!clan) return;
       mostrarCargaFase4(() => {
@@ -3678,7 +3701,6 @@
         mostrarPanelFase4("fase4-clan-resultado");
       });
     });
-    mostrarPanelFase4("fase4-clan-buscar");
   });
 
   document.getElementById("fase4-clan-copiar").addEventListener("click", () => {
