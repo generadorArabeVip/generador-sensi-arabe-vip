@@ -1,0 +1,2494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador Oficial - Sensi Árabe Vip</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: #050505;
+    color: #F1F1F1;
+    font-family: sans-serif;
+  }
+
+  /* ---- Video de fondo ---- */
+  #video-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    filter: brightness(1.25) contrast(1.12) saturate(1.15);
+    z-index: 0;
+  }
+  .overlay-oscuro {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(5,5,5,0.42), rgba(26,0,0,0.5), rgba(5,5,5,0.62));
+    z-index: 1;
+  }
+
+  /* ---- Panel flotante ---- */
+  .panel {
+    position: relative;
+    max-width: 480px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(8,8,8,0.88);
+    border: 1px solid #8C6A16;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(225,6,0,0.18), 0 0 60px rgba(0,0,0,0.6);
+    animation: panelAuraPulso 4s ease-in-out infinite;
+  }
+  @keyframes panelAuraPulso {
+    0%, 100% { box-shadow: 0 0 30px rgba(225,6,0,0.18), 0 0 60px rgba(0,0,0,0.6); border-color: #8C6A16; }
+    50%      { box-shadow: 0 0 42px rgba(212,175,55,0.32), 0 0 70px rgba(225,6,0,0.22), 0 0 60px rgba(0,0,0,0.6); border-color: #D4AF37; }
+  }
+  /* Fase 3: vidrio esmerilado en vez de negro sólido, para que el
+     video de fondo se distinga a través del panel. Contorno dorado
+     con aura multicolor exótica (dorado → rojo → morado) girando. */
+  /* Fase 3: la tarjeta completa (con todo lo de en medio) se centra
+     de verdad en la pantalla, en vez de quedar pegada arriba. */
+  #contenido-generador {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+    box-sizing: border-box;
+  }
+  #contenido-generador .panel {
+    position: relative;
+    z-index: 2;
+    max-width: 340px;
+    margin: 0 auto;
+    background: transparent;
+    border: 1px solid rgba(212,175,55,0.6);
+    animation: panelAuraExotica 6s ease-in-out infinite, panelFlotar 6s ease-in-out infinite;
+  }
+  @keyframes panelAuraExotica {
+    0%   { box-shadow: 0 0 26px rgba(212,175,55,0.28), 0 0 55px rgba(0,0,0,0.5); border-color: rgba(212,175,55,0.65); }
+    33%  { box-shadow: 0 0 30px rgba(225,6,0,0.32), 0 0 60px rgba(0,0,0,0.5); border-color: rgba(225,6,0,0.6); }
+    66%  { box-shadow: 0 0 30px rgba(176,38,255,0.30), 0 0 60px rgba(0,0,0,0.5); border-color: rgba(176,38,255,0.55); }
+    100% { box-shadow: 0 0 26px rgba(212,175,55,0.28), 0 0 55px rgba(0,0,0,0.5); border-color: rgba(212,175,55,0.65); }
+  }
+  @keyframes panelFlotar {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-12px) rotate(0.5deg); }
+  }
+  /* Esquinas doradas decorativas, estilo "marco VIP" */
+  .panel::before, .panel::after {
+    content: "";
+    position: absolute;
+    width: 26px; height: 26px;
+    border: 2px solid #D4AF37;
+    filter: drop-shadow(0 0 4px #D4AF37);
+    pointer-events: none;
+  }
+  .panel::before {
+    top: -1px; left: -1px;
+    border-right: none; border-bottom: none;
+    border-radius: 16px 0 0 0;
+  }
+  .panel::after {
+    bottom: -1px; right: -1px;
+    border-left: none; border-top: none;
+    border-radius: 0 0 16px 0;
+  }
+  #contenido-generador .panel::before,
+  #contenido-generador .panel::after {
+    animation: esquinaExotica 6s ease-in-out infinite;
+  }
+  @keyframes esquinaExotica {
+    0%   { border-color: #D4AF37; filter: drop-shadow(0 0 5px #D4AF37); }
+    33%  { border-color: #E10600; filter: drop-shadow(0 0 6px #E10600); }
+    66%  { border-color: #B026FF; filter: drop-shadow(0 0 6px #B026FF); }
+    100% { border-color: #D4AF37; filter: drop-shadow(0 0 5px #D4AF37); }
+  }
+  .panel-candado {
+    max-width: 340px;
+    width: 100%;
+    margin: 0;
+    animation: panelAuraPulso 4s ease-in-out infinite, panelFlotarNotorio 5s ease-in-out infinite;
+  }
+
+  /* ---- Soporte por Telegram (Fase 1) ---- */
+  .soporte-telegram-box {
+    margin-top: 18px;
+    text-align: center;
+  }
+  .soporte-telegram-texto {
+    font-size: 13px;
+    color: #FF1414;
+    line-height: 1.5;
+    margin-bottom: 6px;
+    animation: textoNeonRojo 2.6s ease-in-out infinite, textoFlotaSuave 3.6s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite;
+  }
+  @keyframes textoNeonRojo {
+    0%, 100% {
+      text-shadow: 0 0 4px #FFFFFF, 0 0 8px #FFFFFF, 0 0 14px #FF1414;
+    }
+    50% {
+      text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px #FF1414, 0 0 42px #FF1414;
+    }
+  }
+  @keyframes textoFlotaSuave {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+  }
+  @keyframes textoParpadeo {
+    0%, 92%, 100% { opacity: 1; }
+    95%           { opacity: 0.55; }
+  }
+  .soporte-telegram-manita {
+    font-size: 20px;
+    animation: manitaRebote 1.4s ease-in-out infinite;
+    margin-bottom: 4px;
+  }
+  @keyframes manitaRebote {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(6px); }
+  }
+  .soporte-telegram-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    color: #29A9EA;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(41,169,234,0.6);
+    font-size: 24px;
+    text-decoration: none;
+    filter: drop-shadow(0 0 4px rgba(41,169,234,0.6));
+    transition: transform .2s, filter .2s;
+    animation: telegramNeon 2.6s ease-in-out infinite;
+  }
+  .soporte-telegram-link:hover, .soporte-telegram-link:active {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 12px #29A9EA);
+  }
+  @keyframes telegramNeon {
+    0%, 100% { box-shadow: 0 0 6px rgba(41,169,234,0.35); }
+    50%      { box-shadow: 0 0 16px rgba(41,169,234,0.65); }
+  }
+  @keyframes panelFlotarNotorio {
+    0%, 100%  { transform: translateY(0) rotate(0deg); }
+    50%       { transform: translateY(-10px) rotate(-0.4deg); }
+  }
+
+  .logo {
+    display: block;
+    margin: 0 auto 10px auto;
+    max-width: 200px;
+    width: 100%;
+    /* Truco para "quitar" un fondo negro sólido del PNG: con screen,
+       los pixeles negros se funden con el fondo oscuro y quedan
+       invisibles, sin tocar el archivo original. */
+    mix-blend-mode: screen;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    animation: logoSpin3D 9s linear infinite, logoNeon 3s ease-in-out infinite;
+  }
+  @keyframes logoSpin3D {
+    0%   { transform: perspective(700px) rotateY(0deg); }
+    100% { transform: perspective(700px) rotateY(360deg); }
+  }
+  @keyframes logoNeon {
+    0%, 100% { filter: drop-shadow(0 0 6px #8C6A16) drop-shadow(0 0 2px #D4AF37); }
+    50%      { filter: drop-shadow(0 0 20px #E10600) drop-shadow(0 0 8px #F5D76E); }
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #FF1414;
+    animation: textoNeonRojo 2.6s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite;
+  }
+
+  /* ---- Barra de redes ---- */
+  .redes-bar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 8px 0 18px 0;
+  }
+  .redes-bar a {
+    color: #D4AF37;
+    font-size: 26px;
+    text-decoration: none;
+    filter: drop-shadow(0 0 4px #8C6A16);
+    transition: filter .2s, transform .2s;
+    display: inline-block;
+    animation: iconoFlotaNeon 2.8s ease-in-out infinite;
+  }
+  .redes-bar a:nth-child(1) { animation-delay: 0s; }
+  .redes-bar a:nth-child(2) { animation-delay: .35s; }
+  .redes-bar a:nth-child(3) { animation-delay: .7s; }
+  @keyframes iconoFlotaNeon {
+    0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 4px #8C6A16); }
+    50%      { transform: translateY(-6px); filter: drop-shadow(0 0 13px #E10600) drop-shadow(0 0 6px #D4AF37); }
+  }
+  .redes-bar a:hover, .redes-bar a:active {
+    filter: drop-shadow(0 0 14px #E10600);
+    transform: scale(1.18);
+  }
+
+  /* ---- Contador en tiempo real ---- */
+  .contador-box {
+    text-align: center;
+    margin: 4px 0 18px 0;
+  }
+  .contador-numero {
+    font-size: 26px;
+    font-weight: bold;
+    color: #050505;
+    -webkit-text-stroke: 1px #FFFFFF;
+    text-shadow: 0 0 6px #FFFFFF, 0 0 12px #FFFFFF, 0 0 20px #D9D9D9;
+    animation: contadorNeonBlanco 2.4s ease-in-out infinite, textoFlotaSuave 3.6s ease-in-out infinite;
+  }
+  @keyframes contadorNeonBlanco {
+    0%, 100% { text-shadow: 0 0 5px #FFFFFF, 0 0 10px #FFFFFF, 0 0 16px #CFCFCF; }
+    50%      { text-shadow: 0 0 12px #FFFFFF, 0 0 22px #FFFFFF, 0 0 34px #FFFFFF, 0 0 46px #D9D9D9; }
+  }
+  .contador-label {
+    font-size: 11px;
+    color: #A6A6A6;
+    letter-spacing: 1px;
+  }
+
+  select, textarea {
+    width: 100%;
+    padding: 12px 40px 12px 14px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    border: 1px solid #8C6A16;
+    font-size: 16px;
+    background: #111111;
+    color: #F1F1F1;
+    font-family: inherit;
+    transition: border-color .25s ease, box-shadow .25s ease, color .25s ease, transform .15s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  /* ================= BUSCADOR DE DISPOSITIVO (capa visual sobre los selects) =================
+     No toca Firebase ni la lógica de marca/modelo: los <select> reales siguen
+     existiendo y funcionando igual, solo quedan ocultos visualmente. */
+  #marca, #modelo {
+    display: none !important;
+  }
+
+  .plataforma-selector {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .plataforma-card {
+    flex: 1;
+    text-align: center;
+    padding: 18px 10px;
+    border-radius: 14px;
+    border: 1px solid #3A3A3A;
+    background: #111111;
+    cursor: pointer;
+    transition: transform .15s ease;
+    animation: plataformaPulso 3.2s ease-in-out infinite, plataformaRespira 2.6s ease-in-out infinite;
+  }
+  .plataforma-card:active { transform: scale(0.97); }
+  .plataforma-card#card-ios { animation-delay: 0s; }
+  .plataforma-card#card-android { animation-delay: .5s; }
+  @keyframes plataformaPulso {
+    0%, 100% { box-shadow: 0 0 6px rgba(140,106,22,0.25); border-color: #3A3A3A; }
+    50%      { box-shadow: 0 0 16px rgba(212,175,55,0.4), 0 0 26px rgba(225,6,0,0.2); border-color: #8C6A16; }
+  }
+  @keyframes plataformaRespira {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50%      { transform: scale(1.035) translateY(-3px); }
+  }
+  .plataforma-card.elegido {
+    border-color: #E10600;
+    box-shadow: 0 0 14px rgba(225,6,0,0.7), 0 0 26px rgba(176,38,255,0.4);
+    animation: pulsoNeonSelect 1.8s ease-in-out infinite;
+  }
+  .plataforma-emoji {
+    font-size: 30px;
+    display: block;
+    margin-bottom: 6px;
+    animation: textoFlotaSuave 3.6s ease-in-out infinite, emojiNeonExotico 3.2s ease-in-out infinite;
+  }
+  @keyframes emojiNeonExotico {
+    0%   { opacity: .55; filter: drop-shadow(0 0 4px #FFFFFF) drop-shadow(0 0 8px #FFFFFF); }
+    30%  { opacity: 1;   filter: drop-shadow(0 0 10px #29A9EA) drop-shadow(0 0 18px #29A9EA); }
+    60%  { opacity: .6;  filter: drop-shadow(0 0 10px #B026FF) drop-shadow(0 0 20px #B026FF); }
+    100% { opacity: .55; filter: drop-shadow(0 0 4px #FFFFFF) drop-shadow(0 0 8px #FFFFFF); }
+  }
+  .plataforma-nombre {
+    font-size: 15px;
+    font-weight: bold;
+    color: #F1F1F1;
+    animation: textoParpadeo 4.5s ease-in-out infinite;
+  }
+
+
+  .buscador-dispositivo { margin-bottom: 4px; }
+  .btn-cambiar-plataforma {
+    background: none;
+    border: none;
+    color: #D4AF37;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 0 10px 0;
+  }
+  .input-buscador {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 4px;
+    border-radius: 10px;
+    border: 1px solid #8C6A16;
+    font-size: 15px;
+    background: #111111;
+    color: #F1F1F1;
+    font-family: inherit;
+    text-align: center;
+    animation: pulsoNeonGris 3s ease-in-out infinite;
+  }
+  .input-buscador:focus {
+    outline: none;
+    border-color: #E10600;
+    box-shadow: 0 0 10px rgba(225,6,0,0.55), 0 0 18px rgba(176,38,255,0.35);
+  }
+  .input-buscador.elegido {
+    border-color: #E10600;
+    background-color: #150505;
+    animation: inputGlowIntenso 1.6s ease-in-out infinite, inputTextoTinte 1.6s ease-in-out infinite;
+  }
+  @keyframes inputGlowIntenso {
+    0%, 100% { box-shadow: 0 0 10px rgba(225,6,0,0.6), 0 0 22px rgba(176,38,255,0.4), inset 0 0 8px rgba(225,6,0,0.25); }
+    50%      { box-shadow: 0 0 22px rgba(225,6,0,0.95), 0 0 40px rgba(176,38,255,0.65), inset 0 0 14px rgba(225,6,0,0.4); }
+  }
+  @keyframes inputTextoTinte {
+    0%, 100% { opacity: 1;  color: #FF3366; text-shadow: 0 0 6px rgba(225,6,0,0.5); }
+    50%      { opacity: .45; color: #FFFFFF; text-shadow: 0 0 2px rgba(255,255,255,0.2); }
+    75%      { opacity: .9;  color: #E10600; text-shadow: 0 0 12px rgba(225,6,0,0.9); }
+  }
+  .resultados-buscador {
+    margin-bottom: 14px;
+    max-height: 220px;
+    overflow-y: auto;
+    border-radius: 10px;
+    border: 1px solid #3A3A3A;
+    background: #0B0B0B;
+  }
+  .resultado-item {
+    padding: 11px 14px;
+    color: #F1F1F1;
+    border-bottom: 1px solid #222;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .resultado-item:last-child { border-bottom: none; }
+  .resultado-item:hover, .resultado-item:active {
+    background: #1A0505;
+    color: #FF3366;
+    text-shadow: 0 0 6px rgba(225,6,0,0.6);
+  }
+
+  /* ---- Selects premium: marca / modelo (flecha custom + efectos) ---- */
+  select#marca, select#modelo {
+    background-image: linear-gradient(45deg, transparent 50%, #D4AF37 50%),
+                       linear-gradient(135deg, #D4AF37 50%, transparent 50%);
+    background-position: calc(100% - 22px) calc(1em + 4px),
+                          calc(100% - 16px) calc(1em + 4px);
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    letter-spacing: .3px;
+    cursor: pointer;
+  }
+  select#marca:active, select#modelo:active { transform: scale(0.985); }
+
+  /* ---- Estado de los selects: sin elegir vs. ya seleccionado ---- */
+  select.sin-elegir {
+    border: 1px solid #3A3A3A;
+    background-color: #1A1A1A;
+    color: #7A7A7A;
+    animation: pulsoNeonGris 3s ease-in-out infinite;
+  }
+  @keyframes pulsoNeonGris {
+    0%, 100% { box-shadow: 0 0 4px rgba(122,122,122,0.2); border-color: #3A3A3A; }
+    50%      { box-shadow: 0 0 10px rgba(166,166,166,0.5); border-color: #5A5A5A; }
+  }
+  select.elegido {
+    border: 1px solid #E10600;
+    color: #FF3366;
+    background-color: #150505;
+    box-shadow: 0 0 8px rgba(225,6,0,0.65), 0 0 18px rgba(176,38,255,0.45), inset 0 0 6px rgba(225,6,0,0.25);
+    animation: pulsoNeonSelect 1.8s ease-in-out infinite;
+  }
+  @keyframes pulsoNeonSelect {
+    0%, 100% { box-shadow: 0 0 8px rgba(225,6,0,0.55), 0 0 18px rgba(176,38,255,0.35), inset 0 0 6px rgba(225,6,0,0.2); }
+    50%      { box-shadow: 0 0 14px rgba(225,6,0,0.9), 0 0 28px rgba(176,38,255,0.6), inset 0 0 10px rgba(225,6,0,0.35); }
+  }
+  select.elegido option {
+    color: #F1F1F1;
+    background: #111111;
+  }
+
+  /* ---- Efecto "deslizar en rojo" al momento exacto de seleccionar ---- */
+  select.select-flash {
+    animation: selectFlashRojo .55s ease-out;
+  }
+  @keyframes selectFlashRojo {
+    0%   { box-shadow: 0 0 0 rgba(225,6,0,0); background-color: #111111; }
+    25%  { box-shadow: 0 0 26px 4px rgba(225,6,0,0.95); background-color: #2A0505; }
+    100% { box-shadow: 0 0 8px rgba(225,6,0,0.55); background-color: #150505; }
+  }
+
+  /* ---- Cuando marca + modelo ya están listos: parpadeo intenso (prende/apaga) ---- */
+  select.ambos-listos {
+    animation: parpadeoListoFuerte 1.1s ease-in-out infinite;
+  }
+  @keyframes parpadeoListoFuerte {
+    0%, 100% { box-shadow: 0 0 6px rgba(225,6,0,0.4), 0 0 12px rgba(176,38,255,0.25); border-color: #7A0300; opacity: .78; }
+    50%      { box-shadow: 0 0 22px rgba(225,6,0,1), 0 0 38px rgba(176,38,255,0.7); border-color: #FF1414; opacity: 1; }
+  }
+
+  /* ================= BARRAS DE RESULTADO (neón) ================= */
+  .barras-resultado { display: block; }
+  .resultado-barra {
+    margin-bottom: 16px;
+    animation: barraApareceFlash .6s ease-out;
+  }
+  @keyframes barraApareceFlash {
+    0%   { opacity: 0; transform: translateY(6px); }
+    40%  { opacity: 1; }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .resultado-barra-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .resultado-barra-label {
+    font-size: 13px;
+    color: #D4AF37;
+  }
+  .resultado-barra-valor {
+    font-size: 18px;
+    font-weight: bold;
+    color: #F1F1F1;
+  }
+  .resultado-barra-track {
+    position: relative;
+    width: 100%;
+    height: 14px;
+    border-radius: 8px;
+    background: #1A1A1A;
+    border: 1px solid #3A3A3A;
+    overflow: hidden;
+  }
+  .resultado-barra-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 8px 0 0 8px;
+    background: linear-gradient(90deg, #5A5A5A, #E10600);
+    box-shadow: 0 0 8px rgba(225,6,0,0.5), 0 0 14px rgba(176,38,255,0.35);
+    transition: width 1s ease-out, background 1s ease-out;
+    animation: barraRespira var(--dur-respira, 2.2s) ease-in-out infinite;
+    animation-delay: .6s;
+  }
+  @keyframes barraRespira {
+    0%, 100% { filter: brightness(0.85) saturate(0.9); box-shadow: 0 0 6px rgba(225,6,0,0.35), 0 0 10px rgba(176,38,255,0.25); }
+    50%      { filter: brightness(1.35) saturate(1.25); box-shadow: 0 0 16px rgba(225,6,0,0.95), 0 0 28px rgba(176,38,255,0.65); }
+  }
+
+  /* ---- Posición sugerida del botón de disparo ---- */
+  .posicion-sugerida-boton {
+    text-align: right;
+    font-size: 12px;
+    color: #B026FF;
+    text-shadow: 0 0 6px #B026FF;
+    margin-bottom: 6px;
+    letter-spacing: .3px;
+  }
+
+  .card {
+    position: relative;
+    background: linear-gradient(155deg, #161616, #0A0A0A);
+    border: 1px solid #686868;
+    border-top: 1px solid #D4AF37;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    animation: cardIn .4s ease, cardGlow 3.2s ease-in-out infinite;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .card:active {
+    transform: scale(0.97);
+  }
+  /* Barrido de brillo dorado que cruza la card, como un destello de "premium" */
+  .card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(245,215,110,0.16), transparent);
+    animation: cardShine 4.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes cardShine {
+    0%   { left: -60%; }
+    35%  { left: 130%; }
+    100% { left: 130%; }
+  }
+  @keyframes cardGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(212,175,55,0); border-color: #686868; }
+    50%      { box-shadow: 0 0 14px rgba(212,175,55,0.18); border-color: #8C6A16; }
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .valor {
+    font-size: 22px;
+    font-weight: bold;
+    color: #F5D76E;
+    text-shadow: 0 0 10px rgba(245,215,110,0.35);
+  }
+  .label {
+    font-size: 12px;
+    color: #A6A6A6;
+    letter-spacing: .5px;
+  }
+  .nota {
+    font-size: 11px;
+    color: #686868;
+    font-style: italic;
+    margin-top: 4px;
+  }
+  .oculto {
+    display: none !important;
+  }
+
+  /* ---- Botón principal "Generar sensibilidad": neón blanco-rojo
+     que se desvanece y reaparece (efecto "fundido"), además del
+     parpadeo normal de texto que ya tienen todos los btn-rojo-neon. ---- */
+  #btn-generar-sensibilidad {
+    animation: pulsoBotonRojo 1.6s ease-in-out infinite,
+               parpadeoBotonTexto 2.3s ease-in-out infinite,
+               fundidoNeonBlancoRojo 3.4s ease-in-out infinite;
+  }
+  @keyframes fundidoNeonBlancoRojo {
+    0%   { opacity: 1;    text-shadow: 0 0 4px #FFFFFF, 0 0 14px #E10600, 0 0 26px #E10600; }
+    45%  { opacity: 0.45; text-shadow: 0 0 2px #FFFFFF, 0 0 6px #E10600; }
+    55%  { opacity: 0.45; text-shadow: 0 0 2px #FFFFFF, 0 0 6px #E10600; }
+    100% { opacity: 1;    text-shadow: 0 0 4px #FFFFFF, 0 0 14px #E10600, 0 0 26px #E10600; }
+  }
+
+  /* ---- Variante roja/morada neón para los botones del generador
+     (se activan/aparecen conforme avanzas seleccionando) ---- */
+  button.btn-rojo-neon {
+    background: linear-gradient(90deg, #7A0000, #E10600, #FF3366, #E10600, #7A0000);
+    color: #F1F1F1;
+    animation: pulsoBotonRojo 1.6s ease-in-out infinite, parpadeoBotonTexto 2.3s ease-in-out infinite;
+  }
+  @keyframes pulsoBotonRojo {
+    0%, 100% { box-shadow: 0 0 8px rgba(225,6,0,0.55), 0 0 16px rgba(176,38,255,0.3); }
+    50%      { box-shadow: 0 0 20px rgba(225,6,0,0.95), 0 0 36px rgba(176,38,255,0.6); }
+  }
+  button.btn-rojo-neon::before {
+    background: conic-gradient(
+      from 0deg,
+      transparent 0%,
+      transparent 78%,
+      #FF3366 86%,
+      #B026FF 92%,
+      transparent 98%
+    );
+  }
+
+  /* ---- Variante morada neón (ej. Regenerar sensibilidad) ---- */
+  button.btn-morado-neon {
+    background: linear-gradient(90deg, #3D0066, #B026FF, #E48EFF, #B026FF, #3D0066);
+    color: #F1F1F1;
+    animation: parpadeoBotonTextoMorado 2.6s ease-in-out infinite;
+  }
+  button.btn-morado-neon::before {
+    background: conic-gradient(
+      from 0deg,
+      transparent 0%,
+      transparent 78%,
+      #E48EFF 86%,
+      #B026FF 92%,
+      transparent 98%
+    );
+  }
+
+  /* ---- Parpadeo neón en el texto de los botones: se aplica siempre,
+     sin importar el color de fondo del botón (dorado por defecto,
+     rojo o morado en sus variantes). ---- */
+  @keyframes parpadeoBotonTexto {
+    0%, 100% { text-shadow: 0 0 2px #FFFFFF, 0 0 8px #E10600, 0 0 18px #E10600; }
+    50%      { text-shadow: 0 0 1px #FFFFFF, 0 0 3px #E10600; }
+  }
+  @keyframes parpadeoBotonTextoMorado {
+    0%, 100% { text-shadow: 0 0 2px #FFFFFF, 0 0 8px #B026FF, 0 0 18px #B026FF; }
+    50%      { text-shadow: 0 0 1px #FFFFFF, 0 0 3px #B026FF; }
+  }
+
+  /* ---- Botones con borde neón giratorio ---- */
+  button {
+    position: relative;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #8C6A16, #D4AF37, #F5D76E, #D4AF37, #8C6A16);
+    color: #050505;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: transform .12s ease, filter .12s ease;
+    animation: parpadeoBotonTexto 2.3s ease-in-out infinite;
+  }
+  button:active {
+    transform: scale(0.96);
+    filter: brightness(1.25);
+    background: linear-gradient(90deg, #7A0000, #E10600, #FF3366, #E10600, #7A0000) !important;
+    color: #F1F1F1 !important;
+    text-shadow: 0 0 6px rgba(0,0,0,0.5);
+    box-shadow: 0 0 16px rgba(225,6,0,0.85), 0 0 30px rgba(176,38,255,0.45);
+  }
+  button::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 10px;
+    padding: 2px;
+    /* Un solo tramo brillante (la "cometa") que recorre el borde,
+       el resto del contorno queda transparente/tenue. */
+    background: conic-gradient(
+      from 0deg,
+      transparent 0%,
+      transparent 78%,
+      #F5D76E 86%,
+      #E10600 92%,
+      transparent 98%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: girarNeon 2.2s linear infinite;
+    z-index: -1;
+  }
+  @keyframes girarNeon {
+    to { transform: rotate(360deg); }
+  }
+
+  .frase-final {
+    text-align: center;
+    color: #E10600;
+    margin-top: 30px;
+    font-size: 16px;
+  }
+  .marca-sello {
+    text-align: center;
+    color: #D4AF37;
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-top: 8px;
+    text-shadow: 0 0 6px #8C6A16;
+  }
+  .titulo-seccion {
+    text-align: center;
+    font-size: 18px;
+    color: #D4AF37;
+    text-shadow: 0 0 6px #8C6A16;
+    margin: 24px 0 14px 0;
+  }
+
+  /* ---- Loader premium: esfera con partículas orbitando ---- */
+  .loader {
+    text-align: center;
+    margin: 16px 0;
+  }
+  .loader-orbe {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 12px auto;
+  }
+  .loader-nucleo {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 32px; height: 32px;
+    margin: -16px 0 0 -16px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 32%, #FFFFFF, #F5D76E 42%, #E10600 100%);
+    box-shadow: 0 0 18px rgba(225,6,0,0.9), 0 0 34px rgba(212,175,55,0.55);
+    animation: loaderNucleoPulso 1.5s ease-in-out infinite;
+  }
+  @keyframes loaderNucleoPulso {
+    0%, 100% { transform: scale(1); filter: brightness(0.9) hue-rotate(0deg); box-shadow: 0 0 14px rgba(225,6,0,0.75), 0 0 26px rgba(212,175,55,0.4); }
+    50%      { transform: scale(1.18); filter: brightness(1.4) hue-rotate(-8deg); box-shadow: 0 0 26px rgba(255,255,255,0.9), 0 0 44px rgba(225,6,0,1); }
+  }
+
+  /* ---- Anillos de energía expandiéndose (onda de choque) ---- */
+  .loader-anillo {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 32px; height: 32px;
+    margin: -16px 0 0 -16px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(225,6,0,0.8);
+    box-shadow: 0 0 10px rgba(225,6,0,0.6);
+    animation: loaderAnilloExpande 1.8s ease-out infinite;
+  }
+  .loader-anillo-2 {
+    border-color: rgba(176,38,255,0.7);
+    box-shadow: 0 0 10px rgba(176,38,255,0.5);
+    animation-delay: .9s;
+  }
+  @keyframes loaderAnilloExpande {
+    0%   { transform: scale(1); opacity: .9; }
+    100% { transform: scale(2.6); opacity: 0; }
+  }
+  .loader-particula {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 5px; height: 5px;
+    margin: -2.5px 0 0 -2.5px;
+    border-radius: 50%;
+    filter: blur(0.2px);
+  }
+  @keyframes loaderOrbitar {
+    from { transform: rotate(0deg) translateX(var(--radio)); }
+    to   { transform: rotate(360deg) translateX(var(--radio)); }
+  }
+  /* Partícula roja */
+  .loader-particula:nth-child(1) {
+    --radio: 40px;
+    background: #E10600;
+    box-shadow: 0 0 8px #E10600, 0 0 4px #FF3B3B, 0 0 16px 2px rgba(225,6,0,0.35);
+    animation: loaderOrbitar 2.1s linear infinite;
+  }
+  /* Partícula blanca */
+  .loader-particula:nth-child(2) {
+    --radio: 34px;
+    background: #FFFFFF;
+    box-shadow: 0 0 8px #FFFFFF, 0 0 4px #FFFFFF, 0 0 16px 2px rgba(255,255,255,0.3);
+    animation: loaderOrbitar 2.9s linear infinite reverse;
+    animation-delay: .2s;
+  }
+  /* Partícula morada */
+  .loader-particula:nth-child(3) {
+    --radio: 45px;
+    background: #B026FF;
+    box-shadow: 0 0 8px #B026FF, 0 0 4px #E48EFF, 0 0 16px 2px rgba(176,38,255,0.35);
+    animation: loaderOrbitar 2.5s linear infinite;
+    animation-delay: .5s;
+  }
+  /* Partícula negra (con aro de brillo para que se note en el fondo oscuro) */
+  .loader-particula:nth-child(4) {
+    --radio: 30px;
+    background: #050505;
+    border: 1px solid #FF3B3B;
+    box-shadow: 0 0 8px #B026FF, 0 0 4px #E10600, 0 0 16px 2px rgba(176,38,255,0.3);
+    animation: loaderOrbitar 3.3s linear infinite reverse;
+    animation-delay: .8s;
+  }
+  /* Partícula roja clara */
+  .loader-particula:nth-child(5) {
+    --radio: 47px;
+    background: #FF3366;
+    box-shadow: 0 0 8px #FF3366, 0 0 4px #E10600, 0 0 16px 2px rgba(255,51,102,0.35);
+    animation: loaderOrbitar 2.7s linear infinite;
+    animation-delay: 1.1s;
+  }
+  /* Partícula morada clara */
+  .loader-particula:nth-child(6) {
+    --radio: 37px;
+    background: #E48EFF;
+    box-shadow: 0 0 8px #E48EFF, 0 0 4px #B026FF, 0 0 16px 2px rgba(228,142,255,0.3);
+    animation: loaderOrbitar 3.6s linear infinite reverse;
+    animation-delay: .6s;
+  }
+  .loader-texto {
+    color: #F5D76E;
+    font-size: 15px;
+    margin-bottom: 8px;
+    text-shadow: 0 0 8px #8C6A16;
+    letter-spacing: 1px;
+    animation: textoParpadeo 5s ease-in-out infinite;
+  }
+  .loader-barra {
+    width: 100%;
+    height: 8px;
+    border-radius: 6px;
+    background: #111111;
+    border: 1px solid #686868;
+    overflow: hidden;
+  }
+  .loader-barra-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #3A3A3A 0%, #6E6E6E 35%, #B0263F 72%, #E10600 100%);
+    box-shadow: 0 0 10px #E10600;
+    transition: width .15s linear;
+  }
+
+  #card-boton {
+    border: 1px solid #E10600 !important;
+    text-align: center;
+  }
+
+  /* ---- Reseñas ---- */
+  .estrellas-select {
+    text-align: center;
+  }
+  .resena-item {
+    background: #111111;
+    border: 1px solid #686868;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .resena-estrellas {
+    color: #F5D76E;
+    font-size: 14px;
+  }
+  .resena-texto {
+    font-size: 13px;
+    color: #F1F1F1;
+    margin-top: 4px;
+  }
+
+  /* ---- Candado de acceso ---- */
+  #candado-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    overflow: hidden;
+  }
+  #candado-video-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(1.25) contrast(1.12) saturate(1.15);
+    z-index: 0;
+  }
+  #candado-overlay-oscuro {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(5,5,5,0.42), rgba(26,0,0,0.5), rgba(5,5,5,0.62));
+    z-index: 1;
+  }
+  #candado-overlay > *:not(#candado-video-bg):not(#candado-overlay-oscuro) {
+    position: relative;
+    z-index: 2;
+  }
+  #candado-overlay .logo {
+    margin-bottom: 20px;
+  }
+  #candado-overlay input {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px;
+    margin-bottom: 14px;
+    border-radius: 8px;
+    border: 1px solid #8C6A16;
+    background: #111111;
+    color: #F1F1F1;
+    font-size: 16px;
+    text-align: center;
+  }
+  #candado-overlay button {
+    max-width: 300px;
+  }
+
+  /* ---- Deslizador "Entrar" (slide to unlock) — reutilizable ---- */
+  .slider-desliza {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    height: 52px;
+    border-radius: 26px;
+    background: #1A1A1A;
+    border: 1px solid #3A3A3A;
+    margin-top: 4px;
+    overflow: hidden;
+    user-select: none;
+    touch-action: none;
+  }
+  .slider-relleno {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 52px;
+    background: linear-gradient(90deg, #7A0000, #E10600);
+    box-shadow: 0 0 14px rgba(225,6,0,0.7);
+    transition: width .05s linear;
+  }
+  .slider-texto {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7A7A7A;
+    font-size: 14px;
+    letter-spacing: 1px;
+    pointer-events: none;
+    transition: color .2s ease;
+    text-align: center;
+    padding: 0 60px;
+    text-shadow: 0 0 3px rgba(122,122,122,0.4);
+    animation: parpadeoNeon 2.8s infinite;
+  }
+  .slider-desliza.deslizando .slider-texto,
+  .slider-desliza.completo .slider-texto {
+    color: #FF3366;
+    text-shadow: 0 0 8px rgba(225,6,0,0.6);
+  }
+  .slider-mango {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #111111;
+    border: 1px solid #E10600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #E10600;
+    font-size: 18px;
+    cursor: grab;
+    box-shadow: 0 0 10px rgba(225,6,0,0.6);
+  }
+  .slider-desliza.completo .slider-mango {
+    box-shadow: 0 0 18px rgba(225,6,0,0.95), 0 0 30px rgba(176,38,255,0.6);
+  }
+  .slider-desliza.deslizando .slider-mango,
+  .slider-desliza.completo .slider-mango {
+    background: linear-gradient(135deg, #7A0000, #E10600, #FF3366);
+    color: #FFFFFF;
+    border-color: #FF3366;
+  }
+  #candado-error {
+    color: #E10600;
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+  }
+  .candado-titulo {
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 340px;
+    margin-bottom: 6px;
+    color: #E10600;
+    text-shadow: 0 0 4px #FF3B3B, 0 0 10px #E10600, 0 0 22px #E10600, 0 0 34px #E10600;
+    animation: parpadeoNeon 2.6s infinite, flotarSuave 4.2s ease-in-out infinite;
+  }
+  .candado-marca {
+    margin-bottom: 22px;
+    color: #B026FF;
+    text-shadow: 0 0 8px rgba(176,38,255,0.55);
+    animation: flotarSuave 3.6s ease-in-out infinite;
+    animation-delay: .3s;
+  }
+  .candado-label {
+    color: #D4AF37;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-shadow: 0 0 6px #8C6A16;
+    margin-bottom: 10px;
+    animation: flotarSuave 3.9s ease-in-out infinite;
+    animation-delay: .6s;
+  }
+  @keyframes flotarSuave {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+  }
+
+  /* ---- Pantalla de bienvenida (después de acertar la contraseña) ---- */
+  #bienvenida-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 24px;
+    text-align: center;
+    overflow-y: auto;
+  }
+  #bienvenida-video-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(1.25) contrast(1.12) saturate(1.15);
+    z-index: 0;
+  }
+  #bienvenida-overlay-oscuro {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(5,5,5,0.42), rgba(26,0,0,0.5), rgba(5,5,5,0.62));
+    z-index: 1;
+  }
+  #bienvenida-overlay > *:not(#bienvenida-video-bg):not(#bienvenida-overlay-oscuro) {
+    position: relative;
+    z-index: 2;
+  }
+  #bienvenida-overlay .logo {
+    margin-bottom: 14px;
+  }
+  .bienvenida-titulo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #E10600;
+    text-shadow: 0 0 10px rgba(225,6,0,0.7), 0 0 22px rgba(176,38,255,0.4);
+    margin-bottom: 14px;
+    animation: pulsoTituloBienvenida 1.6s ease-in-out infinite, flotarSuave 4.4s ease-in-out infinite;
+  }
+  @keyframes pulsoTituloBienvenida {
+    0%, 100% { text-shadow: 0 0 8px rgba(225,6,0,0.6), 0 0 16px rgba(176,38,255,0.35); }
+    50%      { text-shadow: 0 0 16px rgba(225,6,0,1), 0 0 32px rgba(176,38,255,0.7); }
+  }
+  .bienvenida-linea {
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 380px;
+    color: #F1F1F1;
+    margin-bottom: 16px;
+    animation: flotarSuave 4.8s ease-in-out infinite;
+  }
+  .bienvenida-morado {
+    color: #B026FF;
+    text-shadow: 0 0 8px rgba(176,38,255,0.6);
+  }
+  .bienvenida-sello {
+    color: #D4AF37;
+    letter-spacing: 3px;
+    font-size: 13px;
+    text-shadow: 0 0 6px #8C6A16;
+    margin-bottom: 22px;
+  }
+
+  /* ---- Leyenda larga de la bienvenida (segunda fase) ---- */
+  .bienvenida-leyenda {
+    text-align: left;
+    max-width: 420px;
+    width: 100%;
+    margin: 6px 0 20px 0;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: #E8E8E8;
+  }
+  .bienvenida-leyenda h2 {
+    font-size: 15px;
+    color: #E10600;
+    text-shadow: 0 0 8px rgba(225,6,0,0.6);
+    margin: 22px 0 10px 0;
+    text-align: left;
+    padding-left: 10px;
+    border-left: 3px solid #E10600;
+  }
+  .bienvenida-leyenda ul {
+    margin: 8px 0;
+    padding-left: 18px;
+  }
+  .bienvenida-leyenda li {
+    margin-bottom: 8px;
+  }
+  .bienvenida-leyenda .leyenda-cierre {
+    text-align: left;
+    color: #E10600;
+    text-shadow: 0 0 8px rgba(225,6,0,0.6);
+    margin-top: 18px;
+    padding-left: 10px;
+    border-left: 3px solid #B026FF;
+  }
+  .bienvenida-leyenda .leyenda-cierre strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ---- Letrero de neón: parpadeo + colores variados en las letras ----
+     Se aplica por posición (nth-of-type) para no tener que tocar el
+     texto en el HTML. Cada título/palabra resaltada queda con su
+     propio color de tubo de neón y su propio parpadeo. */
+  @keyframes parpadeoNeon {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0.35; }
+  }
+  @keyframes letraFlotar {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-4px) rotate(-0.7deg); }
+  }
+  .bienvenida-leyenda h2,
+  .bienvenida-leyenda strong,
+  .bienvenida-leyenda .leyenda-cierre strong {
+    color: #0A0A0A;
+    animation: parpadeoNeon 3s infinite, letraFlotar 3.8s ease-in-out infinite;
+  }
+  .bienvenida-leyenda strong {
+    display: inline-block;
+  }
+  /* Títulos (h2): alternan rojo / azul neón */
+  .bienvenida-leyenda h2:nth-of-type(odd) {
+    text-shadow: 0 0 4px #FF3B3B, 0 0 10px #E10600, 0 0 22px #E10600, 0 0 34px #E10600;
+    animation-duration: 2.4s;
+    border-left-color: #E10600;
+  }
+  .bienvenida-leyenda h2:nth-of-type(even) {
+    text-shadow: 0 0 4px #6FE0FF, 0 0 10px #00AEEF, 0 0 22px #00AEEF, 0 0 34px #00AEEF;
+    animation-duration: 2.9s;
+    border-left-color: #00AEEF;
+  }
+  /* Palabras en negrita dentro de párrafos: alternan blanco / morado */
+  .bienvenida-leyenda p strong:nth-of-type(odd) {
+    text-shadow: 0 0 3px #FFFFFF, 0 0 8px #FFFFFF, 0 0 18px #FFFFFF;
+    animation-duration: 3.4s;
+  }
+  .bienvenida-leyenda p strong:nth-of-type(even) {
+    text-shadow: 0 0 3px #E48EFF, 0 0 8px #B026FF, 0 0 18px #B026FF;
+    animation-duration: 2.7s;
+  }
+  /* Puntos de la lista: alternan morado / blanco en su negrita */
+  .bienvenida-leyenda li:nth-of-type(odd) strong {
+    text-shadow: 0 0 3px #E48EFF, 0 0 8px #B026FF, 0 0 18px #B026FF;
+    animation-duration: 2.6s;
+  }
+  .bienvenida-leyenda li:nth-of-type(even) strong {
+    text-shadow: 0 0 3px #FFFFFF, 0 0 8px #FFFFFF, 0 0 18px #FFFFFF;
+    animation-duration: 3.1s;
+  }
+  /* Bloque final: rojo / azul / morado */
+  .bienvenida-leyenda .leyenda-cierre strong:nth-of-type(1) {
+    text-shadow: 0 0 4px #FF3B3B, 0 0 10px #E10600, 0 0 24px #E10600;
+    animation-duration: 2.3s;
+  }
+  .bienvenida-leyenda .leyenda-cierre strong:nth-of-type(2) {
+    text-shadow: 0 0 4px #6FE0FF, 0 0 10px #00AEEF, 0 0 24px #00AEEF;
+    animation-duration: 2.8s;
+  }
+  .bienvenida-leyenda .leyenda-cierre strong:nth-of-type(3) {
+    text-shadow: 0 0 4px #E48EFF, 0 0 10px #B026FF, 0 0 24px #B026FF;
+    animation-duration: 3.2s;
+  }
+  /* Texto en árabe: tubo de neón morado/blanco combinado */
+  .bienvenida-leyenda .leyenda-arabe {
+    color: #0A0A0A;
+    display: inline-block;
+    text-shadow: 0 0 3px #FFFFFF, 0 0 8px #B026FF, 0 0 20px #B026FF;
+    animation: parpadeoNeon 3.6s infinite, letraFlotar 4.4s ease-in-out infinite;
+  }
+
+  /* ---- Deslizador CIRCULAR (fase 2 → fase 3): se arrastra el mango
+     dando toda la vuelta alrededor del ícono ⚙️ para entrar al
+     generador. Reemplaza a la barra recta que se usaba antes. ---- */
+  .circulo-desliza-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .circulo-titulo {
+    font-size: 15px;
+    line-height: 1.5;
+    text-align: center;
+    max-width: 300px;
+    margin-bottom: 20px;
+    color: #E10600;
+    text-shadow: 0 0 4px #FF3B3B, 0 0 10px #E10600, 0 0 22px #E10600, 0 0 34px #E10600;
+    animation: parpadeoNeon 2.6s infinite;
+  }
+  .circulo-desliza {
+    position: relative;
+    width: 176px;
+    height: 176px;
+    border-radius: 50%;
+    background: conic-gradient(#E10600 calc(var(--progreso, 0) * 3.6deg), #1A1A1A 0deg);
+    touch-action: none;
+    user-select: none;
+    cursor: grab;
+  }
+  .circulo-pista {
+    position: absolute;
+    inset: 14px;
+    border-radius: 50%;
+    background: #050505;
+    border: 1px solid #3A3A3A;
+    pointer-events: none;
+  }
+  .circulo-icono {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 38px;
+    pointer-events: none;
+    filter: drop-shadow(0 0 6px #8C6A16) drop-shadow(0 0 2px #D4AF37);
+    animation: girarNeon 5s linear infinite;
+  }
+  .circulo-desliza.arrastrando .circulo-icono,
+  .circulo-desliza.completo .circulo-icono {
+    filter: drop-shadow(0 0 12px #E10600) drop-shadow(0 0 6px #B026FF);
+  }
+  .circulo-mango {
+    position: absolute;
+    top: 7px; left: 7px;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border-radius: 50%;
+    background: #111111;
+    border: 1px solid #E10600;
+    box-shadow: 0 0 10px rgba(225,6,0,0.6);
+    cursor: grab;
+  }
+  .circulo-desliza.arrastrando .circulo-mango,
+  .circulo-desliza.completo .circulo-mango {
+    background: linear-gradient(135deg, #7A0000, #E10600, #FF3366);
+    box-shadow: 0 0 18px rgba(225,6,0,0.95), 0 0 30px rgba(176,38,255,0.6);
+  }
+  .circulo-hint {
+    margin-top: 16px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: #7A7A7A;
+    text-shadow: 0 0 3px rgba(122,122,122,0.4);
+    animation: parpadeoNeon 2.9s infinite;
+  }
+  .circulo-desliza.arrastrando ~ .circulo-hint,
+  .circulo-desliza.completo ~ .circulo-hint {
+    color: #FF3366;
+    text-shadow: 0 0 8px rgba(225,6,0,0.6);
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= CANDADO DE ACCESO ================= -->
+<div id="candado-overlay">
+  <video id="candado-video-bg" autoplay muted loop playsinline webkit-playsinline preload="auto" disableRemotePlayback>
+    <source src="Video_bloqueo_sensi.mp4" type="video/mp4">
+  </video>
+  <div id="candado-overlay-oscuro"></div>
+  <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
+  <div class="panel panel-candado">
+    <h1 class="candado-titulo">⚙️📱👹 SENSI ÁRABE VIP يهيم<br>LAS MEJORES SETTINGS INTERNAS DE SENSIBILIDY<br>SOLO CON NOSOTROS</h1>
+    <div class="marca-sello candado-marca">S:.S:.VI-66</div>
+    <div class="candado-label">PASSWORD</div>
+    <input type="text" id="input-candado" placeholder="Escribe la contraseña" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+    <button id="btn-candado" class="oculto">Entrar</button>
+    <div id="slider-candado" class="slider-desliza">
+      <div class="slider-relleno"></div>
+      <div class="slider-texto">DESLIZA PARA ENTRAR »</div>
+      <div class="slider-mango"><i class="fa-solid fa-chevron-right"></i></div>
+    </div>
+    <div id="candado-error">Contraseña incorrecta, intenta de nuevo.</div>
+    <div class="soporte-telegram-box">
+      <div class="soporte-telegram-texto">¿Dudas o soporte? Contáctanos<br>⚙️👹👺🇦🇱</div>
+      <div class="soporte-telegram-manita">👇</div>
+      <a href="https://t.me/SensiArabeVip?text=Hola%20bro%20%F0%9F%91%B9%20Info%20para%20obtener%20la%20contrase%C3%B1a%20VIP%20del%20Generador%20Sensi%20%C3%81rabe%20Oficial%20S%3A.S%3A.VI-66%20%E2%9A%99%EF%B8%8F%F0%9F%91%BA%F0%9F%87%A6%F0%9F%87%B1%F0%9F%94%A5" target="_blank" rel="noopener" class="soporte-telegram-link" aria-label="Contactar por Telegram">
+        <i class="fa-brands fa-telegram"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ================= BIENVENIDA (después de acertar la contraseña) =================
+     Video de fondo: Video_segunda_interfaz.mp4 (debe subirse al repo,
+     en la misma carpeta que este index.html, con ese nombre exacto). -->
+<div id="bienvenida-overlay" class="oculto">
+  <video id="bienvenida-video-bg" muted loop playsinline webkit-playsinline preload="none" disableRemotePlayback>
+    <source src="Video_segunda_interfaz.mp4" type="video/mp4">
+  </video>
+  <div id="bienvenida-overlay-oscuro"></div>
+  <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
+  <div class="bienvenida-titulo">🩸🎯 BIENVENIDO A SENSI ÁRABE VIP 🎯🩸</div>
+  <div class="bienvenida-linea">
+    👺 Si has entrado aquí es porque eres diferente al resto...<br><br>
+    🔥 Aquí no vienes a probar suerte…<br>
+    vienes a buscar la configuración que te haga jugar diferente.
+    Y a destacar ☝️⚙️📱👺
+  </div>
+  <div class="bienvenida-linea">
+    👑 <span class="bienvenida-morado">GENERADOR OFICIAL</span><br>
+    🎯 SENSIBILIDADES<br>
+    👹👺 Android &amp; IOS<br>
+    ⚡ CONFIGURACIONES<br>
+    ⚙️📱🇦🇱 AJUSTES VIP<br>
+    <span class="bienvenida-morado">الأفضل — LOS MEJORES</span>
+  </div>
+  <div class="bienvenida-linea">
+    🔐 Acceso exclusivo para quienes buscan llevar tu juego al siguiente nivel.
+  </div>
+
+  <div class="bienvenida-leyenda">
+    <h2>👹🎯 S:.S:.VI-66 - MENÚ &amp; GENERADOR OFICIAL 🇦🇱💀</h2>
+    <p class="leyenda-arabe">نحن الأفضل - NOSOTROS SOMOS LOS MEJORES 🔥</p>
+
+    <h2>🔥 S:.S:.VI-66 - NO ES PARA TODOS ⚙️</h2>
+    <p><strong>S:.S:.VI-66</strong> 💀 no es una marca cualquiera. Es la marca que usan solo las personas que quieren destacar y no ser del montón. 👺</p>
+    <p><strong class="leyenda-arabe">نحن الأفضل</strong> - No lo decimos nosotros, lo demuestra nuestra experiencia. 📱🎯</p>
+
+    <h2>⚙️ 9 AÑOS DE EXPERIENCIA NOS AVALAN 👹</h2>
+    <p>Nos avalan <strong>más de 9 años de experiencia en Free Fire</strong>. 📱 Desde el inicio hasta hoy. 🇦🇱</p>
+    <p>Por eso podemos decir con orgullo: <strong class="leyenda-arabe">نحن الأفضل</strong> 💀 Porque nuestro desarrollo no es copia, es hecho por nosotros desde cero. ⚙️</p>
+
+    <h2>📱 MENÚ S:.S:.VI-66 - OPTIMIZACIÓN REAL 💀</h2>
+    <p>Nuestro <strong>Menú S:.S:.VI-66</strong> 🇦🇱 es más que una sensi, es un complemento completo modulado para que <strong>solo afecte cuando juegas</strong>. 👹</p>
+    <p><strong>¿Qué trae? 👺</strong></p>
+    <ul>
+      <li><strong>📱 DNS Mejorado para Juegos:</strong> Optimizamos tu DNS para menos lag y conexión más estable. 🇦🇱</li>
+      <li><strong>⚙️ Optimización Táctil del Sistema:</strong> Respuesta más rápida. 🔥</li>
+      <li><strong>🎯 Sensibilidades Rápidas y Bien Hechas:</strong> Usualmente damos sensis rápidas que levantan mira y pegan rojo más fácil, calibradas según tu teléfono. 💀</li>
+      <li><strong>🔥 Módulo Inteligente:</strong> Solo afecta cuando juegas, no es permanente. 📱</li>
+      <li><strong>👺 نحن الأفضل:</strong> Porque todo está relacionado 100% a tu modelo, no son números al azar.</li>
+    </ul>
+
+    <h2>📱 COMPATIBILIDAD OFICIAL S:.S:.VI-66 ⚙️</h2>
+    <p><strong>👹 MENÚ S:.S:.VI-66:</strong> Solamente para <strong>ANDROID</strong> 🇦🇱⚙️ - Trae DNS, sistema, DPI y módulo completo.</p>
+    <p><strong>🎯 GENERADOR S:.S:.VI-66:</strong> Para <strong>ANDROID &amp; iOS</strong> 📱🔥 - Sensi exacta según tu modelo.</p>
+
+    <h2>💀 S:.S:.VI-66 - SOLO PARA LOS QUE DESTACAN 👹</h2>
+    <p>Esta marca no la usa cualquiera. 🇦🇱 <strong>S:.S:.VI-66</strong> es para los que están hartos de ser del montón. 🎯🔥</p>
+    <p>Si quieres ser del montón, hay muchas páginas.<br>
+    Si quieres destacar y ser parte de <strong class="leyenda-arabe">نحن الأفضل</strong>, ya sabes dónde estás. 📱⚙️</p>
+
+    <div class="leyenda-cierre">
+      <strong>👹 S:.S:.VI-66 OFICIAL 🇦🇱</strong>
+      <strong>🎯 نحن الأفضل - 9 AÑOS | DNS | MÓDULO INTELIGENTE | SENSIS RÁPIDAS 💀</strong>
+      <strong>⚙️ الأفضل - LOS QUE DESTACAN 🔥📱</strong>
+    </div>
+  </div>
+
+  <div class="bienvenida-sello">S:.S:.VI-66</div>
+
+  <div class="circulo-desliza-wrap">
+    <div class="circulo-titulo">ENTRAR AL GENERADOR OFICIAL<br>DE SENSI ÁRABE VIP</div>
+    <div id="circulo-bienvenida" class="circulo-desliza">
+      <div class="circulo-pista"></div>
+      <div class="circulo-icono">⚙️</div>
+      <div class="circulo-mango" id="circulo-bienvenida-mango"></div>
+    </div>
+    <div class="circulo-hint">Desliza en círculo para entrar »</div>
+  </div>
+</div>
+
+<!-- ================= CONTENIDO DEL GENERADOR =================
+     No se muestra (ni el video ni el panel) hasta desbloquear con
+     la contraseña correcta. -->
+<div id="contenido-generador" class="oculto">
+
+  <video id="video-bg" muted loop playsinline webkit-playsinline preload="none" disableRemotePlayback>
+    <source src="Videosensi.mp4" type="video/mp4">
+  </video>
+  <div class="overlay-oscuro"></div>
+
+  <div class="panel">
+
+    <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
+
+    <h1>
+      Generador Oficial<br>
+      Sensi Árabe Vip<br>
+      <span style="color:#E10600">الأفضل</span><br>
+      <span style="color:#E10600">6</span> <span style="color:#E10600">6</span> <span style="color:#E10600">6</span>
+    </h1>
+
+  <div class="redes-bar">
+    <a href="https://www.instagram.com/sensiarabevip?igsi=MzRlODBiNWFlZA==" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
+    <a href="https://www.tiktok.com/@sensiarabevip?_r=1&_t=ZS-99FUHQdshJC" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
+    <a href="https://whatsapp.com/channel/0029VbCsFXAICVfdnm140g03" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i></a>
+  </div>
+
+  <div class="contador-box">
+    <div class="contador-numero" id="contador-numero">0</div>
+    <div class="contador-label">SENSIBILIDADES GENERADAS EN VIVO</div>
+  </div>
+
+  <div class="plataforma-selector" id="plataforma-selector">
+    <div class="plataforma-card" id="card-ios" data-plataforma="ios">
+      <span class="plataforma-emoji">👹</span>
+      <span class="plataforma-nombre">iOS</span>
+    </div>
+    <div class="plataforma-card" id="card-android" data-plataforma="android">
+      <span class="plataforma-emoji">👺</span>
+      <span class="plataforma-nombre">Android</span>
+    </div>
+  </div>
+
+  <div class="buscador-dispositivo oculto" id="buscador-dispositivo">
+    <button type="button" class="btn-cambiar-plataforma" id="btn-cambiar-plataforma">‹ Cambiar dispositivo</button>
+    <input type="text" id="input-buscar-marca" class="input-buscador" placeholder="📱 👺 Ingresa tu dispositivo 👹 ⚙️" autocomplete="off">
+    <div class="resultados-buscador oculto" id="resultados-marca"></div>
+
+    <input type="text" id="input-buscar-modelo" class="input-buscador oculto" placeholder="📱 Ingresa tu modelo ⚙️" autocomplete="off">
+    <div class="resultados-buscador oculto" id="resultados-modelo"></div>
+  </div>
+
+  <select id="marca" class="sin-elegir">
+    <option value="">Selecciona tu marca</option>
+  </select>
+
+  <select id="modelo" class="oculto sin-elegir">
+    <option value="">Selecciona tu modelo</option>
+  </select>
+
+  <!-- Loader compartido para los pasos -->
+  <div class="loader oculto" id="loader">
+    <div class="loader-orbe">
+      <span class="loader-anillo"></span>
+      <span class="loader-anillo loader-anillo-2"></span>
+      <span class="loader-particula"></span>
+      <span class="loader-particula"></span>
+      <span class="loader-particula"></span>
+      <span class="loader-particula"></span>
+      <span class="loader-particula"></span>
+      <span class="loader-particula"></span>
+      <div class="loader-nucleo"></div>
+    </div>
+    <div class="loader-texto">Generando... 0%</div>
+    <div class="loader-barra"><div class="loader-barra-fill"></div></div>
+  </div>
+
+  <!-- Paso 1 -->
+  <button id="btn-generar-sensibilidad" class="oculto btn-rojo-neon">Generar sensibilidad</button>
+
+  <div id="resultado" class="oculto">
+    <div class="grid barras-resultado">
+      <div class="resultado-barra" data-max="200">
+        <div class="resultado-barra-header">
+          <span class="resultado-barra-label">🎯 General</span>
+          <span class="resultado-barra-valor" id="v-general"></span>
+        </div>
+        <div class="resultado-barra-track"><div class="resultado-barra-fill" id="v-general-barra"></div></div>
+      </div>
+      <div class="resultado-barra" data-max="200">
+        <div class="resultado-barra-header">
+          <span class="resultado-barra-label">🔴 Mira de Punto Rojo</span>
+          <span class="resultado-barra-valor" id="v-puntorojo"></span>
+        </div>
+        <div class="resultado-barra-track"><div class="resultado-barra-fill" id="v-puntorojo-barra"></div></div>
+      </div>
+      <div class="resultado-barra" data-max="200">
+        <div class="resultado-barra-header">
+          <span class="resultado-barra-label">🔭 Mira 2x</span>
+          <span class="resultado-barra-valor" id="v-2x"></span>
+        </div>
+        <div class="resultado-barra-track"><div class="resultado-barra-fill" id="v-2x-barra"></div></div>
+      </div>
+      <div class="resultado-barra" data-max="200">
+        <div class="resultado-barra-header">
+          <span class="resultado-barra-label">🔎 Mira 4x</span>
+          <span class="resultado-barra-valor" id="v-4x"></span>
+        </div>
+        <div class="resultado-barra-track"><div class="resultado-barra-fill" id="v-4x-barra"></div></div>
+      </div>
+      <div class="resultado-barra" data-max="200">
+        <div class="resultado-barra-header">
+          <span class="resultado-barra-label">🏹 Mira Francotirador</span>
+          <span class="resultado-barra-valor" id="v-francotirador"></span>
+        </div>
+        <div class="resultado-barra-track"><div class="resultado-barra-fill" id="v-francotirador-barra"></div></div>
+      </div>
+      <div class="resultado-barra" data-max="200">
+        <div class="resultado-barra-header">
+          <span class="resultado-barra-label">📷 Botón de Cámara 360°</span>
+          <span class="resultado-barra-valor" id="v-camara360"></span>
+        </div>
+        <div class="resultado-barra-track"><div class="resultado-barra-fill" id="v-camara360-barra"></div></div>
+      </div>
+    </div>
+    <div class="card" id="dpi-card">
+      <div class="label">📱 DPI sugerido</div>
+      <div class="valor" id="v-dpi"></div>
+      <div class="label" id="v-dpi-rango"></div>
+    </div>
+
+    <button id="btn-regenerar" class="btn-morado-neon">🔄 Regenerar sensibilidad</button>
+
+    <!-- Paso 2 -->
+    <button id="btn-disparo" class="oculto btn-rojo-neon">Generar botón de disparo</button>
+    <div class="card oculto" id="card-boton">
+      <div class="posicion-sugerida-boton" id="v-posicion-boton"></div>
+      <div class="label">🔫 Botón de Disparo</div>
+      <div class="valor" style="color:#E10600;" id="v-boton"></div>
+    </div>
+
+    <!-- Paso 3 -->
+    <button id="btn-ajustes-internos" class="oculto btn-rojo-neon">Generar ajustes internos</button>
+  </div>
+
+  <!-- Resultado fijo del paso 3 -->
+  <div id="seccion-ajustes-tecnicos" class="oculto">
+
+    <!-- Bloque Android: tabla fija, igual para todos los modelos -->
+    <div id="bloque-ajustes-android" class="oculto">
+      <div class="titulo-seccion">⚙️ Ajustes Técnicos del Sistema</div>
+
+      <div class="label" style="margin-bottom:8px;">OPCIONES DE DESARROLLADOR</div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">DPI (Ancho mínimo)</div>
+          <div class="valor">411 - 500</div>
+          <div class="nota">Ajustes &gt; Sistema &gt; Opciones de Desarrollador</div>
+        </div>
+        <div class="card">
+          <div class="label">Escala de animación de ventana</div>
+          <div class="valor">0.5x</div>
+          <div class="nota">Ajustes &gt; Sistema &gt; Opciones de Desarrollador</div>
+        </div>
+        <div class="card">
+          <div class="label">Escala de animación de transición</div>
+          <div class="valor">0.5x</div>
+          <div class="nota">Ajustes &gt; Sistema &gt; Opciones de Desarrollador</div>
+        </div>
+        <div class="card">
+          <div class="label">Escala de duración del animador</div>
+          <div class="valor">0.5x</div>
+          <div class="nota">Ajustes &gt; Sistema &gt; Opciones de Desarrollador</div>
+        </div>
+      </div>
+
+      <div class="label" style="margin:14px 0 8px 0;">SISTEMA</div>
+      <div class="card">
+        <div class="label">Velocidad del puntero</div>
+        <div class="valor">70%</div>
+        <div class="nota">Ajustes &gt; Sistema &gt; Idioma e Introducción &gt; Velocidad del Puntero</div>
+      </div>
+
+      <div class="label" style="margin:14px 0 8px 0;">ACCESIBILIDAD</div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Tiempo de respuesta táctil</div>
+          <div class="valor">Corto</div>
+          <div class="nota">Ajustes &gt; Accesibilidad</div>
+        </div>
+        <div class="card">
+          <div class="label">Click automático al parar el puntero</div>
+          <div class="valor">Desactivado</div>
+          <div class="nota">Ajustes &gt; Accesibilidad</div>
+        </div>
+      </div>
+
+      <div class="label" style="margin:14px 0 8px 0;">AJUSTES GLOBALES ANDROID</div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Puntero del mouse grande</div>
+          <div class="valor">Activado</div>
+          <div class="nota">Ajustes &gt; Accesibilidad</div>
+        </div>
+        <div class="card">
+          <div class="label">Supresión de respuesta táctil</div>
+          <div class="valor">Nivel medio</div>
+          <div class="nota">Ajustes &gt; Accesibilidad</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bloque iOS: valores por modelo específico -->
+    <div id="bloque-ajustes-ios" class="oculto">
+      <div class="titulo-seccion">⚙️ Ajustes Internos de iOS</div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Velocidad del cursor (DPI interno)</div>
+          <div class="valor" id="v-ios-velocidad"></div>
+        </div>
+        <div class="card">
+          <div class="label">Toque con asistencia (duración)</div>
+          <div class="valor" id="v-ios-toque"></div>
+        </div>
+        <div class="card">
+          <div class="label">Refinamiento de movimiento</div>
+          <div class="valor" id="v-ios-refinamiento"></div>
+        </div>
+        <div class="card">
+          <div class="label">Control por botón (exploración)</div>
+          <div class="valor" id="v-ios-control"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="titulo-seccion" id="seccion-ff">Configuración sugerida adicional FF</div>
+    <div class="grid">
+      <div class="card">
+        <div class="label">Gráficos</div>
+        <div class="valor">Suaves</div>
+      </div>
+      <div class="card">
+        <div class="label">FPS</div>
+        <div class="valor">Altos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= RESEÑAS =================
+       Oculto en fase 3: se reubica/rediseña en la fase 4 (pendiente).
+       Se deja el HTML y la lógica JS intactos para no perder nada. -->
+  <div id="bloque-resenas-fase3" style="display:none;">
+    <div class="titulo-seccion">⭐ Reseñas de la comunidad</div>
+    <div class="estrellas-select">
+      <select id="resena-estrellas">
+        <option value="5">★★★★★ (5)</option>
+        <option value="4">★★★★☆ (4)</option>
+        <option value="3">★★★☆☆ (3)</option>
+      </select>
+    </div>
+    <textarea id="resena-texto" placeholder="Escribe tu opinión sobre el generador..."></textarea>
+    <button id="btn-enviar-resena">Enviar reseña</button>
+    <div id="lista-resenas" style="margin-top:14px;"></div>
+  </div>
+
+  <div class="frase-final">
+    الأفضل في التكوينات الداخلية
+  </div>
+  <div class="marca-sello">S:.S:.VI-66</div>
+
+  </div>
+</div>
+
+<script src="calculo-boton.js"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script type="module">
+  try {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+  } catch (e) {
+    console.warn("Telegram WebApp no disponible:", e);
+  }
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc,
+    increment, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3kZdpd-4HO65mePIy93kFTPa3ciKUIDY",
+    authDomain: "generador-sensi-arabe-vip.firebaseapp.com",
+    projectId: "generador-sensi-arabe-vip",
+    storageBucket: "generador-sensi-arabe-vip.firebasestorage.app",
+    messagingSenderId: "648693505511",
+    appId: "1:648693505511:web:587af750ca9c9454d9f142"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  /* ================= CANDADO DE ACCESO =================
+     Contraseña guardada en Firestore: colección "config",
+     documento "acceso", campo "password".
+     Si el documento no existe todavía, se usa un valor por
+     defecto ("666") para no dejar la web sin acceso.
+  */
+  const candadoOverlay = document.getElementById("candado-overlay");
+  const inputCandado = document.getElementById("input-candado");
+  const btnCandado = document.getElementById("btn-candado");
+  const candadoError = document.getElementById("candado-error");
+  const bienvenidaOverlay = document.getElementById("bienvenida-overlay");
+  const contenidoGenerador = document.getElementById("contenido-generador");
+
+  // Tras acertar la contraseña, en vez de entrar directo al generador
+  // se muestra la pantalla de bienvenida. Esta se muestra cada vez que
+  // se vuelve a escribir la contraseña correctamente (por ejemplo, en
+  // una nueva sesión del navegador).
+  function mostrarBienvenida() {
+    candadoOverlay.classList.add("oculto");
+    bienvenidaOverlay.classList.remove("oculto");
+    // Carga perezosa: el video de esta fase solo empieza a descargarse
+    // hasta que de verdad se muestra, para no competir por recursos con
+    // el de la fase 1 (esto es lo que ayuda a que no se trabe en Telegram).
+    const vBienvenida = document.getElementById("bienvenida-video-bg");
+    if (vBienvenida && !vBienvenida.dataset.cargado) {
+      vBienvenida.dataset.cargado = "1";
+      vBienvenida.load();
+      vBienvenida.play().catch(() => {});
+    } else if (vBienvenida) {
+      vBienvenida.play().catch(() => {});
+    }
+  }
+
+  function desbloquear() {
+    candadoOverlay.classList.add("oculto");
+    bienvenidaOverlay.classList.add("oculto");
+    contenidoGenerador.classList.remove("oculto");
+    // Igual que con la de bienvenida: el video del generador solo se
+    // carga hasta que el usuario de verdad llega a esta fase.
+    const vGenerador = document.getElementById("video-bg");
+    if (vGenerador && !vGenerador.dataset.cargado) {
+      vGenerador.dataset.cargado = "1";
+      vGenerador.load();
+      vGenerador.play().catch(() => {});
+    } else if (vGenerador) {
+      vGenerador.play().catch(() => {});
+    }
+  }
+
+  // La fase 1 (candado) pide la contraseña SIEMPRE, sin excepción,
+  // aunque el navegador recuerde una sesión anterior. Por eso aquí
+  // no hay ningún salto automático: la página siempre arranca
+  // mostrando el candado.
+
+  // Quita espacios y también caracteres invisibles de control de
+  // dirección de texto (RLM/LRM/ALM, marcas bidi, etc.) que algunos
+  // teclados móviles insertan solos al escribir en árabe, y que antes
+  // hacían que la contraseña "correcta" nunca coincidiera. También
+  // convierte números arábigo-índicos (٠١٢٣٤٥٦٧٨٩) y persas
+  // (۰۱۲۳۴۵۶۷۸۹) a números normales, por si el teclado los usa.
+  function limpiarTexto(str) {
+    return str
+      .normalize("NFC")
+      .replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\u061C]/g, "")
+      .replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+      .replace(/[\u06F0-\u06F9]/g, (d) => String(d.charCodeAt(0) - 0x06F0))
+      .trim();
+  }
+
+  btnCandado.addEventListener("click", async () => {
+    const intento = limpiarTexto(inputCandado.value);
+    try {
+      const cfgDoc = await getDoc(doc(db, "config", "acceso"));
+      const passwordReal = limpiarTexto(cfgDoc.exists() ? cfgDoc.data().password : "666");
+      if (intento === passwordReal) {
+        mostrarBienvenida();
+      } else {
+        candadoError.style.display = "block";
+      }
+    } catch (e) {
+      candadoError.textContent = "Error de conexión, intenta de nuevo.";
+      candadoError.style.display = "block";
+    }
+  });
+  inputCandado.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") btnCandado.click();
+  });
+
+  /* ---- Deslizadores tipo "slide to unlock" (reutilizable) ----
+     Se usa para el candado (valida la contraseña) y para la
+     bienvenida (entra directo al generador). */
+  function crearSlider(contenedor, alCompletar) {
+    const relleno = contenedor.querySelector(".slider-relleno");
+    const mango = contenedor.querySelector(".slider-mango");
+    const anchoMango = 52;
+    let arrastrando = false;
+
+    function limitePista() {
+      return contenedor.clientWidth - anchoMango;
+    }
+
+    function moverMango(x) {
+      const limite = limitePista();
+      const clamped = Math.max(0, Math.min(x, limite));
+      mango.style.left = clamped + "px";
+      relleno.style.width = (clamped + anchoMango) + "px";
+      const completo = clamped >= limite - 2;
+      contenedor.classList.toggle("completo", completo);
+      return completo;
+    }
+
+    function resetear() {
+      mango.style.left = "2px";
+      relleno.style.width = anchoMango + "px";
+      contenedor.classList.remove("deslizando", "completo");
+    }
+
+    function xDesdeEvento(e) {
+      const rect = contenedor.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      return clientX - rect.left - anchoMango / 2;
+    }
+
+    function empezar(e) {
+      arrastrando = true;
+      contenedor.classList.add("deslizando");
+      e.preventDefault();
+    }
+
+    function mover(e) {
+      if (!arrastrando) return;
+      moverMango(xDesdeEvento(e));
+    }
+
+    function terminar() {
+      if (!arrastrando) return;
+      arrastrando = false;
+      const completo = contenedor.classList.contains("completo");
+      if (completo) {
+        alCompletar(resetear);
+      } else {
+        resetear();
+      }
+    }
+
+    mango.addEventListener("mousedown", empezar);
+    mango.addEventListener("touchstart", empezar, { passive: false });
+    window.addEventListener("mousemove", mover);
+    window.addEventListener("touchmove", mover, { passive: false });
+    window.addEventListener("mouseup", terminar);
+    window.addEventListener("touchend", terminar);
+
+    return { resetear };
+  }
+
+  /* ---- Deslizador CIRCULAR (fase 2 → fase 3) ----
+     Se arrastra el mango dando toda la vuelta (≈360°) alrededor del
+     ícono ⚙️ en el centro. El progreso se acumula por el ángulo real
+     recorrido (no solo por posición), así que hay que completar la
+     vuelta de verdad; si sueltas antes, el mango regresa al inicio. */
+  function crearSliderCircular(contenedor, mango, alCompletar) {
+    const radioMango = 81;
+    const vueltaCompleta = 345; // grados; deja un poco de margen para no exigir 360 exactos
+    let arrastrando = false;
+    let anguloAnterior = 0;
+    let acumulado = 0;
+    let completado = false;
+
+    function centro() {
+      const rect = contenedor.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }
+
+    // Ángulo en grados medido en sentido horario desde arriba (0 = 12 en punto),
+    // igual a como conic-gradient dibuja el progreso por defecto.
+    function anguloDesdeEvento(e, c) {
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const dx = clientX - c.x;
+      const dy = clientY - c.y;
+      let angulo = Math.atan2(dx, -dy) * 180 / Math.PI;
+      if (angulo < 0) angulo += 360;
+      return angulo;
+    }
+
+    function colocarMango(angulo) {
+      const rad = angulo * Math.PI / 180;
+      const x = contenedor.clientWidth / 2 + radioMango * Math.sin(rad);
+      const y = contenedor.clientHeight / 2 - radioMango * Math.cos(rad);
+      mango.style.left = x + "px";
+      mango.style.top = y + "px";
+    }
+
+    function actualizarProgreso(porcentaje) {
+      contenedor.style.setProperty("--progreso", Math.max(0, Math.min(100, porcentaje)));
+    }
+
+    function resetear() {
+      acumulado = 0;
+      completado = false;
+      contenedor.classList.remove("arrastrando", "completo");
+      mango.style.transition = "left .25s ease, top .25s ease";
+      colocarMango(0);
+      actualizarProgreso(0);
+      setTimeout(() => { mango.style.transition = ""; }, 260);
+    }
+
+    function empezar(e) {
+      if (completado) return;
+      arrastrando = true;
+      acumulado = 0;
+      mango.style.transition = "";
+      contenedor.classList.add("arrastrando");
+      const c = centro();
+      anguloAnterior = anguloDesdeEvento(e, c);
+      colocarMango(anguloAnterior);
+      e.preventDefault();
+    }
+
+    function mover(e) {
+      if (!arrastrando || completado) return;
+      const c = centro();
+      const anguloActual = anguloDesdeEvento(e, c);
+      let delta = anguloActual - anguloAnterior;
+      if (delta > 180) delta -= 360;
+      if (delta < -180) delta += 360;
+      acumulado = Math.max(0, acumulado + delta);
+      anguloAnterior = anguloActual;
+      colocarMango(anguloActual);
+      actualizarProgreso((acumulado / vueltaCompleta) * 100);
+
+      if (acumulado >= vueltaCompleta) {
+        completado = true;
+        arrastrando = false;
+        contenedor.classList.remove("arrastrando");
+        contenedor.classList.add("completo");
+        actualizarProgreso(100);
+        alCompletar();
+      }
+      e.preventDefault();
+    }
+
+    function terminar() {
+      if (!arrastrando) return;
+      arrastrando = false;
+      contenedor.classList.remove("arrastrando");
+      if (!completado) resetear();
+    }
+
+    contenedor.addEventListener("mousedown", empezar);
+    contenedor.addEventListener("touchstart", empezar, { passive: false });
+    window.addEventListener("mousemove", mover);
+    window.addEventListener("touchmove", mover, { passive: false });
+    window.addEventListener("mouseup", terminar);
+    window.addEventListener("touchend", terminar);
+
+    colocarMango(0);
+    actualizarProgreso(0);
+  }
+
+  // Slider del candado: al completarlo, valida la contraseña.
+  // Si resultó incorrecta, el slider vuelve a su lugar para reintentar.
+  crearSlider(document.getElementById("slider-candado"), (resetear) => {
+    vibrarTelegram("medium");
+    btnCandado.click();
+    setTimeout(() => {
+      if (candadoError.style.display === "block") {
+        vibrarTelegram("rigid");
+        resetear();
+      } else {
+        vibrarTelegram("heavy");
+      }
+    }, 50);
+  });
+
+  // Deslizador circular de la bienvenida: al completar la vuelta
+  // alrededor del ⚙️, entra al generador (fase 3).
+  crearSliderCircular(
+    document.getElementById("circulo-bienvenida"),
+    document.getElementById("circulo-bienvenida-mango"),
+    () => { vibrarTelegram("heavy"); desbloquear(); }
+  );
+
+  // Vibración al tocar el ícono de soporte por Telegram (fase 1)
+  const soporteTelegramLink = document.querySelector(".soporte-telegram-link");
+  if (soporteTelegramLink) {
+    soporteTelegramLink.addEventListener("click", () => vibrarTelegram("light"));
+  }
+
+  /* ================= CONTADOR EN TIEMPO REAL ================= */
+  const contadorNumero = document.getElementById("contador-numero");
+  onSnapshot(doc(db, "contador", "generaciones"), (snap) => {
+    const total = snap.exists() ? (snap.data().total || 0) : 0;
+    contadorNumero.textContent = total.toLocaleString("es-MX");
+  });
+
+  async function sumarContador() {
+    if (sessionStorage.getItem("yaConto") === "1") return;
+    sessionStorage.setItem("yaConto", "1");
+    try {
+      await updateDoc(doc(db, "contador", "generaciones"), { total: increment(1) });
+    } catch (e) {
+      // Si el documento no existe aún, se crea con total 1.
+      await setDoc(doc(db, "contador", "generaciones"), { total: 1 });
+    }
+  }
+
+  /* ================= RESEÑAS ================= */
+  const listaResenas = document.getElementById("lista-resenas");
+  const btnEnviarResena = document.getElementById("btn-enviar-resena");
+  const resenaEstrellas = document.getElementById("resena-estrellas");
+  const resenaTexto = document.getElementById("resena-texto");
+
+  const qResenas = query(collection(db, "resenas"), orderBy("fecha", "desc"), limit(10));
+  onSnapshot(qResenas, (snap) => {
+    listaResenas.innerHTML = "";
+    snap.forEach((docSnap) => {
+      const r = docSnap.data();
+      const estrellas = "★".repeat(r.estrellas || 5) + "☆".repeat(5 - (r.estrellas || 5));
+      const div = document.createElement("div");
+      div.className = "resena-item";
+      div.innerHTML = `<div class="resena-estrellas">${estrellas}</div><div class="resena-texto"></div>`;
+      div.querySelector(".resena-texto").textContent = r.texto || "";
+      listaResenas.appendChild(div);
+    });
+  });
+
+  btnEnviarResena.addEventListener("click", async () => {
+    const texto = resenaTexto.value.trim();
+    if (!texto) return;
+    if (sessionStorage.getItem("yaReseño") === "1") {
+      alert("Ya enviaste una reseña en esta sesión, ¡gracias!");
+      return;
+    }
+    await addDoc(collection(db, "resenas"), {
+      estrellas: Number(resenaEstrellas.value),
+      texto: texto,
+      fecha: serverTimestamp()
+    });
+    sessionStorage.setItem("yaReseño", "1");
+    resenaTexto.value = "";
+  });
+
+  /* ================= FLUJO DEL GENERADOR ================= */
+  const marcaSelect = document.getElementById("marca");
+  const modeloSelect = document.getElementById("modelo");
+  const resultado = document.getElementById("resultado");
+  const loader = document.getElementById("loader");
+
+  const btnSensibilidad = document.getElementById("btn-generar-sensibilidad");
+  const btnRegenerar = document.getElementById("btn-regenerar");
+  const btnDisparo = document.getElementById("btn-disparo");
+  const btnAjustes = document.getElementById("btn-ajustes-internos");
+  const cardBoton = document.getElementById("card-boton");
+  const dpiCard = document.getElementById("dpi-card");
+  const seccionAjustes = document.getElementById("seccion-ajustes-tecnicos");
+  const bloqueAndroid = document.getElementById("bloque-ajustes-android");
+  const bloqueIOS = document.getElementById("bloque-ajustes-ios");
+
+  let modeloActual = null; // { marcaId, modeloId, datos }
+
+  /* ================= BUSCADOR DE DISPOSITIVO (capa visual) =================
+     Solo filtra sobre lo que ya cargan cargarMarcas()/cargarModelos() desde
+     Firebase. No hace consultas nuevas ni toca el cálculo de sensibilidades. */
+  const plataformaSelector = document.getElementById("plataforma-selector");
+  const buscadorDispositivo = document.getElementById("buscador-dispositivo");
+  const btnCambiarPlataforma = document.getElementById("btn-cambiar-plataforma");
+  const inputBuscarMarca = document.getElementById("input-buscar-marca");
+  const resultadosMarca = document.getElementById("resultados-marca");
+  const inputBuscarModelo = document.getElementById("input-buscar-modelo");
+  const resultadosModelo = document.getElementById("resultados-modelo");
+
+  let marcasCache = [];   // {id, label} — espejo de las <option> de #marca
+  let modelosCache = [];  // {id, label} — espejo de las <option> de #modelo
+  let plataformaElegida = null; // "ios" | "android"
+
+  function renderResultadosBusqueda(contenedor, items, onSelect) {
+    contenedor.innerHTML = "";
+    if (!items.length) {
+      contenedor.classList.add("oculto");
+      return;
+    }
+    contenedor.classList.remove("oculto");
+    items.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "resultado-item";
+      div.textContent = item.label;
+      div.addEventListener("click", () => onSelect(item));
+      contenedor.appendChild(div);
+    });
+  }
+
+  function marcasSegunPlataforma() {
+    if (plataformaElegida === "android") {
+      return marcasCache.filter((m) => m.id.toLowerCase() !== "apple");
+    }
+    return marcasCache;
+  }
+
+  function seleccionarMarcaDesdeBuscador(marcaId) {
+    marcaSelect.value = marcaId;
+    marcaSelect.dispatchEvent(new Event("change"));
+    inputBuscarMarca.classList.add("elegido");
+    inputBuscarModelo.value = "";
+    inputBuscarModelo.classList.remove("oculto");
+    inputBuscarModelo.classList.remove("elegido");
+    resultadosModelo.classList.add("oculto");
+    resultadosModelo.innerHTML = "";
+  }
+
+  document.querySelectorAll(".plataforma-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      document.querySelectorAll(".plataforma-card").forEach((c) => c.classList.remove("elegido"));
+      card.classList.add("elegido");
+      plataformaElegida = card.dataset.plataforma;
+      vibrarTelegram("light");
+
+      plataformaSelector.classList.add("oculto");
+      buscadorDispositivo.classList.remove("oculto");
+      inputBuscarMarca.value = "";
+      inputBuscarMarca.classList.remove("elegido");
+      resultadosMarca.classList.add("oculto");
+      resultadosMarca.innerHTML = "";
+      inputBuscarModelo.classList.add("oculto");
+      inputBuscarModelo.classList.remove("elegido");
+      resultadosModelo.classList.add("oculto");
+
+      if (plataformaElegida === "ios") {
+        // Solo hay una marca iOS (Apple): se salta el paso de marca y va directo a modelo.
+        inputBuscarMarca.classList.add("oculto");
+        const apple = marcasCache.find((m) => m.id.toLowerCase() === "apple");
+        if (apple) seleccionarMarcaDesdeBuscador(apple.id);
+      } else {
+        inputBuscarMarca.classList.remove("oculto");
+      }
+    });
+  });
+
+  btnCambiarPlataforma.addEventListener("click", () => {
+    buscadorDispositivo.classList.add("oculto");
+    plataformaSelector.classList.remove("oculto");
+    document.querySelectorAll(".plataforma-card").forEach((c) => c.classList.remove("elegido"));
+    inputBuscarMarca.classList.remove("elegido");
+    inputBuscarModelo.classList.remove("elegido");
+    plataformaElegida = null;
+    marcaSelect.value = "";
+    marcaSelect.dispatchEvent(new Event("change"));
+  });
+
+  inputBuscarMarca.addEventListener("input", () => {
+    inputBuscarMarca.classList.remove("elegido");
+    const texto = inputBuscarMarca.value.trim().toLowerCase();
+    if (!texto) {
+      resultadosMarca.classList.add("oculto");
+      resultadosMarca.innerHTML = "";
+      return;
+    }
+    const filtrados = marcasSegunPlataforma().filter((m) => m.label.toLowerCase().includes(texto));
+    renderResultadosBusqueda(resultadosMarca, filtrados, (item) => {
+      inputBuscarMarca.value = item.label;
+      resultadosMarca.classList.add("oculto");
+      seleccionarMarcaDesdeBuscador(item.id);
+    });
+  });
+
+  inputBuscarModelo.addEventListener("input", () => {
+    inputBuscarModelo.classList.remove("elegido");
+    const texto = inputBuscarModelo.value.trim().toLowerCase();
+    if (!texto) {
+      resultadosModelo.classList.add("oculto");
+      resultadosModelo.innerHTML = "";
+      return;
+    }
+    const filtrados = modelosCache.filter((m) => m.label.toLowerCase().includes(texto));
+    renderResultadosBusqueda(resultadosModelo, filtrados, (item) => {
+      inputBuscarModelo.value = item.label;
+      inputBuscarModelo.classList.add("elegido");
+      resultadosModelo.classList.add("oculto");
+      modeloSelect.value = item.id;
+      modeloSelect.dispatchEvent(new Event("change"));
+    });
+  });
+
+  async function cargarMarcas() {
+    const snapshot = await getDocs(collection(db, "sensibilidades"));
+    snapshot.forEach((docSnap) => {
+      const option = document.createElement("option");
+      option.value = docSnap.id;
+      option.textContent = docSnap.id.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      marcaSelect.appendChild(option);
+      marcasCache.push({ id: option.value, label: option.textContent });
+    });
+  }
+
+  async function cargarModelos(marcaId) {
+    modeloSelect.innerHTML = '<option value="">Selecciona tu modelo</option>';
+    modelosCache = [];
+    const marcaDoc = await getDoc(doc(db, "sensibilidades", marcaId));
+    if (!marcaDoc.exists()) return;
+    const modelos = marcaDoc.data().modelos || {};
+    Object.keys(modelos).forEach((modeloId) => {
+      const option = document.createElement("option");
+      option.value = modeloId;
+      option.textContent = modelos[modeloId].nombre || modeloId;
+      modeloSelect.appendChild(option);
+      modelosCache.push({ id: option.value, label: option.textContent });
+    });
+    modeloSelect.classList.remove("oculto");
+  }
+
+  function ocultarTodoElFlujo() {
+    resultado.classList.add("oculto");
+    cardBoton.classList.add("oculto");
+    seccionAjustes.classList.add("oculto");
+    bloqueAndroid.classList.add("oculto");
+    bloqueIOS.classList.add("oculto");
+    btnSensibilidad.classList.add("oculto");
+    btnRegenerar.classList.add("oculto");
+    btnDisparo.classList.add("oculto");
+    btnAjustes.classList.add("oculto");
+  }
+
+  function actualizarEstiloSelect(select) {
+    if (select.value) {
+      select.classList.remove("sin-elegir");
+      select.classList.add("elegido");
+      // Efecto "deslizar en rojo" al momento exacto de seleccionar
+      select.classList.remove("select-flash");
+      void select.offsetWidth; // fuerza reinicio de animación
+      select.classList.add("select-flash");
+      vibrarTelegram("medium");
+    } else {
+      select.classList.remove("elegido", "ambos-listos");
+      select.classList.add("sin-elegir");
+    }
+  }
+
+  // Cuando marca + modelo ya están elegidos, ambos parpadean fuerte (prende/apaga)
+  function revisarAmbosListos() {
+    const listos = !!marcaSelect.value && !!modeloSelect.value;
+    marcaSelect.classList.toggle("ambos-listos", listos);
+    modeloSelect.classList.toggle("ambos-listos", listos);
+  }
+
+  marcaSelect.addEventListener("change", () => {
+    ocultarTodoElFlujo();
+    modeloActual = null;
+    actualizarEstiloSelect(marcaSelect);
+    if (marcaSelect.value) {
+      cargarModelos(marcaSelect.value);
+    } else {
+      modeloSelect.classList.add("oculto");
+    }
+    // Al cambiar de marca, el modelo vuelve a quedar sin elegir.
+    modeloSelect.value = "";
+    actualizarEstiloSelect(modeloSelect);
+    revisarAmbosListos();
+  });
+
+  modeloSelect.addEventListener("change", async () => {
+    ocultarTodoElFlujo();
+    modeloActual = null;
+    actualizarEstiloSelect(modeloSelect);
+    revisarAmbosListos();
+    if (!modeloSelect.value) return;
+
+    const marcaDoc = await getDoc(doc(db, "sensibilidades", marcaSelect.value));
+    const m = marcaDoc.data().modelos[modeloSelect.value];
+    modeloActual = {
+      marcaId: marcaSelect.value,
+      modeloId: modeloSelect.value,
+      datos: m
+    };
+    btnSensibilidad.classList.remove("oculto");
+  });
+
+  // Paso 1: Generar sensibilidad (también se reusa para "Regenerar")
+  function correrGenerarSensibilidad() {
+    vibrarTelegram("medium");
+    if (!modeloActual) return;
+    const els = {
+      general: document.getElementById("v-general"),
+      puntorojo: document.getElementById("v-puntorojo"),
+      x2: document.getElementById("v-2x"),
+      x4: document.getElementById("v-4x"),
+      francotirador: document.getElementById("v-francotirador"),
+      camara360: document.getElementById("v-camara360"),
+      dpiValor: document.getElementById("v-dpi"),
+      dpiRango: document.getElementById("v-dpi-rango")
+    };
+    cardBoton.classList.add("oculto");
+    seccionAjustes.classList.add("oculto");
+    bloqueAndroid.classList.add("oculto");
+    bloqueIOS.classList.add("oculto");
+    btnAjustes.classList.add("oculto");
+
+    window.SensiApp.generarSensibilidad(modeloActual.datos, els, loader, (tieneDPI) => {
+      resultado.classList.remove("oculto");
+      btnRegenerar.classList.remove("oculto");
+      btnDisparo.classList.remove("oculto");
+
+      if (tieneDPI) {
+        dpiCard.classList.remove("oculto");
+      } else {
+        dpiCard.classList.add("oculto");
+      }
+
+      llenarBarrasResultado();
+      sumarContador();
+    });
+  }
+
+  /* ================= BARRAS DE RESULTADO: color + ancho según valor ================= */
+  function llenarBarrasResultado() {
+    document.querySelectorAll(".resultado-barra").forEach((barra) => {
+      const valorSpan = barra.querySelector(".resultado-barra-valor");
+      const fill = barra.querySelector(".resultado-barra-fill");
+      if (!valorSpan || !fill) return;
+      const valor = parseFloat(valorSpan.textContent) || 0;
+      const max = parseFloat(barra.dataset.max) || 200;
+      const pct = Math.max(0, Math.min(100, (valor / max) * 100));
+
+      fill.style.width = pct + "%";
+
+      // Degradado de color según qué tan cerca está del máximo:
+      // gris (bajo) -> naranja (medio) -> rojo intenso (alto), con glow morado de acento.
+      let colorBase;
+      if (pct < 40) {
+        colorBase = "linear-gradient(90deg, #4A4A4A, #8C6A16)";
+      } else if (pct < 75) {
+        colorBase = "linear-gradient(90deg, #8C6A16, #E67E00, #E10600)";
+      } else {
+        colorBase = "linear-gradient(90deg, #E10600, #FF3B3B, #FFFFFF)";
+      }
+      fill.style.background = colorBase;
+
+      // Entre más alto el valor, más rápido/intenso "respira" el glow.
+      const duracion = pct >= 75 ? "1.1s" : pct >= 40 ? "1.7s" : "2.6s";
+      fill.style.setProperty("--dur-respira", duracion);
+
+      // Reinicia el destello de aparición.
+      barra.classList.remove("resultado-barra");
+      void barra.offsetWidth;
+      barra.classList.add("resultado-barra");
+    });
+  }
+
+  /* ================= POSICIÓN SUGERIDA DEL BOTÓN DE DISPARO ================= */
+  const posicionesBotonDisparo = [
+    "📍 Posición sugerida: Arriba derecha",
+    "📍 Posición sugerida: Centro-alto derecha",
+    "📍 Posición sugerida: Centro derecha",
+    "📍 Posición sugerida: Centro-bajo derecha",
+    "📍 Posición sugerida: Abajo derecha (pegado al borde)",
+    "📍 Posición sugerida: Esquina superior derecha",
+    "📍 Posición sugerida: Esquina inferior derecha",
+    "📍 Posición sugerida: Media pantalla, borde derecho",
+    "📍 Posición sugerida: Ligeramente por encima del centro derecho",
+    "📍 Posición sugerida: Ligeramente por debajo del centro derecho"
+  ];
+  function elegirPosicionBotonDisparo() {
+    const el = document.getElementById("v-posicion-boton");
+    if (!el) return;
+    const idx = Math.floor(Math.random() * posicionesBotonDisparo.length);
+    el.textContent = posicionesBotonDisparo[idx];
+  }
+
+  btnSensibilidad.addEventListener("click", correrGenerarSensibilidad);
+  btnRegenerar.addEventListener("click", correrGenerarSensibilidad);
+
+  // Paso 2: Generar botón de disparo
+  btnDisparo.addEventListener("click", () => {
+    const els = { boton: document.getElementById("v-boton") };
+    window.SensiApp.generarBotonDisparo(els, loader, () => {
+      elegirPosicionBotonDisparo();
+      cardBoton.classList.remove("oculto");
+      btnAjustes.classList.remove("oculto");
+    });
+  });
+
+  // Paso 3: Generar ajustes internos
+  btnAjustes.addEventListener("click", () => {
+    if (!modeloActual) return;
+    window.SensiApp.generarAjustesInternos(
+      {
+        esApple: modeloActual.marcaId === "apple",
+        modeloId: modeloActual.modeloId,
+        elsIOS: {
+          velocidad: document.getElementById("v-ios-velocidad"),
+          toque: document.getElementById("v-ios-toque"),
+          refinamiento: document.getElementById("v-ios-refinamiento"),
+          controlBoton: document.getElementById("v-ios-control")
+        },
+        seccionesAOcultar: [resultado, btnSensibilidad, btnDisparo, btnAjustes],
+        seccionAjustes: seccionAjustes,
+        bloqueAndroid: bloqueAndroid,
+        bloqueIOS: bloqueIOS
+      },
+      loader,
+      () => {}
+    );
+  });
+
+  /* ================= INTEGRACIÓN TELEGRAM MINI APP =================
+     Sin tocar fondos/tema/colores ni Firebase: solo vibración (haptics).
+     Si se abre fuera de Telegram, todo esto no hace nada (no rompe nada). */
+  const tgApp = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+
+  if (tgApp) {
+    tgApp.ready();
+    tgApp.expand();
+  }
+
+  function vibrarTelegram(tipo) {
+    if (tgApp && tgApp.HapticFeedback) {
+      tgApp.HapticFeedback.impactOccurred(tipo || "medium");
+    }
+  }
+
+  cargarMarcas();
+
+  /* ================= FLUIDEZ DE VIDEOS DE FONDO (3 fases) =================
+     Refuerza el loop nativo por si algún navegador se queda "pegado" al
+     terminar el video (pasa en algunos Android/iPhone con buffer lento),
+     y reintenta reproducir si el video se pausa solo por falta de buffer. */
+  ["candado-video-bg", "bienvenida-video-bg", "video-bg"].forEach((id) => {
+    const v = document.getElementById(id);
+    if (!v) return;
+
+    // Respaldo manual del loop: si por algo el navegador no lo retoma solo,
+    // lo regresamos al inicio y lo volvemos a reproducir.
+    v.addEventListener("ended", () => {
+      v.currentTime = 0;
+      v.play().catch(() => {});
+    });
+
+    // Si el video se pausa por sí solo (buffer, cambio de pestaña, etc.),
+    // intentamos reanudarlo para que no se quede una imagen fija.
+    v.addEventListener("pause", () => {
+      if (!document.hidden) {
+        v.play().catch(() => {});
+      }
+    });
+
+    // Al volver a la pestaña/app, aseguramos que siga reproduciendo.
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && v.paused) {
+        v.play().catch(() => {});
+      }
+    });
+
+    // Reintento silencioso si el autoplay inicial fue bloqueado.
+    v.play().catch(() => {});
+  });
+
+  // Desbloqueo extra para WebViews estrictos (como el navegador interno de
+  // Telegram): en el primer toque real del usuario en cualquier parte de la
+  // pantalla, se reintenta reproducir los 3 videos. No cambia nada más.
+  function desbloquearVideosConToque() {
+    ["candado-video-bg", "bienvenida-video-bg", "video-bg"].forEach((id) => {
+      const v = document.getElementById(id);
+      if (v && v.paused) v.play().catch(() => {});
+    });
+  }
+  document.addEventListener("touchstart", desbloquearVideosConToque, { once: true, passive: true });
+  document.addEventListener("click", desbloquearVideosConToque, { once: true });
+</script>
+
+</body>
+</html>
