@@ -1481,6 +1481,241 @@
     50%      { transform: translateY(10px); }
   }
 
+  /* ================= VÍBORA DESLIZANTE (Fase4→5, Fase5→6) =================
+     Camino en zigzag: el fondo blanco/gris es la "guía" (parte no
+     recorrida); el trazo rojo (o dorado, con .vibora-dorado) se va
+     revelando encima conforme se arrastra, usando pathLength=100 +
+     stroke-dashoffset. El 👹 viaja sobre el mismo camino con
+     offset-path (motion path), así que sigue el zigzag de verdad. */
+  .vibora-contenedor {
+    position: relative;
+    width: 300px;
+    max-width: 88vw;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .vibora-titulo {
+    color: #D4AF37;
+    font-size: 12px;
+    margin-bottom: 6px;
+    animation: textoParpadeo 3s ease-in-out infinite;
+  }
+  .vibora-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    touch-action: none;
+  }
+  .vibora-guia {
+    fill: none;
+    stroke: rgba(255,255,255,0.28);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .vibora-progreso {
+    fill: none;
+    stroke: #E10600;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    filter: drop-shadow(0 0 7px rgba(225,6,0,0.9));
+  }
+  .vibora-progreso.vibora-dorado {
+    stroke: #D4AF37;
+    filter: drop-shadow(0 0 7px rgba(212,175,55,0.9));
+  }
+  .vibora-cabeza {
+    position: absolute;
+    top: 0; left: 0;
+    font-size: 26px;
+    transform: translate(-50%, -50%);
+    offset-path: path('M10,55 L50,15 L90,55 L130,15 L170,55 L210,15 L250,55 L280,30');
+    offset-distance: 0%;
+    filter: drop-shadow(0 0 8px rgba(225,6,0,0.85));
+    animation: emojiFlotar 3s ease-in-out infinite, fase4LogoFundido 4.2s ease-in-out infinite;
+  }
+  .vibora-cabeza.vibora-dorado-cabeza {
+    filter: drop-shadow(0 0 8px rgba(212,175,55,0.85));
+  }
+  .vibora-contenedor.completo .vibora-titulo {
+    color: #39FF88;
+  }
+
+  /* ================= FASE 5 ================= */
+  #fase5-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 24px 20px 60px 20px;
+    text-align: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  #video-fase5-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+  #fase5-overlay .overlay-oscuro {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: -1;
+  }
+  #contenido-fase5 {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 380px;
+  }
+  .fase5-ojo {
+    position: fixed;
+    bottom: 18px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #D4AF37;
+    z-index: 0;
+    animation: fase4LogoRespira 3s ease-in-out infinite, fase4LogoFundido 4.6s ease-in-out infinite;
+  }
+  .fase5-ojo-izq { left: 14px; animation-delay: 0s, .4s; }
+  .fase5-ojo-der { right: 14px; animation-delay: .8s, 1.2s; }
+
+  .fase5-panel-titulo {
+    color: #D4AF37;
+    font-size: 13px;
+    letter-spacing: .5px;
+    margin: 18px 0 10px 0;
+    animation: flotarSuave 3.6s ease-in-out infinite;
+  }
+  #fase5-grafica {
+    background: rgba(10,10,10,0.6);
+    border: 1px solid #3A3A3A;
+    border-radius: 12px;
+    padding: 12px 14px;
+    text-align: left;
+  }
+  .fase5-grafica-fila {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+  }
+  .fase5-grafica-label {
+    width: 66px;
+    font-size: 10px;
+    color: #D4AF37;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .fase5-grafica-barra-fondo {
+    flex: 1;
+    height: 13px;
+    background: #111111;
+    border-radius: 7px;
+    overflow: hidden;
+    border: 1px solid #2A2A2A;
+  }
+  .fase5-grafica-barra {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #E10600, #B026FF);
+    border-radius: 7px;
+    box-shadow: 0 0 8px rgba(225,6,0,0.55);
+    transition: width .5s ease;
+  }
+  .fase5-grafica-num {
+    width: 24px;
+    font-size: 10px;
+    color: #F1F1F1;
+    flex-shrink: 0;
+    text-align: left;
+  }
+
+  .fase5-resena-caja {
+    background: rgba(10,10,10,0.65);
+    border: 1px solid #B026FF;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 6px;
+  }
+  .fase5-leyenda {
+    color: #FF3366;
+    font-size: 11.5px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .fase5-calificacion {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .fase5-btn-calif {
+    flex: 1;
+    background: #111111;
+    border: 1px solid #3A3A3A;
+    border-radius: 10px;
+    padding: 8px 6px;
+    color: #E5E5E5;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .fase5-btn-calif.seleccionado {
+    border-color: #D4AF37;
+    box-shadow: 0 0 10px rgba(212,175,55,0.6);
+    color: #D4AF37;
+  }
+  .fase5-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: #111111;
+    border: 1px solid #3A3A3A;
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #E5E5E5;
+    font-size: 13px;
+    min-height: 64px;
+    resize: none;
+  }
+
+  #fase5-lista-resenas {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+  }
+  .fase5-resena-tarjeta {
+    background: linear-gradient(160deg, #150710, #0A0A0A);
+    border: 1px solid #7A1FBF;
+    border-radius: 12px;
+    padding: 10px 14px;
+    box-shadow: 0 0 8px rgba(176,38,255,0.25);
+    animation: fase4ListaAparece .3s ease-out;
+  }
+  .fase5-resena-titulo {
+    color: #D4AF37;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .fase5-resena-texto {
+    color: #E5E5E5;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
   /* ================= FASE 4 ================= */
   #fase4-overlay {
     position: fixed;
@@ -2387,16 +2622,68 @@
       <div class="fase4-carga-texto">Generando<span class="fase4-carga-puntos">...</span></div>
     </div>
 
-    <!-- ---- Continuar a Fase 5: aparece con completar al menos 1 de los 3 ---- -->
-    <div id="slider-fase5" class="slider-desliza slider-ancho oculto" style="margin-top:26px;">
-      <div class="slider-relleno"></div>
-      <div class="slider-texto">Desliza para continuar »</div>
-      <div class="slider-mango">➤</div>
+    <div class="marca-sello fase4-marca" style="margin-top:34px;">S:.S:.VI-66</div>
+    <div class="frase-final fase4-frase">
+      الأفضل في التكوينات الداخلية
     </div>
+
+    <div id="vibora-fase5-wrap" class="vibora-contenedor" style="margin-top:44px;">
+      <div class="vibora-titulo">Desliza siguiendo el camino para pasar a Fase 5</div>
+      <svg class="vibora-svg" viewBox="0 0 300 70" xmlns="http://www.w3.org/2000/svg">
+        <path class="vibora-guia" d="M10,55 L50,15 L90,55 L130,15 L170,55 L210,15 L250,55 L280,30"></path>
+        <path class="vibora-progreso" id="vibora-progreso-fase5" pathLength="100" d="M10,55 L50,15 L90,55 L130,15 L170,55 L210,15 L250,55 L280,30"></path>
+      </svg>
+      <div class="vibora-cabeza" id="vibora-cabeza-fase5">👹</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FASE 5 =================
+     Video de fondo: Video_fase_5.mp4 (subir al repo junto al index.html).
+     Imágenes de los ojos: ojo_horus.jpg (izquierda) y ojo_iluminati.jpg
+     (derecha), también en la misma carpeta. -->
+<div id="fase5-overlay" class="oculto">
+  <video id="video-fase5-bg" muted loop playsinline webkit-playsinline preload="none" disableRemotePlayback>
+    <source src="Video_fase_5.mp4" type="video/mp4">
+  </video>
+  <div class="overlay-oscuro"></div>
+  <img src="ojo_horus.jpg" class="fase5-ojo fase5-ojo-izq" alt="Ojo de Horus">
+  <img src="ojo_iluminati.jpg" class="fase5-ojo fase5-ojo-der" alt="Ojo Iluminati">
+
+  <div id="contenido-fase5">
+    <img src="Logo_bloqueo.png" class="logo" alt="Sensi Árabe Vip">
+    <div class="fase4-666">
+      <span style="color:#E10600">6</span> <span style="color:#E10600">6</span> <span style="color:#E10600">6</span>
+    </div>
+
+    <div class="fase5-panel-titulo">📊 Sensibilidades generadas por marca</div>
+    <div id="fase5-grafica"></div>
+
+    <div class="fase5-resena-caja">
+      <div class="fase5-leyenda">⚠️ Debes dejar tu reseña (calificación + comentario) para poder avanzar a Fase 6.</div>
+      <div class="fase5-calificacion">
+        <button class="fase5-btn-calif" id="fase5-calif-4" data-valor="4">👺🇲🇽👺🇲🇽</button>
+        <button class="fase5-btn-calif" id="fase5-calif-5" data-valor="5">👺🇲🇽👺🇲🇽👺🇲🇽</button>
+      </div>
+      <textarea id="fase5-comentario" class="fase5-textarea" placeholder="Escribe tu comentario..."></textarea>
+      <button class="btn-rojo-neon" id="fase5-enviar-resena" style="margin-top:10px; width:100%;" disabled>Enviar reseña</button>
+    </div>
+
+    <div class="fase5-panel-titulo">💬 Últimas reseñas</div>
+    <div id="fase5-lista-resenas"></div>
 
     <div class="marca-sello fase4-marca" style="margin-top:34px;">S:.S:.VI-66</div>
     <div class="frase-final fase4-frase">
       الأفضل في التكوينات الداخلية
+    </div>
+
+    <div id="vibora-fase6-wrap" class="vibora-contenedor oculto" style="margin-top:44px;">
+      <div class="vibora-titulo">Desliza siguiendo el camino para pasar a Fase 6</div>
+      <svg class="vibora-svg" viewBox="0 0 300 70" xmlns="http://www.w3.org/2000/svg">
+        <path class="vibora-guia" d="M10,55 L50,15 L90,55 L130,15 L170,55 L210,15 L250,55 L280,30"></path>
+        <path class="vibora-progreso vibora-dorado" id="vibora-progreso-fase6" pathLength="100" d="M10,55 L50,15 L90,55 L130,15 L170,55 L210,15 L250,55 L280,30"></path>
+      </svg>
+      <div class="vibora-cabeza vibora-dorado-cabeza" id="vibora-cabeza-fase6">👹</div>
     </div>
   </div>
 </div>
@@ -3332,6 +3619,19 @@
     }
   }
 
+  function mostrarFase5() {
+    fase4Overlay.classList.add("oculto");
+    document.getElementById("fase5-overlay").classList.remove("oculto");
+    const vFase5 = document.getElementById("video-fase5-bg");
+    if (vFase5 && !vFase5.dataset.cargado) {
+      vFase5.dataset.cargado = "1";
+      vFase5.load();
+      vFase5.play().catch(() => {});
+    } else if (vFase5) {
+      vFase5.play().catch(() => {});
+    }
+  }
+
   const fase3InfoFinal = document.getElementById("fase3-info-final");
   const fase3TransicionFinal = document.getElementById("fase3-transicion-final");
   const fase3FinalFlecha = document.getElementById("fase3-final-flecha");
@@ -3434,9 +3734,6 @@
     document.getElementById(id).classList.remove("oculto");
   }
 
-  let fase4AlgunoCompletado = false;
-  const sliderFase5 = document.getElementById("slider-fase5");
-
   /* Pantalla de carga (66s) antes de mostrar el resultado final de
      cualquiera de las 3 secciones -- círculo con bolita girando,
      degradado gris->morado->rojo->azul (ver CSS .fase4-carga-*). */
@@ -3469,10 +3766,6 @@
         botonRegresar.classList.remove("oculto");
       }
       vibrarTelegram("medium");
-      if (!fase4AlgunoCompletado) {
-        fase4AlgunoCompletado = true;
-        sliderFase5.classList.remove("oculto");
-      }
     };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(texto).then(hacerVisible).catch(() => {
@@ -3595,10 +3888,6 @@
   document.getElementById("fase4-hud-confirmar").addEventListener("click", () => {
     document.getElementById("fase4-hud-confirmar").classList.add("oculto");
     document.getElementById("fase4-hud-regresar").classList.remove("oculto");
-    if (!fase4AlgunoCompletado) {
-      fase4AlgunoCompletado = true;
-      sliderFase5.classList.remove("oculto");
-    }
   });
   document.getElementById("fase4-hud-regresar").addEventListener("click", volverAFase4Inicio);
 
@@ -3650,10 +3939,6 @@
   document.getElementById("fase4-combo-confirmar").addEventListener("click", () => {
     document.getElementById("fase4-combo-confirmar").classList.add("oculto");
     document.getElementById("fase4-combo-regresar").classList.remove("oculto");
-    if (!fase4AlgunoCompletado) {
-      fase4AlgunoCompletado = true;
-      sliderFase5.classList.remove("oculto");
-    }
   });
   document.getElementById("fase4-combo-regresar").addEventListener("click", volverAFase4Inicio);
 
@@ -3691,18 +3976,6 @@
   });
   document.getElementById("fase4-clan-regresar").addEventListener("click", volverAFase4Inicio);
 
-  /* ---- Deslizador hacia Fase 5 (pendiente de construir) ---- */
-  crearSliderProgreso(
-    sliderFase5,
-    () => {},
-    () => {
-      vibrarTelegram("heavy");
-      // Fase 5 aún no está construida -- este es el punto donde se
-      // conectará cuando se arme esa fase.
-      console.log("Fase 4 completa: listo para pasar a Fase 5.");
-    }
-  );
-
   cargarMarcas();
 
   /* ================= FLUIDEZ DE VIDEOS DE FONDO (4 fases) =================
@@ -3712,7 +3985,7 @@
      y agrega un "vigilante" que detecta congelamiento silencioso (cuando
      el navegador interno de Telegram deja el video en estado "reproduciendo"
      pero el tiempo no avanza, sin disparar el evento pause). */
-  const IDS_VIDEO_FONDO = ["candado-video-bg", "bienvenida-video-bg", "video-bg", "video-fase4-bg"];
+  const IDS_VIDEO_FONDO = ["candado-video-bg", "bienvenida-video-bg", "video-bg", "video-fase4-bg", "video-fase5-bg"];
   const ultimoTiempoPorVideo = {};
 
   function reintentarReproducir(v) {
@@ -3786,6 +4059,173 @@
   }
   document.addEventListener("touchstart", desbloquearVideosConToque, { passive: true });
   document.addEventListener("click", desbloquearVideosConToque);
+
+  /* ================= VÍBORA DESLIZANTE (reutilizable) =================
+     contenedor: el div .vibora-contenedor
+     idProgreso: id del <path class="vibora-progreso">
+     idCabeza: id del div .vibora-cabeza
+     onCompletar: se llama automático al llegar al final del camino */
+  function crearViboraDeslizante(contenedor, idProgreso, idCabeza, onCompletar) {
+    const svg = contenedor.querySelector(".vibora-svg");
+    const progreso = document.getElementById(idProgreso);
+    const cabeza = document.getElementById(idCabeza);
+    let arrastrando = false;
+    let completado = false;
+
+    function actualizar(pct) {
+      const clamped = Math.max(0, Math.min(100, pct));
+      progreso.style.strokeDashoffset = (100 - clamped).toFixed(1);
+      cabeza.style.offsetDistance = clamped.toFixed(1) + "%";
+    }
+
+    function pctDesdeEvento(e) {
+      const rect = svg.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      return ((clientX - rect.left) / rect.width) * 100;
+    }
+
+    function empezar(e) {
+      if (completado) return;
+      arrastrando = true;
+      e.preventDefault();
+    }
+    function mover(e) {
+      if (!arrastrando || completado) return;
+      const pct = pctDesdeEvento(e);
+      actualizar(pct);
+      if (pct >= 94) {
+        completado = true;
+        arrastrando = false;
+        actualizar(100);
+        contenedor.classList.add("completo");
+        vibrarTelegram("heavy");
+        onCompletar();
+      }
+      e.preventDefault();
+    }
+    function terminar() {
+      if (!arrastrando) return;
+      arrastrando = false;
+      if (!completado) actualizar(0);
+    }
+
+    svg.addEventListener("mousedown", empezar);
+    svg.addEventListener("touchstart", empezar, { passive: false });
+    window.addEventListener("mousemove", mover);
+    window.addEventListener("touchmove", mover, { passive: false });
+    window.addEventListener("mouseup", terminar);
+    window.addEventListener("touchend", terminar);
+  }
+
+  crearViboraDeslizante(
+    document.getElementById("vibora-fase5-wrap"),
+    "vibora-progreso-fase5",
+    "vibora-cabeza-fase5",
+    mostrarFase5
+  );
+
+  /* ================= FASE 5: gráfica de marcas en tiempo real ================= */
+  // Nombres tal como se usan en el generador (mismos IDs de la colección
+  // "sensibilidades"). Si alguna marca real tiene otra escritura exacta
+  // en Firestore, avisar para ajustar aquí.
+  const MARCAS_GRAFICA = [
+    "Samsung", "Xiaomi", "Redmi", "Poco", "Infinix", "Tecno", "Itel",
+    "iPhone", "Huawei", "Oppo", "Realme", "Motorola", "ZTE", "Vivo", "Nokia", "Honor"
+  ];
+
+  const fase5Grafica = document.getElementById("fase5-grafica");
+  MARCAS_GRAFICA.forEach((marca) => {
+    const fila = document.createElement("div");
+    fila.className = "fase5-grafica-fila";
+    fila.innerHTML =
+      '<div class="fase5-grafica-label">' + marca + '</div>' +
+      '<div class="fase5-grafica-barra-fondo"><div class="fase5-grafica-barra" id="fase5-barra-' + marca + '"></div></div>' +
+      '<div class="fase5-grafica-num" id="fase5-num-' + marca + '">0</div>';
+    fase5Grafica.appendChild(fila);
+  });
+
+  onSnapshot(collection(db, "registro_marcas"), (snap) => {
+    const totales = {};
+    snap.forEach((d) => { totales[d.id] = d.data().total || 0; });
+    const maxTotal = Math.max(1, ...MARCAS_GRAFICA.map((m) => totales[m] || 0));
+    MARCAS_GRAFICA.forEach((marca) => {
+      const total = totales[marca] || 0;
+      const barra = document.getElementById("fase5-barra-" + marca);
+      const num = document.getElementById("fase5-num-" + marca);
+      if (barra) barra.style.width = ((total / maxTotal) * 100).toFixed(1) + "%";
+      if (num) num.textContent = total;
+    });
+  });
+
+  /* ================= FASE 5: reseña obligatoria para desbloquear la víbora ================= */
+  let fase5CalifSeleccionada = null;
+  const fase5Comentario = document.getElementById("fase5-comentario");
+  const fase5BtnEnviar = document.getElementById("fase5-enviar-resena");
+  const fase5Calif4 = document.getElementById("fase5-calif-4");
+  const fase5Calif5 = document.getElementById("fase5-calif-5");
+
+  function fase5RevisarHabilitado() {
+    fase5BtnEnviar.disabled = !(fase5CalifSeleccionada && fase5Comentario.value.trim().length > 0);
+  }
+  fase5Calif4.addEventListener("click", () => {
+    fase5CalifSeleccionada = 4;
+    fase5Calif4.classList.add("seleccionado");
+    fase5Calif5.classList.remove("seleccionado");
+    fase5RevisarHabilitado();
+  });
+  fase5Calif5.addEventListener("click", () => {
+    fase5CalifSeleccionada = 5;
+    fase5Calif5.classList.add("seleccionado");
+    fase5Calif4.classList.remove("seleccionado");
+    fase5RevisarHabilitado();
+  });
+  fase5Comentario.addEventListener("input", fase5RevisarHabilitado);
+
+  fase5BtnEnviar.addEventListener("click", async () => {
+    if (fase5BtnEnviar.disabled) return;
+    const vGeneral = document.getElementById("v-general");
+    await addDoc(collection(db, "resenas"), {
+      estrellas: fase5CalifSeleccionada,
+      texto: fase5Comentario.value.trim(),
+      fecha: serverTimestamp(),
+      marca: modeloActual ? modeloActual.marcaId : null,
+      modelo: modeloActual ? modeloActual.modeloId : null,
+      sensi: vGeneral ? vGeneral.textContent : null
+    });
+    vibrarTelegram("medium");
+    fase5BtnEnviar.disabled = true;
+    fase5BtnEnviar.textContent = "✅ Reseña enviada";
+    document.getElementById("vibora-fase6-wrap").classList.remove("oculto");
+  });
+
+  /* ================= FASE 5: últimas 5 reseñas, en vivo ================= */
+  const qUltimasResenas = query(collection(db, "resenas"), orderBy("fecha", "desc"), limit(5));
+  onSnapshot(qUltimasResenas, (snap) => {
+    const lista = document.getElementById("fase5-lista-resenas");
+    lista.innerHTML = "";
+    snap.forEach((d) => {
+      const r = d.data();
+      if (!r.marca && !r.sensi) return; // reseñas viejas sin estos campos: se omiten aquí, no se borran
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "fase5-resena-tarjeta";
+      const emojis = "👺🇲🇽".repeat(r.estrellas === 5 ? 3 : 2);
+      tarjeta.innerHTML =
+        '<div class="fase5-resena-titulo">' + (r.marca || "") + " " + (r.modelo || "") + " · Sensi " + (r.sensi || "-") + "</div>" +
+        '<div class="fase5-resena-texto">' + emojis + " " + (r.texto || "") + "</div>";
+      lista.appendChild(tarjeta);
+    });
+  });
+
+  /* ---- Fase 5 → Fase 6 (pendiente de construir) ---- */
+  crearViboraDeslizante(
+    document.getElementById("vibora-fase6-wrap"),
+    "vibora-progreso-fase6",
+    "vibora-cabeza-fase6",
+    () => {
+      console.log("Fase 5 completa: reseña enviada, listo para Fase 6.");
+    }
+  );
+
 </script>
 
 </body>
