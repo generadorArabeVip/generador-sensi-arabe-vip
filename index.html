@@ -4260,12 +4260,17 @@
 
   fase5BtnEnviar.addEventListener("click", async () => {
     if (fase5BtnEnviar.disabled) return;
+    // Guardamos el texto bonito que se ve en los selects (ej. "Apple",
+    // "iPhone 15 Pro"), no el id crudo de Firestore (ej. "apple",
+    // "iphone_17_pro"), para que la tarjeta se vea limpia.
+    const marcaTexto = marcaSelect.options[marcaSelect.selectedIndex] ? marcaSelect.options[marcaSelect.selectedIndex].textContent : null;
+    const modeloTexto = modeloSelect.options[modeloSelect.selectedIndex] ? modeloSelect.options[modeloSelect.selectedIndex].textContent : null;
     await addDoc(collection(db, "resenas"), {
       estrellas: fase5CalifSeleccionada,
       texto: fase5Comentario.value.trim(),
       fecha: serverTimestamp(),
-      marca: modeloActual ? modeloActual.marcaId : null,
-      modelo: modeloActual ? modeloActual.modeloId : null
+      marca: modeloActual ? marcaTexto : null,
+      modelo: modeloActual ? modeloTexto : null
     });
     vibrarTelegram("medium");
     fase5BtnEnviar.disabled = true;
