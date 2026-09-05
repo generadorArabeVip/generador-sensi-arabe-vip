@@ -1686,22 +1686,20 @@
     margin-bottom: 10px;
   }
   .fase5-calificacion {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
     margin-bottom: 10px;
   }
-  .fase5-btn-calif {
-    flex: 1;
+  .fase5-select-calif {
+    width: 100%;
+    box-sizing: border-box;
     background: #111111;
     border: 1px solid #3A3A3A;
     border-radius: 10px;
-    padding: 8px 6px;
+    padding: 10px 12px;
     color: #E5E5E5;
     font-size: 13px;
     cursor: pointer;
   }
-  .fase5-btn-calif.seleccionado {
+  .fase5-select-calif.seleccionado {
     border-color: #D4AF37;
     box-shadow: 0 0 10px rgba(212,175,55,0.6);
     color: #D4AF37;
@@ -2692,9 +2690,12 @@
     <div class="fase5-resena-caja">
       <div class="fase5-leyenda">⚠️ Debes dejar tu reseña (calificación + comentario) para poder avanzar a Fase 6.</div>
       <div class="fase5-calificacion">
-        <button class="fase5-btn-calif" id="fase5-calif-4" data-valor="4">👺🇲🇽👺🇲🇽</button>
-        <button class="fase5-btn-calif" id="fase5-calif-5" data-valor="5">👺🇲🇽👺🇲🇽👺🇲🇽</button>
-        <button class="fase5-btn-calif" id="fase5-calif-6" data-valor="6">👺🇲🇽👺🇲🇽👺🇲🇽👺🇲🇽</button>
+        <select id="fase5-calif-select" class="fase5-select-calif">
+          <option value="">Elige tu calificación</option>
+          <option value="4">👺🇲🇽👺🇲🇽 (4)</option>
+          <option value="5">👺🇲🇽👺🇲🇽👺🇲🇽 (5)</option>
+          <option value="6">👺🇲🇽👺🇲🇽👺🇲🇽👺🇲🇽 (6)</option>
+        </select>
       </div>
       <textarea id="fase5-comentario" class="fase5-textarea" placeholder="Escribe tu comentario..."></textarea>
       <button class="btn-rojo-neon" id="fase5-enviar-resena" style="margin-top:10px; width:100%;" disabled>Enviar reseña</button>
@@ -4237,24 +4238,19 @@
   });
 
   /* ================= FASE 5: reseña obligatoria para desbloquear la víbora ================= */
-  let fase5CalifSeleccionada = null;
   const fase5Comentario = document.getElementById("fase5-comentario");
   const fase5BtnEnviar = document.getElementById("fase5-enviar-resena");
-  const fase5BotonesCalif = [
-    document.getElementById("fase5-calif-4"),
-    document.getElementById("fase5-calif-5"),
-    document.getElementById("fase5-calif-6")
-  ];
+  const fase5SelectCalif = document.getElementById("fase5-calif-select");
 
-  function fase5RevisarHabilitado() {
-    fase5BtnEnviar.disabled = !(fase5CalifSeleccionada && fase5Comentario.value.trim().length > 0);
+  function fase5CalifSeleccionada() {
+    return fase5SelectCalif.value ? Number(fase5SelectCalif.value) : null;
   }
-  fase5BotonesCalif.forEach((boton) => {
-    boton.addEventListener("click", () => {
-      fase5CalifSeleccionada = Number(boton.dataset.valor);
-      fase5BotonesCalif.forEach((b) => b.classList.toggle("seleccionado", b === boton));
-      fase5RevisarHabilitado();
-    });
+  function fase5RevisarHabilitado() {
+    fase5BtnEnviar.disabled = !(fase5CalifSeleccionada() && fase5Comentario.value.trim().length > 0);
+  }
+  fase5SelectCalif.addEventListener("change", () => {
+    fase5SelectCalif.classList.toggle("seleccionado", !!fase5SelectCalif.value);
+    fase5RevisarHabilitado();
   });
   fase5Comentario.addEventListener("input", fase5RevisarHabilitado);
 
@@ -4266,7 +4262,7 @@
     const marcaTexto = marcaSelect.options[marcaSelect.selectedIndex] ? marcaSelect.options[marcaSelect.selectedIndex].textContent : null;
     const modeloTexto = modeloSelect.options[modeloSelect.selectedIndex] ? modeloSelect.options[modeloSelect.selectedIndex].textContent : null;
     await addDoc(collection(db, "resenas"), {
-      estrellas: fase5CalifSeleccionada,
+      estrellas: fase5CalifSeleccionada(),
       texto: fase5Comentario.value.trim(),
       fecha: serverTimestamp(),
       marca: modeloActual ? marcaTexto : null,
@@ -4275,6 +4271,8 @@
     vibrarTelegram("medium");
     fase5BtnEnviar.disabled = true;
     fase5BtnEnviar.textContent = "✅ Reseña enviada";
+    fase5SelectCalif.disabled = true;
+    fase5Comentario.disabled = true;
     document.getElementById("vibora-fase6-wrap").classList.remove("oculto");
   });
 
