@@ -1691,17 +1691,24 @@
   .fase5-select-calif {
     width: 100%;
     box-sizing: border-box;
-    background: #111111;
-    border: 1px solid #3A3A3A;
-    border-radius: 10px;
-    padding: 10px 12px;
-    color: #E5E5E5;
+    appearance: none;
+    -webkit-appearance: none;
+    background: linear-gradient(160deg, #150710, #0A0A0A) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23D4AF37' d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center / 16px;
+    border: 1px solid #7A1FBF;
+    border-radius: 12px;
+    padding: 12px 36px 12px 14px;
+    color: #F1F1F1;
     font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .3px;
     cursor: pointer;
+    box-shadow: 0 0 10px rgba(176,38,255,0.35);
+    transition: border-color .15s ease, box-shadow .15s ease;
+    font-family: 'Orbitron', sans-serif;
   }
   .fase5-select-calif.seleccionado {
     border-color: #D4AF37;
-    box-shadow: 0 0 10px rgba(212,175,55,0.6);
+    box-shadow: 0 0 14px rgba(212,175,55,0.65);
     color: #D4AF37;
   }
   .fase5-textarea {
@@ -1742,7 +1749,117 @@
     margin-top: 4px;
   }
 
-  /* ================= FASE 4 ================= */
+  /* ================= FASE 6 ================= */
+  #fase6-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 24px 20px 60px 20px;
+    text-align: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  #video-fase6-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+  #fase6-overlay .overlay-oscuro {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: -1;
+  }
+  #contenido-fase6 {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 380px;
+  }
+  .fase6-logo-estatico {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 8px auto;
+    display: block;
+    border: 2px solid #FFFFFF;
+    animation: fase6LogoNeon 2.4s ease-in-out infinite, fase4LogoFundido 4.4s ease-in-out infinite;
+  }
+  @keyframes fase6LogoNeon {
+    0%, 100% { box-shadow: 0 0 14px rgba(225,6,0,0.55), 0 0 26px rgba(255,255,255,0.25); border-color: #E10600; }
+    50%      { box-shadow: 0 0 30px rgba(225,6,0,1), 0 0 50px rgba(255,255,255,0.6); border-color: #FFFFFF; }
+  }
+  .fase6-texto {
+    text-align: left;
+    color: #E5E5E5;
+    font-size: 12.5px;
+    line-height: 1.65;
+    background: rgba(10,10,10,0.55);
+    border: 1px solid #3A3A3A;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    white-space: pre-line;
+  }
+  .fase6-texto b, .fase6-destacado {
+    color: #D4AF37;
+  }
+  .fase6-separador {
+    border: none;
+    border-top: 1px solid rgba(212,175,55,0.4);
+    margin: 18px 0;
+  }
+  .fase6-titulo-regalo {
+    color: #FF3366;
+    font-size: 15px;
+    font-weight: 800;
+    margin: 6px 0 14px 0;
+    text-shadow: 0 0 8px rgba(225,6,0,0.6);
+    animation: textoParpadeo 2.6s ease-in-out infinite;
+  }
+  .fase6-descarga-item {
+    background: linear-gradient(160deg, #150710, #0A0A0A);
+    border: 1px solid #7A1FBF;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 0 12px rgba(176,38,255,0.3);
+  }
+  .fase6-descarga-titulo {
+    color: #F1F1F1;
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .fase6-descarga-fila {
+    display: flex;
+    gap: 8px;
+  }
+  .fase6-descarga-input {
+    flex: 1;
+    box-sizing: border-box;
+    background: #111111;
+    border: 1px solid #3A3A3A;
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #E5E5E5;
+    font-size: 13px;
+  }
+  .fase6-descarga-error {
+    color: #FF3366;
+    font-size: 11px;
+    margin-top: 8px;
+  }
+
   #fase4-overlay {
     position: fixed;
     inset: 0;
@@ -1806,12 +1923,12 @@
     animation: flotarSuave 3.8s ease-in-out infinite, textoParpadeo 5s ease-in-out infinite;
   }
 
-  /* ---- Fase 3: bloque de soporte (hasta abajo) ---- */
-  #soporte-fase3 {
+  /* ---- Fase 3 y Fase 6: bloque de soporte (hasta abajo) ---- */
+  #soporte-fase3, #soporte-fase6 {
     margin: 26px 0 10px 0;
     text-align: center;
   }
-  #soporte-fase3 .soporte-titulo {
+  #soporte-fase3 .soporte-titulo, #soporte-fase6 .soporte-titulo {
     color: #E10600;
     font-size: 13px;
     font-weight: 700;
@@ -1820,12 +1937,12 @@
     text-shadow: 0 0 8px rgba(225,6,0,0.5);
     animation: textoParpadeo 4s ease-in-out infinite;
   }
-  #soporte-fase3 .soporte-manita {
+  #soporte-fase3 .soporte-manita, #soporte-fase6 .soporte-manita {
     font-size: 22px;
     margin: 4px 0;
     animation: flechaFlotar 1.4s ease-in-out infinite;
   }
-  #soporte-fase3 a {
+  #soporte-fase3 a, #soporte-fase6 a {
     display: inline-block;
     font-size: 34px;
     color: #29A9EA;
@@ -2717,6 +2834,105 @@
         </svg>
         <div class="vibora-cabeza vibora-dorado-cabeza" id="vibora-cabeza-fase6">👹</div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FASE 6 =================
+     Video de fondo: Video_fase_6.mp4 y Logo_fase_6.png (subir al repo
+     junto al index.html, mismos nombres exactos). -->
+<div id="fase6-overlay" class="oculto">
+  <video id="video-fase6-bg" muted loop playsinline webkit-playsinline preload="none" disableRemotePlayback>
+    <source src="Video_fase_6.mp4" type="video/mp4">
+  </video>
+  <div class="overlay-oscuro"></div>
+
+  <div id="contenido-fase6">
+    <img src="Logo_fase_6.png" class="fase6-logo-estatico" alt="Sensi Árabe Vip">
+
+    <div class="fase6-texto">⚙️📱👹 <b>LAS MEJORES SETTINGS INTERNAS DE SENSIBILITY</b>
+SOLO CON NOSOTROS — SENSI ÁRABE VIP الأفضل 🇦🇱
+
+<b>S:.S:.VI-66 — نحن الأفضل.</b> 💀
+
+Después de todo lo que viste, llegaste al final.
+
+Nosotros creamos este proyecto porque vimos durante mucho tiempo cómo existían generadores que simplemente entregaban configuraciones genéricas para cualquier dispositivo. 💀
+
+Y decidimos hacer algo diferente.
+
+Este es nuestro primer proyecto de esta magnitud, desarrollado desde cero con la intención de crear uno de los sistemas de generación más completos que hemos desarrollado. 📱⚙️
+
+Más de 9 años de experiencia, más de 1,100 modelos y un sistema que seguimos actualizando y perfeccionando constantemente.
+
+No buscamos hacer otro generador más.
+
+Buscamos crear EL GENERADOR. 👹🔥
+
+🎯 Generación en tiempo real
+⚙️ Configuraciones adaptadas al dispositivo
+📱 +1,100 modelos en desarrollo
+🔥 Actualizaciones constantes
+
+Porque para nosotros, ser los mejores no significa decirlo.
+
+Significa demostrarlo con nuestro trabajo. 💀
+
+Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, demostrar de qué eres capaz en cualquier modo y dejar de conformarte con lo mismo que usa la mayoría, entonces este proyecto es para ti.
+
+<b>NO NACIMOS PARA SER DEL MONTÓN.</b> 👹🔥
+
+🇦🇱 <b>S:.S:.VI-66 — نحن الأفضل</b></div>
+
+    <hr class="fase6-separador">
+
+    <div class="fase6-titulo-regalo">🎁 ACÁ PUEDES OBTENER TUS CONFIGURACIONES GRATIS DE OPTIMIZACIÓN 🎁</div>
+
+    <div class="fase6-descarga-item" id="fase6-item-menu">
+      <div class="fase6-descarga-titulo">⚙️📱 Menú Principal Sensi Árabe Vip 👹👺👑</div>
+      <div class="fase6-descarga-fila">
+        <input type="password" class="fase6-descarga-input" id="fase6-clave-menu" placeholder="Contraseña">
+        <button class="btn-rojo-neon fase6-btn-obtener" id="fase6-btn-menu">Obtener</button>
+      </div>
+      <div class="fase6-descarga-error oculto" id="fase6-error-menu">⚠️ Contraseña incorrecta</div>
+    </div>
+
+    <div class="fase6-descarga-item" id="fase6-item-samsung">
+      <div class="fase6-descarga-titulo">📱 SAMSUNG — OPTIMIZACIÓN VIP 👺👹</div>
+      <div class="fase6-descarga-fila">
+        <input type="password" class="fase6-descarga-input" id="fase6-clave-samsung" placeholder="Contraseña">
+        <button class="btn-rojo-neon fase6-btn-obtener" id="fase6-btn-samsung">Obtener</button>
+      </div>
+      <div class="fase6-descarga-error oculto" id="fase6-error-samsung">⚠️ Contraseña incorrecta</div>
+    </div>
+
+    <div class="fase6-descarga-item" id="fase6-item-xiaomi">
+      <div class="fase6-descarga-titulo">📱 XIAOMI / REDMI / POCO — OPTIMIZACIÓN VIP ⚙️👹👺</div>
+      <div class="fase6-descarga-fila">
+        <input type="password" class="fase6-descarga-input" id="fase6-clave-xiaomi" placeholder="Contraseña">
+        <button class="btn-rojo-neon fase6-btn-obtener" id="fase6-btn-xiaomi">Obtener</button>
+      </div>
+      <div class="fase6-descarga-error oculto" id="fase6-error-xiaomi">⚠️ Contraseña incorrecta</div>
+    </div>
+
+    <div class="fase6-descarga-item" id="fase6-item-motorola">
+      <div class="fase6-descarga-titulo">📱 MOTOROLA — OPTIMIZACIÓN VIP 👹👺</div>
+      <div class="fase6-descarga-fila">
+        <input type="password" class="fase6-descarga-input" id="fase6-clave-motorola" placeholder="Contraseña">
+        <button class="btn-rojo-neon fase6-btn-obtener" id="fase6-btn-motorola">Obtener</button>
+      </div>
+      <div class="fase6-descarga-error oculto" id="fase6-error-motorola">⚠️ Contraseña incorrecta</div>
+    </div>
+
+    <div id="soporte-fase6">
+      <div class="soporte-titulo">Soporte Oficial del Generador</div>
+      <div class="soporte-manita">👇</div>
+      <a href="https://t.me/SensiArabeVip?text=%F0%9F%91%B9%20Hola%20hermano%20tuve%20un%20problema%20con%20el%20generador%20necesito%20ayuda%20%E2%9A%99%EF%B8%8F%F0%9F%91%87" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i></a>
+    </div>
+
+    <div class="marca-sello fase4-marca" style="margin-top:34px;">S:.S:.VI-66</div>
+    <div class="frase-final fase4-frase">
+      الأفضل في التكوينات الداخلية
     </div>
   </div>
 </div>
@@ -4025,7 +4241,7 @@
      y agrega un "vigilante" que detecta congelamiento silencioso (cuando
      el navegador interno de Telegram deja el video en estado "reproduciendo"
      pero el tiempo no avanza, sin disparar el evento pause). */
-  const IDS_VIDEO_FONDO = ["candado-video-bg", "bienvenida-video-bg", "video-bg", "video-fase4-bg", "video-fase5-bg"];
+  const IDS_VIDEO_FONDO = ["candado-video-bg", "bienvenida-video-bg", "video-bg", "video-fase4-bg", "video-fase5-bg", "video-fase6-bg"];
   const ultimoTiempoPorVideo = {};
 
   function reintentarReproducir(v) {
@@ -4292,15 +4508,75 @@
     });
   });
 
-  /* ---- Fase 5 → Fase 6 (pendiente de construir) ---- */
+  /* ---- Fase 5 → Fase 6 ---- */
   crearViboraDeslizante(
     document.getElementById("vibora-fase6-wrap"),
     "vibora-progreso-fase6",
     "vibora-cabeza-fase6",
-    () => {
-      console.log("Fase 5 completa: reseña enviada, listo para Fase 6.");
-    }
+    mostrarFase6
   );
+
+  function mostrarFase6() {
+    document.getElementById("fase5-overlay").classList.add("oculto");
+    document.getElementById("fase6-overlay").classList.remove("oculto");
+    const vFase6 = document.getElementById("video-fase6-bg");
+    if (vFase6 && !vFase6.dataset.cargado) {
+      vFase6.dataset.cargado = "1";
+      vFase6.load();
+      vFase6.play().catch(() => {});
+    } else if (vFase6) {
+      vFase6.play().catch(() => {});
+    }
+  }
+
+  /* ================= FASE 6: descargas con contraseña =================
+     Cada tarjeta pide su clave; si coincide, abre el link real de
+     MediaFire en una pestaña nueva. Los enlaces llevan emojis en la
+     ruta -- se codifican con encodeURI para que el navegador los
+     entienda bien. */
+  const FASE6_DESCARGAS = {
+    menu: {
+      clave: "999",
+      url: "https://www.mediafire.com/folder/5nx534ulrarlu/⚙️📱Pack+Sensi+Árabe+VIP.+👹👺👑"
+    },
+    samsung: {
+      clave: "333",
+      url: "https://www.mediafire.com/folder/4f93leqn9ldxg/⚙️📱👺👹Optimización+Samsung"
+    },
+    xiaomi: {
+      clave: "333",
+      url: "https://www.mediafire.com/folder/wyrqocjz0b0tj/Optimización+Xiaomi+⚙️📱👺👹"
+    },
+    motorola: {
+      clave: "333",
+      url: "https://www.mediafire.com/folder/ja05jxua9btbk/Optimización+Motorola+⚙️👹👺📱"
+    }
+  };
+
+  Object.keys(FASE6_DESCARGAS).forEach((id) => {
+    const { clave, url } = FASE6_DESCARGAS[id];
+    const input = document.getElementById("fase6-clave-" + id);
+    const boton = document.getElementById("fase6-btn-" + id);
+    const error = document.getElementById("fase6-error-" + id);
+    boton.addEventListener("click", () => {
+      if (input.value.trim() === clave) {
+        error.classList.add("oculto");
+        vibrarTelegram("medium");
+        const tg = window.Telegram && window.Telegram.WebApp;
+        if (tg && typeof tg.openLink === "function") {
+          tg.openLink(encodeURI(url));
+        } else {
+          window.open(encodeURI(url), "_blank", "noopener");
+        }
+      } else {
+        error.classList.remove("oculto");
+        vibrarTelegram("heavy");
+      }
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") boton.click();
+    });
+  });
 
 </script>
 
