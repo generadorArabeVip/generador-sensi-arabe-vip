@@ -1705,6 +1705,11 @@
     box-shadow: 0 0 10px rgba(176,38,255,0.35);
     transition: border-color .15s ease, box-shadow .15s ease;
     font-family: 'Orbitron', sans-serif;
+    animation: fase5SelectRespira 2.6s ease-in-out infinite;
+  }
+  @keyframes fase5SelectRespira {
+    0%, 100% { box-shadow: 0 0 8px rgba(176,38,255,0.3); border-color: #7A1FBF; }
+    50%      { box-shadow: 0 0 18px rgba(176,38,255,0.7), 0 0 28px rgba(225,6,0,0.3); border-color: #B026FF; }
   }
   .fase5-select-calif.seleccionado {
     border-color: #D4AF37;
@@ -1804,13 +1809,27 @@
     font-size: 12.5px;
     line-height: 1.65;
     background: rgba(10,10,10,0.55);
-    border: 1px solid #3A3A3A;
+    border: 1px solid #FFFFFF;
     border-radius: 12px;
     padding: 16px;
     margin-top: 16px;
     white-space: pre-line;
+    animation: fase6ContornoBlanco 2.8s ease-in-out infinite;
   }
-  .fase6-texto b, .fase6-destacado {
+  @keyframes fase6ContornoBlanco {
+    0%, 100% { box-shadow: 0 0 8px rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); }
+    50%      { box-shadow: 0 0 20px rgba(255,255,255,0.6); border-color: #FFFFFF; }
+  }
+  .fase6-texto b {
+    color: #E10600;
+    font-weight: 800;
+    animation: fase6TituloNeon 2.4s ease-in-out infinite;
+  }
+  @keyframes fase6TituloNeon {
+    0%, 100% { text-shadow: 0 0 6px rgba(225,6,0,0.5); opacity: .85; }
+    50%      { text-shadow: 0 0 14px rgba(225,6,0,1), 0 0 24px rgba(225,6,0,0.6); opacity: 1; }
+  }
+  .fase6-destacado {
     color: #D4AF37;
   }
   .fase6-separador {
@@ -2922,6 +2941,24 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
         <button class="btn-rojo-neon fase6-btn-obtener" id="fase6-btn-motorola">Obtener</button>
       </div>
       <div class="fase6-descarga-error oculto" id="fase6-error-motorola">⚠️ Contraseña incorrecta</div>
+    </div>
+
+    <div class="fase6-descarga-item" id="fase6-item-modulo">
+      <div class="fase6-descarga-titulo">👹 MÓDULO SENSI ÁRABE VIP — OPTIMIZACIÓN</div>
+      <div class="fase6-descarga-fila">
+        <input type="password" class="fase6-descarga-input" id="fase6-clave-modulo" placeholder="Contraseña">
+        <button class="btn-rojo-neon fase6-btn-obtener" id="fase6-btn-modulo">Obtener</button>
+      </div>
+      <div class="fase6-descarga-error oculto" id="fase6-error-modulo">⚠️ Contraseña incorrecta</div>
+    </div>
+
+    <div class="fase6-descarga-item" id="fase6-item-fps120">
+      <div class="fase6-descarga-titulo">⚙️👺🇲🇽👹 +120 FPS Árabe Vip</div>
+      <div class="fase6-descarga-fila">
+        <input type="password" class="fase6-descarga-input" id="fase6-clave-fps120" placeholder="Contraseña">
+        <button class="btn-rojo-neon fase6-btn-obtener" id="fase6-btn-fps120">Obtener</button>
+      </div>
+      <div class="fase6-descarga-error oculto" id="fase6-error-fps120">⚠️ Contraseña incorrecta</div>
     </div>
 
     <div id="soporte-fase6">
@@ -4550,6 +4587,14 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
     motorola: {
       clave: "333",
       url: "https://www.mediafire.com/folder/ja05jxua9btbk/Optimización+Motorola+⚙️👹👺📱"
+    },
+    modulo: {
+      clave: "333",
+      url: "https://www.mediafire.com/folder/4vyh7iafbfg5b/Módulo+Sensi+Árabe+Vip+👹"
+    },
+    fps120: {
+      clave: "333",
+      url: "https://www.mediafire.com/folder/3x6hjcemedcov/+120+FPS+Árabe+Vip+👹"
     }
   };
 
