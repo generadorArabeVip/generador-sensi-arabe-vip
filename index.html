@@ -1822,6 +1822,14 @@
     height: 100%;
     object-fit: cover;
     z-index: -2;
+    /* Fase 6 tiene mucho texto y varias tarjetas con box-shadow (glow):
+       al hacer scroll, el navegador repintaba el video "fixed" en cada
+       frame junto con todo lo demás, causando el lag. Forzamos que el
+       video viva en su propia capa de composición (GPU) para que el
+       scroll no lo vuelva a pintar cada vez. */
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
   }
   #fase6-overlay .overlay-oscuro {
     position: fixed;
@@ -1833,6 +1841,7 @@
     position: relative;
     z-index: 1;
     width: 100%;
+    contain: content;
     max-width: 380px;
   }
   .fase6-logo-estatico {
