@@ -4278,7 +4278,7 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
   });
   document.getElementById("fase4-clan-regresar").addEventListener("click", volverAFase4Inicio);
 
-  cargarMarcas();
+  const marcasListas = cargarMarcas();
 
   /* ================= FLUIDEZ DE VIDEOS DE FONDO (4 fases) =================
      Refuerza el loop nativo por si algún navegador se queda "pegado" al
@@ -4469,32 +4469,45 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
   // Nombres tal como se usan en el generador (mismos IDs de la colección
   // "sensibilidades"). Si alguna marca real tiene otra escritura exacta
   // en Firestore, avisar para ajustar aquí.
-  const MARCAS_GRAFICA = [
-    "Samsung", "Xiaomi", "Redmi", "Poco", "Infinix", "Tecno", "Itel",
-    "iPhone", "Huawei", "Oppo", "Realme", "Motorola", "ZTE", "Vivo", "Nokia", "Honor"
-  ];
-
+  // Antes: lista fija con nombres "bonitos" (Samsung, iPhone, etc.) que no
+  // coincidía con los IDs reales de Firestore (apple, samsung, etc.), por lo
+  // que la gráfica siempre mostraba 0% salvo cuando por casualidad coincidía.
+  // Ahora: se construye dinámicamente a partir de marcasCache (los mismos
+  // IDs que usa el selector de marca y por lo tanto los mismos que se usan
+  // al guardar en "registro_marcas").
   const fase5Grafica = document.getElementById("fase5-grafica");
-  MARCAS_GRAFICA.forEach((marca) => {
-    const fila = document.createElement("div");
-    fila.className = "fase5-grafica-fila";
-    fila.innerHTML =
-      '<div class="fase5-grafica-label">' + marca + '</div>' +
-      '<div class="fase5-grafica-barra-fondo"><div class="fase5-grafica-barra" id="fase5-barra-' + marca + '"></div></div>' +
-      '<div class="fase5-grafica-num" id="fase5-num-' + marca + '">0</div>';
-    fase5Grafica.appendChild(fila);
-  });
+  let MARCAS_GRAFICA = [];
 
-  onSnapshot(collection(db, "registro_marcas"), (snap) => {
-    const totales = {};
-    snap.forEach((d) => { totales[d.id] = d.data().total || 0; });
-    const maxTotal = Math.max(1, ...MARCAS_GRAFICA.map((m) => totales[m] || 0));
-    MARCAS_GRAFICA.forEach((marca) => {
-      const total = totales[marca] || 0;
-      const barra = document.getElementById("fase5-barra-" + marca);
-      const num = document.getElementById("fase5-num-" + marca);
-      if (barra) barra.style.width = ((total / maxTotal) * 100).toFixed(1) + "%";
-      if (num) num.textContent = total;
+  function construirFilasGrafica() {
+    MARCAS_GRAFICA = marcasCache.map((m) => m.id);
+    fase5Grafica.innerHTML = "";
+    marcasCache.forEach(({ id, label }) => {
+      const fila = document.createElement("div");
+      fila.className = "fase5-grafica-fila";
+      fila.innerHTML =
+        '<div class="fase5-grafica-label">' + label + '</div>' +
+        '<div class="fase5-grafica-barra-fondo"><div class="fase5-grafica-barra" id="fase5-barra-' + id + '"></div></div>' +
+        '<div class="fase5-grafica-num" id="fase5-num-' + id + '">0</div>';
+      fase5Grafica.appendChild(fila);
+    });
+  }
+
+  // cargarMarcas() (llamado más arriba) llena marcasCache de forma asíncrona;
+  // esperamos esa misma promesa antes de construir las filas y el listener.
+  marcasListas.then(() => {
+    construirFilasGrafica();
+
+    onSnapshot(collection(db, "registro_marcas"), (snap) => {
+      const totales = {};
+      snap.forEach((d) => { totales[d.id] = d.data().total || 0; });
+      const maxTotal = Math.max(1, ...MARCAS_GRAFICA.map((m) => totales[m] || 0));
+      MARCAS_GRAFICA.forEach((marca) => {
+        const total = totales[marca] || 0;
+        const barra = document.getElementById("fase5-barra-" + marca);
+        const num = document.getElementById("fase5-num-" + marca);
+        if (barra) barra.style.width = ((total / maxTotal) * 100).toFixed(1) + "%";
+        if (num) num.textContent = total;
+      });
     });
   });
 
