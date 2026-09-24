@@ -2544,7 +2544,7 @@
     <button id="btn-disparo" class="oculto btn-rojo-neon">Generar botón de disparo</button>
     <div class="card oculto" id="card-boton">
       <div class="posicion-sugerida-boton" id="v-posicion-boton"></div>
-      <div class="label">🔫 Botón de Disparo</div>
+      <div class="label"><img src="Boton_de_disparo.png" alt="" style="width:22px;height:22px;vertical-align:middle;margin-right:6px;"> Botón de Disparo</div>
       <div class="valor" style="color:#E10600;" id="v-boton"></div>
     </div>
 
@@ -3039,6 +3039,7 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
 </div>
 
 <script src="calculo-boton.js"></script>
+<script src="estimar-modelo.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script type="module">
   try {
@@ -3565,7 +3566,16 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
       return;
     }
     const filtrados = modelosCache.filter((m) => m.label.toLowerCase().includes(texto));
-    renderResultadosBusqueda(resultadosModelo, filtrados, (item) => {
+    const hayExacto = modelosCache.some((m) => m.label.toLowerCase() === texto);
+    const itemsAMostrar = [...filtrados];
+    if (!hayExacto && inputBuscarModelo.value.trim()) {
+      itemsAMostrar.push({ id: "__usar__", label: `Usar: ${inputBuscarModelo.value.trim()}` });
+    }
+    renderResultadosBusqueda(resultadosModelo, itemsAMostrar, async (item) => {
+      if (item.id === "__usar__") {
+        await usarModeloEstimado(inputBuscarModelo.value.trim());
+        return;
+      }
       inputBuscarModelo.value = item.label;
       inputBuscarModelo.classList.add("elegido");
       resultadosModelo.classList.add("oculto");
@@ -3573,6 +3583,31 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
       modeloSelect.dispatchEvent(new Event("change"));
     });
   });
+
+  // Modelo que no está en la base: se estima con estimar-modelo.js,
+  // se guarda en Firebase si no existía, y sigue el flujo normal.
+  async function usarModeloEstimado(textoEscrito) {
+    const marcaDoc = await getDoc(doc(db, "sensibilidades", marcaSelect.value));
+    const modelosMarca = marcaDoc.data().modelos || {};
+    const r = window.EstimarModelo.crearModelo(textoEscrito, modelosMarca);
+    if (!r) return;
+
+    await window.EstimarModelo.guardarSiNoExiste(
+      db, marcaSelect.value, r.id, r.datos, { doc, getDoc, setDoc }
+    );
+
+    inputBuscarModelo.value = r.datos.nombre;
+    inputBuscarModelo.classList.add("elegido");
+    resultadosModelo.classList.add("oculto");
+
+    modelosCache.push({ id: r.id, label: r.datos.nombre });
+    const option = document.createElement("option");
+    option.value = r.id;
+    option.textContent = r.datos.nombre;
+    modeloSelect.appendChild(option);
+    modeloSelect.value = r.id;
+    modeloSelect.dispatchEvent(new Event("change"));
+  }
 
   async function cargarMarcas() {
     const snapshot = await getDocs(collection(db, "sensibilidades"));
@@ -4359,6 +4394,7 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
      pero el tiempo no avanza, sin disparar el evento pause). */
   const IDS_VIDEO_FONDO = ["candado-video-bg", "bienvenida-video-bg", "video-bg", "video-fase4-bg", "video-fase5-bg", "video-fase6-bg"];
   const ultimoTiempoPorVideo = {};
+  const fallosSeguidosPorVideo = {};
 
   function reintentarReproducir(v) {
     const intento = v.play();
@@ -4369,6 +4405,7 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
     const v = document.getElementById(id);
     if (!v) return;
     ultimoTiempoPorVideo[id] = -1;
+    fallosSeguidosPorVideo[id] = 0;
 
     // Respaldo manual del loop: si por algo el navegador no lo retoma solo,
     // lo regresamos al inicio y lo volvemos a reproducir.
@@ -4411,8 +4448,16 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
 
       const tiempoActual = v.currentTime;
       if (tiempoActual === ultimoTiempoPorVideo[id]) {
-        v.load();
-        reintentarReproducir(v);
+        fallosSeguidosPorVideo[id]++;
+        // Solo recarga si lleva 2 revisiones seguidas sin avanzar (~6s),
+        // para no confundir un micro-buffer normal con un congelamiento real.
+        if (fallosSeguidosPorVideo[id] >= 2) {
+          v.load();
+          reintentarReproducir(v);
+          fallosSeguidosPorVideo[id] = 0;
+        }
+      } else {
+        fallosSeguidosPorVideo[id] = 0;
       }
       ultimoTiempoPorVideo[id] = tiempoActual;
     });

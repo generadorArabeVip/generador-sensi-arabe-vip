@@ -99,6 +99,7 @@ const AJUSTES_IOS = {
   iphone_7:           { velocidadCursor: 85,  modo: "Modo Sencillo",  toque: 0.25, refinamiento: 0.68, controlBoton: "Estándar",          controlBotonDuracion: 0.20 },
   iphone_6_plus:      { velocidadCursor: 80,  modo: "Modo Sencillo",  toque: 0.30, refinamiento: 0.65, controlBoton: "Estándar",          controlBotonDuracion: 0.25 },
   iphone_se_2022:     { velocidadCursor: 105, modo: "Modo Individual",toque: 0.15, refinamiento: 0.85, controlBoton: "Estándar",          controlBotonDuracion: 0.10 },
+  __default__:        { velocidadCursor: 110, modo: "Modo Individual",toque: 0.15, refinamiento: 0.88, controlBoton: "Estándar",          controlBotonDuracion: 0.20 },
   iphone_se_2020:     { velocidadCursor: 100, modo: "Modo Sencillo",  toque: 0.20, refinamiento: 0.80, controlBoton: "Estándar",          controlBotonDuracion: 0.15 },
 };
 
@@ -198,7 +199,7 @@ window.SensiApp = {
       config.seccionesAOcultar.forEach((el) => el.classList.add("oculto"));
 
       if (config.esApple) {
-        const datos = AJUSTES_IOS[config.modeloId];
+        const datos = AJUSTES_IOS[config.modeloId] || AJUSTES_IOS.__default__;
         if (datos && config.elsIOS) {
           config.elsIOS.velocidad.textContent = `${datos.velocidadCursor} (${datos.modo})`;
           config.elsIOS.toque.textContent = `${datos.toque} segundos`;
