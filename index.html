@@ -3612,7 +3612,13 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
     option.textContent = r.datos.nombre;
     modeloSelect.appendChild(option);
     modeloSelect.value = r.id;
-    modeloSelect.dispatchEvent(new Event("change"));
+    actualizarEstiloSelect(modeloSelect);
+    revisarAmbosListos();
+
+    // Usa los datos ya calculados en vez de releerlos de Firebase:
+    // si el guardado falló (permisos), igual debe poder generar.
+    modeloActual = { marcaId: marcaSelect.value, modeloId: r.id, datos: r.datos };
+    btnSensibilidad.classList.remove("oculto");
   }
 
   async function cargarMarcas() {
