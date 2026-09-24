@@ -3569,7 +3569,7 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
     const hayExacto = modelosCache.some((m) => m.label.toLowerCase() === texto);
     const itemsAMostrar = [...filtrados];
     if (!hayExacto && inputBuscarModelo.value.trim()) {
-      itemsAMostrar.push({ id: "__usar__", label: `Usar: ${inputBuscarModelo.value.trim()}` });
+      itemsAMostrar.push({ id: "__usar__", label: `${inputBuscarModelo.value.trim()} ✦` });
     }
     renderResultadosBusqueda(resultadosModelo, itemsAMostrar, async (item) => {
       if (item.id === "__usar__") {
@@ -3592,9 +3592,15 @@ Y si tú también quieres ser diferente, llevar tu jugabilidad a otro nivel, dem
     const r = window.EstimarModelo.crearModelo(textoEscrito, modelosMarca);
     if (!r) return;
 
-    await window.EstimarModelo.guardarSiNoExiste(
-      db, marcaSelect.value, r.id, r.datos, { doc, getDoc, setDoc }
-    );
+    try {
+      await window.EstimarModelo.guardarSiNoExiste(
+        db, marcaSelect.value, r.id, r.datos, { doc, getDoc, setDoc }
+      );
+    } catch (e) {
+      // Si no se pudo guardar (ej. permisos de Firebase), no importa:
+      // igual se genera la sensibilidad con los datos ya calculados.
+      console.warn("No se pudo guardar el modelo estimado:", e);
+    }
 
     inputBuscarModelo.value = r.datos.nombre;
     inputBuscarModelo.classList.add("elegido");
